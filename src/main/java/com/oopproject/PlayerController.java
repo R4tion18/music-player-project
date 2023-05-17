@@ -24,6 +24,8 @@ public class PlayerController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Properties defaultProps = new Properties();
+        boolean isFirstSetup = false;
+
         try {
             defaultProps.load(PlayerController.class.getResourceAsStream("default.properties"));
         } catch (IOException e) {
@@ -37,11 +39,12 @@ public class PlayerController implements Initializable {
             throw new RuntimeException(e);
         }
 
-        //if (playerProperties.getProperty("libraryFolder", "").equals(""))   {
-            //ask for directory;
-            //playerProperties.setProperty("libraryFolder", directory);
-        //}
+    //  if (playerProperties.getProperty("libraryFolder", "").equals(""))   {
+    //    ask for directory;
+    //    playerProperties.setProperty("libraryFolder", directory);
+    //    isFirstSetup = true;
+    //  }
 
-        //set up library;
+        Library library = new Library(playerProperties, isFirstSetup);
     }
 }
