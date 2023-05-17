@@ -36,5 +36,12 @@ public class PlayerController implements Initializable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        //if (playerProperties.getProperty("libraryFolder", "").equals(""))   {
+            //ask for directory;
+            //playerProperties.setProperty("libraryFolder", directory);
+        //}
+
+        //set up library;
     }
 }
