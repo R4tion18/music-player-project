@@ -7,6 +7,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Library {
     private Properties properties;
@@ -16,7 +17,7 @@ public class Library {
 
     public Library(Properties props, boolean isFirstSetup) {
         this.properties = props;
-        File directory = new File(props.getProperty("libraryFolder"));
+        File directory = new File(properties.getProperty("libraryFolder"));
         CopyOnWriteArrayList<File> files = new CopyOnWriteArrayList<>(List.of(Objects.requireNonNull(directory.listFiles())));
 
         if (!isFirstSetup)  {
@@ -26,24 +27,27 @@ public class Library {
                     .sorted()
                     .collect(Collectors.toCollection(() -> files));
 
-            for (int i = 0; i < files.size(); ++i) {
-                addNewSong(files.get(i).getAbsolutePath(), i);
-            }
+            IntStream
+                    .range(0, files.size())
+                    .forEachOrdered(i -> addNewSong(files.get(i).getAbsolutePath(), i));
         }
     }
 
     public Library(CopyOnWriteArrayList<File> files) {
-        for (File file : files) {
-            if (Song.getIndex(file.getAbsolutePath()).matches(""))  {
+        files.forEach(file -> {
+            if (Song.getIndex(file.getAbsolutePath()).matches("")) {
                 addNewSong(file.getAbsolutePath(), properties.size());
             }
+            Arrays.stream(properties.getProperty(Song.getIndex(file.getAbsolutePath())).split("\n"))
+                    .forEach(playlist -> {
+                        playlists.putIfAbsent(playlist, new Playlist(playlist, this));
+                        playlists.get(playlist).addSong(Integer.parseInt(Song.getIndex(file.getAbsolutePath())));
+                    });
+        });
+    }
 
-            String[] pls = properties.getProperty(Song.getIndex(file.getAbsolutePath())).split("\n");
-            for (String pl : pls)   {
-                playlists.putIfAbsent(pl, new Playlist(pl));
-                playlists.get(pl).addSong(Integer.parseInt(Song.getIndex(file.getAbsolutePath())));
-            }
-        }
+    public String getSong(int index) {
+        return songs.get(index);
     }
 
     public void addSongFile(String path)    {
@@ -59,15 +63,14 @@ public class Library {
         songs.put(index, path);
         String album = new Media(path).getMetadata().get("album").toString();
         if (!album.matches("")) {
-            albums.putIfAbsent(album, new Album(album));
+            albums.putIfAbsent(album, new Album(new Media(path).getMetadata().get("album artist").toString(), album, this));
             albums.get(album).addSong(Integer.parseInt(Song.getIndex(path)));
         }
     }
 
     public void deleteSong(int index)   {
-        for (String playlist : properties.getProperty(String.valueOf(index)).split("\n"))   {
-            playlists.get(playlist).removeSong(index);
-        }
+        Arrays.stream(properties.getProperty(String.valueOf(index)).split("\n"))
+                .forEach(playlist -> playlists.get(playlist).removeSong(index));
 
         String album = new Media(songs.get(index)).getMetadata().get("album").toString();
         if (!album.matches("")) {
