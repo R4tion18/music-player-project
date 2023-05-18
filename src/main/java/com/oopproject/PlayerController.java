@@ -1,7 +1,5 @@
 package com.oopproject;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 
@@ -42,10 +40,10 @@ public class PlayerController implements Initializable {
         if (files != null){
             Collections.addAll(songs, files);
         }
+        //Testing code End
         volumeSlider.setMax(1.0);
         volumeSlider.setValue(0.5);
         mediaLoader();
-        //Testing code End
     }
     private void mediaLoader(){
         media = new Media(songs.get(songNumber).toURI().toString());
@@ -53,16 +51,16 @@ public class PlayerController implements Initializable {
         mediaPlayer.volumeProperty().bindBidirectional(volumeSlider.valueProperty());
         timeSlider.setValue(0.0);
         currentTimeLabel.setText("0");
-
-
         mediaPlayer.totalDurationProperty().addListener((observable, oldDuration, newDuration) -> {
             timeSlider.setMax(newDuration.toSeconds());
             totalTimeLabel.setText(getTime(newDuration));
         });
         timeSlider.valueChangingProperty().addListener((observable, wasChanging, isChanging) -> {
+            stopAction();
             if(!isChanging){
                 mediaPlayer.seek(Duration.seconds(timeSlider.getValue()));
                 currentTimeLabel.setText(getTime(mediaPlayer.getCurrentTime()));
+                startAction();
             }
         });
         timeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
