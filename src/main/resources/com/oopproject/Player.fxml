@@ -42,32 +42,38 @@
                   <Font size="18.0" />
                </font>
             </Button>
-            <Button layoutX="14.0" layoutY="108.0" mnemonicParsing="false" onAction="#debugAction" prefHeight="40.0" prefWidth="296.0" text="Debug">
+            <Button layoutX="190.0" layoutY="143.0" mnemonicParsing="false" onAction="#debugAction" prefHeight="40.0" prefWidth="296.0" text="Debug">
                <font>
                   <Font size="18.0" />
                </font>
             </Button>
-            <Button layoutX="138.0" layoutY="47.0" mnemonicParsing="false" onAction="#previousAction" prefHeight="40.0" prefWidth="97.0" text="Previous">
+            <Button layoutX="153.0" layoutY="47.0" mnemonicParsing="false" onAction="#previousAction" prefHeight="40.0" prefWidth="97.0" text="Previous">
                <font>
                   <Font size="18.0" />
                </font>
             </Button>
-            <Button layoutX="433.0" layoutY="47.0" mnemonicParsing="false" onAction="#nextAction" prefHeight="40.0" prefWidth="97.0" text="Next">
+            <Button layoutX="416.0" layoutY="47.0" mnemonicParsing="false" onAction="#nextAction" prefHeight="40.0" prefWidth="97.0" text="Next">
                <font>
                   <Font size="18.0" />
                </font>
             </Button>
-            <Button layoutX="14.0" layoutY="47.0" mnemonicParsing="false" onAction="#replayAction" prefHeight="40.0" prefWidth="97.0" text="Replay">
+            <Button layoutX="29.0" layoutY="47.0" mnemonicParsing="false" onAction="#loopAction" prefHeight="40.0" prefWidth="97.0" text="Loop">
                <font>
                   <Font size="18.0" />
                </font>
             </Button>
-            <Button layoutX="14.0" layoutY="148.0" mnemonicParsing="false" onAction="#infoAction" prefHeight="40.0" prefWidth="97.0" text="Info">
+            <Button layoutX="285.0" layoutY="100.0" mnemonicParsing="false" onAction="#infoAction" prefHeight="40.0" prefWidth="97.0" text="Info">
                <font>
                   <Font size="18.0" />
                </font>
             </Button>
-            <Slider fx:id="volumeSlider" layoutX="618.0" layoutY="25.0" orientation="VERTICAL" prefHeight="83.0" prefWidth="14.0" />
+            <Slider fx:id="volumeSlider" layoutX="647.0" layoutY="25.0" orientation="VERTICAL" prefHeight="83.0" prefWidth="14.0" />
+            <Label fx:id="volumeLabel" alignment="CENTER" layoutX="632.0" layoutY="113.0" prefHeight="29.0" prefWidth="43.0" text="V" />
+            <Button layoutX="541.0" layoutY="47.0" mnemonicParsing="false" onAction="#volumeAction" prefHeight="40.0" prefWidth="97.0" text="Volume">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Button>
          </children>
       </AnchorPane>
    </bottom>

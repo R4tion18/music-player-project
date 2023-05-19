@@ -16,11 +16,10 @@ import javafx.util.Duration;
 
 public class PlayerController implements Initializable {
 
-
-
     @FXML Label songLabel;
     @FXML Label currentTimeLabel;
     @FXML Label totalTimeLabel;
+    @FXML Label volumeLabel;
     @FXML Slider timeSlider;
     @FXML Slider volumeSlider;
 
@@ -30,6 +29,8 @@ public class PlayerController implements Initializable {
     private Media media;
     private MediaPlayer mediaPlayer;
     private int songNumber;
+    private boolean isPlaying = false;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
@@ -37,118 +38,148 @@ public class PlayerController implements Initializable {
         songs = new ArrayList<>();
         directory = new File("C:\\Users\\rikiv\\OneDrive\\Desktop\\MediaMusic");
         files = directory.listFiles();
-        if (files != null){
-            Collections.addAll(songs, files);
+        if (files != null) {
+            songs.addAll(Arrays.asList(files));
         }
         //Testing code End
+
         volumeSlider.setMax(1.0);
         volumeSlider.setValue(0.5);
-        mediaLoader();
+        volumeLabel.setText("50%");
+        load(songs.get(songNumber).toURI().toString());
     }
-    private void mediaLoader(){
-        media = new Media(songs.get(songNumber).toURI().toString());
+
+    private void load(String songName) {
+        media = new Media(songName);
         mediaPlayer = new MediaPlayer(media);
         mediaPlayer.volumeProperty().bindBidirectional(volumeSlider.valueProperty());
+
+        volumeSlider.valueChangingProperty().addListener((observable, wasChanging, isChanging) ->
+                volumeLabel.setText(String.format("%d", (int) (volumeSlider.getValue() * 100)) + "%"));
+        volumeSlider.valueProperty().addListener((observable, oldValue, newValue) ->
+                volumeLabel.setText(String.format("%d", (int) (newValue.doubleValue() * 100)) + "%"));
+
         timeSlider.setValue(0.0);
         currentTimeLabel.setText("0");
         mediaPlayer.totalDurationProperty().addListener((observable, oldDuration, newDuration) -> {
             timeSlider.setMax(newDuration.toSeconds());
-            totalTimeLabel.setText(getTime(newDuration));
+            totalTimeLabel.setText(timeFormatting(newDuration));
         });
         timeSlider.valueChangingProperty().addListener((observable, wasChanging, isChanging) -> {
-            stopAction();
-            if(!isChanging){
+            mediaPlayer.pause();
+            if (!isChanging) {
                 mediaPlayer.seek(Duration.seconds(timeSlider.getValue()));
-                currentTimeLabel.setText(getTime(mediaPlayer.getCurrentTime()));
-                startAction();
+                currentTimeLabel.setText(timeFormatting(mediaPlayer.getCurrentTime()));
+                if (isPlaying) {
+                    mediaPlayer.play();
+                }
             }
         });
         timeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             double currentTime = mediaPlayer.getCurrentTime().toSeconds();
-            if (Math.abs(currentTime - newValue.doubleValue()) > 0.5){
+            if (Math.abs(currentTime - newValue.doubleValue()) > 0.5) {
                 mediaPlayer.seek(Duration.seconds(newValue.doubleValue()));
-                currentTimeLabel.setText(getTime(Duration.seconds(newValue.doubleValue())));
+                currentTimeLabel.setText(timeFormatting(Duration.seconds(newValue.doubleValue())));
             }
         });
         mediaPlayer.currentTimeProperty().addListener((observable, oldDuration, newDuration) -> {
-            if (!timeSlider.isValueChanging()){
+            if (!timeSlider.isValueChanging()) {
                 timeSlider.setValue(newDuration.toSeconds());
-                currentTimeLabel.setText(getTime(newDuration));
+                currentTimeLabel.setText(timeFormatting(newDuration));
             }
         });
         mediaPlayer.setOnEndOfMedia(this::nextAction);
         songLabel.setText(songs.get(songNumber).getName());
-
     }
-    @FXML void nextAction() {
-        if(songNumber == songs.size() - 1){
+
+    @FXML
+    void nextAction() {
+        if (songNumber == songs.size() - 1) {
             songNumber = 0;
-        }else{
+        } else {
             songNumber++;
         }
-        stopAction();
-        mediaLoader();
+        pauseAction();
+        load(songs.get(songNumber).toURI().toString());
         startAction();
     }
 
-    @FXML void previousAction() {
-        if(songNumber == 0){
-            songNumber = songs.size() - 1;
-        }else{
-            songNumber--;
+    @FXML
+    void previousAction() {
+        if (mediaPlayer.getCurrentTime().toSeconds() < 2.5){
+            if (songNumber == 0) {
+                songNumber = songs.size() - 1;
+            } else {
+                songNumber--;
+            }
+            pauseAction();
+            load(songs.get(songNumber).toURI().toString());
+            startAction();
+        } else {
+            mediaPlayer.seek(Duration.seconds(0.0));
         }
-        stopAction();
-        mediaLoader();
-        startAction();
     }
 
-    @FXML void replayAction() {
-        mediaPlayer.seek(Duration.seconds(0.0));
+    @FXML
+    void loopAction() {
+        mediaPlayer.setOnEndOfMedia(() -> mediaPlayer.seek(Duration.seconds(0.0)));
     }
 
-    @FXML void startStopAction() {
-        if(mediaPlayer.getStatus().toString().equals("STALLED")) {
-            stopAction();
+    @FXML
+    void volumeAction() {
+
+    }
+
+    @FXML
+    void startStopAction() {
+        if (mediaPlayer.getStatus().toString().equals("STALLED")) {
+            pauseAction();
         } else {
             if (!mediaPlayer.getStatus().toString().equals("PLAYING")) {
                 startAction();
             } else {
-                stopAction();
+                pauseAction();
             }
         }
     }
-    private void startAction(){
+
+    private void startAction() {
         mediaPlayer.play();
+        isPlaying = true;
     }
-    private void stopAction(){
+
+    private void pauseAction() {
         mediaPlayer.pause();
+        isPlaying = false;
     }
-    public String getTime(Duration time){
+
+    public String timeFormatting(Duration time) {
         int minutes = (int) time.toMinutes();
         int seconds = (int) time.toSeconds();
 
-        if (seconds > 59){
+        if (seconds > 59) {
             seconds = seconds % 60;
         }
-        if(minutes > 59){
+        if (minutes > 59) {
             minutes = minutes % 60;
         }
-        if(minutes > 0){
+        if (minutes > 0) {
             return String.format("%02d:%02d", minutes, seconds);
         } else {
             return String.format("%02d", seconds);
         }
     }
 
-   //Debug methods
-    @FXML void infoAction() {
+    //Debug methods
+    @FXML
+    void infoAction() {
         System.out.println(mediaPlayer.getStatus());
         System.out.println(media.getDuration());
         System.out.println(mediaPlayer.getCurrentTime());
         System.out.println(mediaPlayer.getStopTime());
-
     }
 
-    @FXML void debugAction(){
+    @FXML
+    void debugAction() {
     }
 }
