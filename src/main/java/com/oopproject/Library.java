@@ -15,6 +15,26 @@ public class Library {
     private final ConcurrentHashMap<String, Playlist> playlists = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, Album> albums = new ConcurrentHashMap<>();
 
+    public int getLibrarySize() {
+        return songs.size();
+    }
+
+    public int getNumberOfPlaylists()   {
+        return playlists.size();
+    }
+
+    public int getNumberOfAlbums()  {
+        return albums.size();
+    }
+
+    public Playlist getPlaylist(String name)    {
+        return playlists.get(name);
+    }
+
+    public Album getAlbum(String name)  {
+        return albums.get(name);
+    }
+
     public Library(Properties props, boolean isFirstSetup) {
         this.properties = props;
         File directory = new File(properties.getProperty("libraryFolder"));
@@ -22,7 +42,7 @@ public class Library {
 
         if (!isFirstSetup)  {
             new Library(files);
-        }   else {
+        } else {
             files.stream()
                     .sorted()
                     .collect(Collectors.toCollection(() -> files));
