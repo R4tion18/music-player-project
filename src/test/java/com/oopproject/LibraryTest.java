@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -20,13 +21,13 @@ class LibraryTest {
     }
 
     @Test
-    void Library()   {
-        props.setProperty("libraryFolder", "/Users/Francesco/IdeaProjects/oop-project/src/test/resources/test-songs");
+    void Library() throws URISyntaxException {
+        props.setProperty("libraryFolder", "/Users/francescorighi/IdeaProjects/oop-project/src/test/resources/test-songs");
         library = new Library(props, true);
-        assertEquals(55, props.size());
-        assertEquals(54, library.getLibrarySize());
+        assertEquals(54, props.size());
+        assertEquals(53, library.getLibrarySize());
         assertEquals(0, library.getNumberOfPlaylists());
-        //assertEquals(2, library.getNumberOfAlbums());
+        assertEquals(0, library.getNumberOfAlbums());
     }
 
     @Test

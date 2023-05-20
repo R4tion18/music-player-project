@@ -4,6 +4,7 @@ import javafx.fxml.Initializable;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
 import java.io.File;
@@ -45,6 +46,10 @@ public class PlayerController implements Initializable {
     //    isFirstSetup = true;
     //  }
 
-        Library library = new Library(playerProperties, isFirstSetup);
+        try {
+            Library library = new Library(playerProperties, isFirstSetup);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

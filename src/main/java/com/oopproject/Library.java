@@ -3,6 +3,8 @@ package com.oopproject;
 import javafx.scene.media.Media;
 
 import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -27,6 +29,10 @@ public class Library {
         return albums.size();
     }
 
+    public CopyOnWriteArrayList<File> getFiles(File directory)   {
+        return new CopyOnWriteArrayList<>(List.of(Objects.requireNonNull(directory.listFiles())));
+    }
+
     public Playlist getPlaylist(String name)    {
         return playlists.get(name);
     }
@@ -35,56 +41,58 @@ public class Library {
         return albums.get(name);
     }
 
-    public Library(Properties props, boolean isFirstSetup) {
-        this.properties = props;
-        File directory = new File(properties.getProperty("libraryFolder"));
-        CopyOnWriteArrayList<File> files = new CopyOnWriteArrayList<>(List.of(Objects.requireNonNull(directory.listFiles())));
+    public String getSong(int index) {
+        return songs.get(index);
+    }
+
+    public Library(Properties properties, boolean isFirstSetup) throws URISyntaxException {
+        this.properties = properties;
+        File directory = new File(new URI(this.properties.getProperty("libraryFolder")));
+        CopyOnWriteArrayList<File> files = getFiles(directory);
 
         if (!isFirstSetup)  {
             new Library(files);
         } else {
+            CopyOnWriteArrayList<File> sorted = new CopyOnWriteArrayList<>();
             files.stream()
                     .sorted()
-                    .collect(Collectors.toCollection(() -> files));
+                    .collect(Collectors.toCollection(() -> sorted));
 
-            IntStream
-                    .range(0, files.size())
-                    .forEachOrdered(i -> addNewSong(files.get(i).getAbsolutePath(), i));
+            IntStream.range(0, sorted.size())
+                    .forEachOrdered(i -> addNewSong(Song.getStringFromFile(sorted.get(i)), i));
         }
     }
 
     public Library(CopyOnWriteArrayList<File> files) {
         files.forEach(file -> {
-            if (Song.getIndex(file.getAbsolutePath()).matches("")) {
-                addNewSong(file.getAbsolutePath(), properties.size());
+            if (Song.getIndexString(file) == null) {    //look over with new library
+                addNewSong(Song.getStringFromFile(file), properties.size());
             }
-            Arrays.stream(properties.getProperty(Song.getIndex(file.getAbsolutePath())).split("\n"))
+            Arrays.stream(properties.getProperty(Song.getIndexString(file)).split("\n"))    //look over with new library
                     .forEach(playlist -> {
                         playlists.putIfAbsent(playlist, new Playlist(playlist, this));
-                        playlists.get(playlist).addSong(Integer.parseInt(Song.getIndex(file.getAbsolutePath())));
+                        playlists.get(playlist)
+                                .addSong(Song.getIndex(file));
                     });
         });
     }
 
-    public String getSong(int index) {
-        return songs.get(index);
-    }
-
-    public void addSongFile(String path)    {
-        File oldFile = new File(path);
-        File song = new File(properties.getProperty("libraryFolder"), path);
+    public void addSongFile(String uri)    {
+        File oldFile = new File(uri);
+        File song = new File(properties.getProperty("libraryFolder"), uri);
         boolean delete = oldFile.delete();
-        addNewSong(song.getAbsolutePath(), properties.size());
+        addNewSong(Song.getStringFromFile(song), properties.size());
     }
 
-    public void addNewSong(String path, int index)  {
-        Song.setIndex(path, index);
+    public void addNewSong(String uri, int index)  {
+        Song.setIndex(uri, index);
         properties.setProperty(String.valueOf(index), "");
-        songs.put(index, path);
-        String album = new Media(path).getMetadata().get("album").toString();
-        if (!album.matches("")) {
-            albums.putIfAbsent(album, new Album(new Media(path).getMetadata().get("album artist").toString(), album, this));
-            albums.get(album).addSong(Integer.parseInt(Song.getIndex(path)));
+        songs.put(index, uri);
+
+        Object album = new Media(uri).getMetadata().get("album");
+        if (!(album == null)) {
+            albums.putIfAbsent(album.toString(), new Album(new Media(uri).getMetadata().get("album artist").toString(), album.toString(), this));
+            albums.get(album.toString()).addSong(Integer.parseInt(Song.getIndexString(uri)));
         }
     }
 
