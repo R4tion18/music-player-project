@@ -4,10 +4,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 
 import java.net.URL;
-import java.util.*;
 import java.io.File;
 import java.util.ResourceBundle;
-import java.util.stream.IntStream;
 
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
@@ -24,40 +22,74 @@ public class PlayerController implements Initializable {
     @FXML Slider timeSlider;
     @FXML Slider volumeSlider;
 
-    private File directory;
-    private File[] files;
-    private ArrayList<File> songs;
+
     private Media media;
     private MediaPlayer mediaPlayer;
-    private int songNumber;
-    private ArrayList<Integer> songSequence;
+    private SongQueue songs;
     private boolean isPlaying = false;
     private  boolean isLooping = false;
-    private boolean isRandom = false;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
-        //Testing code Start
-        songs = new ArrayList<>();
-        directory = new File("C:\\Users\\rikiv\\OneDrive\\Desktop\\MediaMusic");
-        files = directory.listFiles();
-        if (files != null) {
-            songs.addAll(Arrays.asList(files));
-        }
-        //Testing code End
-
+        //Testing code start
+        songs = new SongQueue(new File("C:\\Users\\rikiv\\OneDrive\\Desktop\\MediaMusic"));
+        //Testing code stop
         volumeSlider.setMax(1.0);
         volumeSlider.setValue(0.5);
         volumeLabel.setText("50%");
-        loadSong(songs.get(songNumber).toURI().toString());
+        loadSong(songs.getSong());
+    }
+    @FXML
+    void nextAction() {
+        pauseAction();
+        loadSong(songs.getNextSong());
+        startAction();
+    }
+    @FXML
+    void previousAction() {
+        if (mediaPlayer.getCurrentTime().toSeconds() < 2.5){
+            pauseAction();
+            loadSong(songs.getPreviousSong());
+            startAction();
+        } else {
+            mediaPlayer.seek(Duration.seconds(0.0));
+        }
+    }
+    @FXML
+    void loopAction() {
+        if(!isLooping) {
+            mediaPlayer.setOnEndOfMedia(() -> mediaPlayer.seek(Duration.seconds(0.0)));
+            isLooping = true;
+        }else{
+            mediaPlayer.setOnEndOfMedia(this::nextAction);
+            isLooping = false;
+        }
+    }
+    @FXML
+    void randomAction(){
+        songs.setRandom();
+    }
+    @FXML
+    void volumeAction() {
+
+    }
+    @FXML
+    void startStopAction() {
+        if (mediaPlayer.getStatus().toString().equals("STALLED")) {
+            pauseAction();
+        } else {
+            if (!mediaPlayer.getStatus().toString().equals("PLAYING")) {
+                startAction();
+            } else {
+                pauseAction();
+            }
+        }
     }
 
     private void loadSong(String songName) {
         media = new Media(songName);
         mediaPlayer = new MediaPlayer(media);
         mediaPlayer.volumeProperty().bindBidirectional(volumeSlider.valueProperty());
-
         volumeSlider.valueChangingProperty().addListener((observable, wasChanging, isChanging) ->
                 volumeLabel.setText(String.format("%d", (int) (volumeSlider.getValue() * 100)) + "%"));
 
@@ -93,78 +125,9 @@ public class PlayerController implements Initializable {
                 currentTimeLabel.setText(timeFormatting(newDuration));
             }
         });
+        isLooping = false;
         mediaPlayer.setOnEndOfMedia(this::nextAction);
-        songLabel.setText(songs.get(nextSongIndex(songNumber)).getName());
-    }
-
-    @FXML
-    void nextAction() {
-        if (nextSongIndex(songNumber) == songs.size() - 1) {
-            songNumber = 0;
-        } else {
-            songNumber++;
-        }
-        pauseAction();
-        loadSong(songs.get(nextSongIndex(songNumber)).toURI().toString());
-        startAction();
-    }
-
-    @FXML
-    void previousAction() {
-        if (mediaPlayer.getCurrentTime().toSeconds() < 2.5){
-            if (nextSongIndex(songNumber) == 0) {
-                songNumber = songs.size() - 1;
-            } else {
-                songNumber--;
-            }
-            pauseAction();
-            loadSong(songs.get(nextSongIndex(songNumber)).toURI().toString());
-            startAction();
-        } else {
-            mediaPlayer.seek(Duration.seconds(0.0));
-        }
-    }
-
-    @FXML
-    void loopAction() {
-        if(!isLooping) {
-            mediaPlayer.setOnEndOfMedia(() -> mediaPlayer.seek(Duration.seconds(0.0)));
-            isLooping = true;
-        }else{
-            mediaPlayer.setOnEndOfMedia(this::nextAction);
-            isLooping = false;
-        }
-    }
-    @FXML
-    void randomAction(){
-        if(!isRandom) {
-            songSequence = new ArrayList<>(songs.size());
-            IntStream.
-                    range(0, songs.size()).
-                    forEach(i -> songSequence.add(i));
-            Collections.shuffle(songSequence);
-            isRandom = true;
-        }else{
-            isRandom = false;
-        }
-    }
-
-    @FXML
-    void volumeAction() {
-
-    }
-
-    @FXML
-    void startStopAction() {
-        if (mediaPlayer.getStatus().toString().equals("STALLED")) {
-            pauseAction();
-        } else {
-            if (!mediaPlayer.getStatus().toString().equals("PLAYING")) {
-                startAction();
-            } else {
-                pauseAction();
-            }
-        }
+        songLabel.setText(songs.getName());
     }
 
     private void startAction() {
@@ -177,23 +140,15 @@ public class PlayerController implements Initializable {
         isPlaying = false;
     }
 
-    private int nextSongIndex(int songRealIndex){
-        if(!isRandom){
-            return songRealIndex;
-        }else{
-            return songSequence.get(songRealIndex);
-        }
-    }
-
     public String timeFormatting(Duration time) {
         int minutes = (int) time.toMinutes();
         int seconds = (int) time.toSeconds();
 
         if (seconds > 59) {
-            seconds = seconds % 60;
+            seconds %= 60;
         }
         if (minutes > 59) {
-            minutes = minutes % 60;
+            minutes %= 60;
         }
         if (minutes > 0) {
             return String.format("%02d:%02d", minutes, seconds);
@@ -212,8 +167,8 @@ public class PlayerController implements Initializable {
 
     @FXML
     void debugAction() {
-        System.out.println(songSequence);
-        System.out.println(songNumber);
-        System.out.println(nextSongIndex(songNumber));
+        System.out.println(songs.getSongSequence());
+        System.out.println(songs.getSongNumber());
+        System.out.println(songs.getSongSequence().get(songs.getSongNumber()));
     }
 }
