@@ -7,6 +7,7 @@ import java.net.URL;
 import java.util.*;
 import java.io.File;
 import java.util.ResourceBundle;
+import java.util.stream.IntStream;
 
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
@@ -29,7 +30,10 @@ public class PlayerController implements Initializable {
     private Media media;
     private MediaPlayer mediaPlayer;
     private int songNumber;
+    private ArrayList<Integer> songSequence;
     private boolean isPlaying = false;
+    private  boolean isLooping = false;
+    private boolean isRandom = false;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -46,16 +50,17 @@ public class PlayerController implements Initializable {
         volumeSlider.setMax(1.0);
         volumeSlider.setValue(0.5);
         volumeLabel.setText("50%");
-        load(songs.get(songNumber).toURI().toString());
+        loadSong(songs.get(songNumber).toURI().toString());
     }
 
-    private void load(String songName) {
+    private void loadSong(String songName) {
         media = new Media(songName);
         mediaPlayer = new MediaPlayer(media);
         mediaPlayer.volumeProperty().bindBidirectional(volumeSlider.valueProperty());
 
         volumeSlider.valueChangingProperty().addListener((observable, wasChanging, isChanging) ->
                 volumeLabel.setText(String.format("%d", (int) (volumeSlider.getValue() * 100)) + "%"));
+
         volumeSlider.valueProperty().addListener((observable, oldValue, newValue) ->
                 volumeLabel.setText(String.format("%d", (int) (newValue.doubleValue() * 100)) + "%"));
 
@@ -94,26 +99,26 @@ public class PlayerController implements Initializable {
 
     @FXML
     void nextAction() {
-        if (songNumber == songs.size() - 1) {
+        if (nextSongIndex(songNumber) == songs.size() - 1) {
             songNumber = 0;
         } else {
             songNumber++;
         }
         pauseAction();
-        load(songs.get(songNumber).toURI().toString());
+        loadSong(songs.get(nextSongIndex(songNumber)).toURI().toString());
         startAction();
     }
 
     @FXML
     void previousAction() {
         if (mediaPlayer.getCurrentTime().toSeconds() < 2.5){
-            if (songNumber == 0) {
+            if (nextSongIndex(songNumber) == 0) {
                 songNumber = songs.size() - 1;
             } else {
                 songNumber--;
             }
             pauseAction();
-            load(songs.get(songNumber).toURI().toString());
+            loadSong(songs.get(nextSongIndex(songNumber)).toURI().toString());
             startAction();
         } else {
             mediaPlayer.seek(Duration.seconds(0.0));
@@ -122,7 +127,26 @@ public class PlayerController implements Initializable {
 
     @FXML
     void loopAction() {
-        mediaPlayer.setOnEndOfMedia(() -> mediaPlayer.seek(Duration.seconds(0.0)));
+        if(!isLooping) {
+            mediaPlayer.setOnEndOfMedia(() -> mediaPlayer.seek(Duration.seconds(0.0)));
+            isLooping = true;
+        }else{
+            mediaPlayer.setOnEndOfMedia(this::nextAction);
+            isLooping = false;
+        }
+    }
+    @FXML
+    void randomAction(){
+        if(!isRandom) {
+            songSequence = new ArrayList<>(songs.size());
+            IntStream.
+                    range(0, songs.size()).
+                    forEach(i -> songSequence.add(i));
+            Collections.shuffle(songSequence);
+            isRandom = true;
+        }else{
+            isRandom = false;
+        }
     }
 
     @FXML
@@ -151,6 +175,14 @@ public class PlayerController implements Initializable {
     private void pauseAction() {
         mediaPlayer.pause();
         isPlaying = false;
+    }
+
+    private int nextSongIndex(int songRealIndex){
+        if(!isRandom){
+            return songRealIndex;
+        }else{
+            return songSequence.get(songRealIndex);
+        }
     }
 
     public String timeFormatting(Duration time) {
