@@ -94,7 +94,7 @@ public class PlayerController implements Initializable {
             }
         });
         mediaPlayer.setOnEndOfMedia(this::nextAction);
-        songLabel.setText(songs.get(songNumber).getName());
+        songLabel.setText(songs.get(nextSongIndex(songNumber)).getName());
     }
 
     @FXML
@@ -208,10 +208,12 @@ public class PlayerController implements Initializable {
         System.out.println(mediaPlayer.getStatus());
         System.out.println(media.getDuration());
         System.out.println(mediaPlayer.getCurrentTime());
-        System.out.println(mediaPlayer.getStopTime());
     }
 
     @FXML
     void debugAction() {
+        System.out.println(songSequence);
+        System.out.println(songNumber);
+        System.out.println(nextSongIndex(songNumber));
     }
 }
