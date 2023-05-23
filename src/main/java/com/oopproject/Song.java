@@ -78,6 +78,21 @@ public class Song {
         return Integer.parseInt(getIndexString(file));
     }
 
+    public static void setConsecutive(File file, Integer index)    {
+        Mp3File song = getMp3File(file);
+
+        assert song != null;
+        ID3v2 tag;
+        if (song.hasId3v2Tag()) {
+            tag = song.getId3v2Tag();
+        }   else {
+            tag = new ID3v24Tag();
+            song.setId3v2Tag(tag);
+        }
+
+        tag.setComment(tag.getComment() + "," + index.toString());
+    }
+
     public static String getString(URI uri)  {
         return uri.toString();
     }
@@ -168,5 +183,29 @@ public class Song {
 
     public static String getArtist(File file)    {
         return getMp3File(file).getId3v2Tag().getArtist();
+    }
+
+    public static int getYear(String uri)   {
+        return getYear(getFile(uri));
+    }
+
+    public static int getYear(URI uri)  {
+        return getYear(getFile(uri));
+    }
+
+    public static int getYear(File file)    {
+        return Integer.parseInt(getMp3File(file).getId3v2Tag().getYear());
+    }
+
+    public static int getTrack(String uri)  {
+        return getTrack(getFile(uri));
+    }
+
+    public static int getTrack(URI uri)  {
+        return getTrack(getFile(uri));
+    }
+
+    public static int getTrack(File file)   {
+        return Integer.parseInt(getMp3File(file).getId3v2Tag().getTrack());
     }
 }

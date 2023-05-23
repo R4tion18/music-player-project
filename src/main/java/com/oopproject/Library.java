@@ -51,9 +51,14 @@ public class Library {
         return songs.get(index);
     }
 
-    public Library(Properties properties, boolean isFirstSetup) throws URISyntaxException {
+    public Library(Properties properties, boolean isFirstSetup) {
         this.properties = properties;
-        File directory = new File(new URI(this.properties.getProperty("libraryFolder")));
+        File directory = null;
+        try {
+            directory = new File(new URI(this.properties.getProperty("libraryFolder")));
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);  //change exception handling
+        }
         CopyOnWriteArrayList<File> files = getFiles(directory);
 
         if (!isFirstSetup)  {
@@ -83,8 +88,30 @@ public class Library {
         });
     }
 
+    public void addFromFolder(String folderUri) {
+        File folder = null;
+        try {
+            folder = new File(new URI(folderUri));
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);  //change exception handling
+        }
+
+        addMultipleFiles(new CopyOnWriteArrayList<File>(Objects.requireNonNull(folder.listFiles())));
+    }
+
+    public void addMultipleFiles(CopyOnWriteArrayList<File> files)  {
+        for (File file : files) {
+            addSongFile(file.toURI().toString());
+        }
+    }
+
     public void addSongFile(String uri)    {
-        File oldFile = new File(uri);
+        File oldFile = null;
+        try {
+            oldFile = new File(new URI(uri));
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);  //change exception handling
+        }
         File song = new File(properties.getProperty("libraryFolder"), uri);
         boolean delete = oldFile.delete();
         addNewSong(Song.getString(song), properties.size());
@@ -97,7 +124,7 @@ public class Library {
 
         String album = Song.getAlbum(uri);
         if (!(album == null)) {
-            albums.putIfAbsent(album, new Album(Song.getAlbumArtist(uri), album, this));
+            albums.putIfAbsent(album, new Album(album, this));
             albums.get(album).addSong(Song.getIndex(uri));
         }
     }

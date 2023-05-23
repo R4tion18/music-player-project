@@ -27,7 +27,7 @@ class LibraryTest {
         assertEquals(54, props.size());
         assertEquals(53, library.getLibrarySize());
         assertEquals(0, library.getNumberOfPlaylists());
-        assertEquals(0, library.getNumberOfAlbums());
+        assertEquals(2, library.getNumberOfAlbums());
     }
 
     @Test

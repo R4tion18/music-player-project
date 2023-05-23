@@ -5,10 +5,11 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class SongQueue {
     private final CopyOnWriteArrayList<Integer> queue;
     private CopyOnWriteArrayList<Integer> order;
-    private Library library;
+    private final Library library;
 
-    public SongQueue(CopyOnWriteArrayList<Integer> queue) {
+    public SongQueue(CopyOnWriteArrayList<Integer> queue, Library library) {
         this.queue = queue;
+        this.library = library;
     }
 
     public void addTop(int index)  {

@@ -8,12 +8,28 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class Playlist {
     private String name;
     private Duration totalDuration;
-    private final CopyOnWriteArrayList<Integer> songs = new CopyOnWriteArrayList<>();
-    private final Library library;
+    protected CopyOnWriteArrayList<Integer> songs = new CopyOnWriteArrayList<>();
+    protected final Library library;
 
     public Playlist(String name, Library library) {
         this.name = name;
         this.library = library;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public CopyOnWriteArrayList<Integer> getSongs() {
+        return songs;
+    }
+
+    public Library getLibrary() {
+        return library;
     }
 
     public void addSong(int index)  {
@@ -27,7 +43,7 @@ public class Playlist {
     }
 
     public void play(boolean shuffle)   {
-        SongQueue queue = new SongQueue(songs);
+        SongQueue queue = new SongQueue(getSongs(), getLibrary());
         queue.play(shuffle);
     }
 
