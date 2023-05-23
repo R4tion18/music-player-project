@@ -32,7 +32,7 @@ public class PlayerController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         //Testing code start
-        songs = new SongQueue(new File("C:\\Users\\rikiv\\OneDrive\\Desktop\\MediaMusic"));
+        songs = new SongQueue(new File("HollowKnightTestPlaylist\\"));
         //Testing code stop
         volumeSlider.setMax(1.0);
         volumeSlider.setValue(0.5);

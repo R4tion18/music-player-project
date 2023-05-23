@@ -7,8 +7,13 @@ import java.util.Collections;
 import java.util.stream.IntStream;
 
 public class SongQueue {
+    //This shit can be changed, songs must be a list of something (String, File, URI) that represent
+    //the song queue and can be converted to URI.toString for the media player
     private File[] files;
     private ArrayList<File> songs;
+
+
+  //This shit is important and cannot be changed
     private int songNumber = 0;
     private ArrayList<Integer> songSequence;
     private boolean isRandom = false;
@@ -21,7 +26,7 @@ public class SongQueue {
         if (files != null) {
             songs.addAll(Arrays.asList(files));
         }
-        songSequence = new ArrayList<>(songs.size());
+        songSequence = new ArrayList<>();
         IntStream.
                 range(0, songs.size()).
                 forEach(i -> songSequence.add(i));
@@ -48,7 +53,7 @@ public class SongQueue {
         } else {
             songNumber++;
         }
-        return songs.get(nextSongIndex(songNumber)).toURI().toString();
+        return this.getSong();
     }
     public String getPreviousSong(){
         if (songNumber == 0) {
@@ -56,7 +61,7 @@ public class SongQueue {
         } else {
             songNumber--;
         }
-        return songs.get(nextSongIndex(songNumber)).toURI().toString();
+        return this.getSong();
     }
 
     public void setRandom() {
