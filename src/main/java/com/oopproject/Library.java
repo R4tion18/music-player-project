@@ -1,7 +1,5 @@
 package com.oopproject;
 
-import javafx.scene.media.Media;
-
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -19,6 +17,14 @@ public class Library {
 
     public int getLibrarySize() {
         return songs.size();
+    }
+
+    public int getHighestIndex()    {
+        return properties.stringPropertyNames()
+                .stream()
+                .mapToInt(Integer::parseInt)
+                .max()
+                .orElse(0);
     }
 
     public int getNumberOfPlaylists()   {
@@ -59,14 +65,14 @@ public class Library {
                     .collect(Collectors.toCollection(() -> sorted));
 
             IntStream.range(0, sorted.size())
-                    .forEachOrdered(i -> addNewSong(Song.getStringFromFile(sorted.get(i)), i));
+                    .forEachOrdered(i -> addNewSong(Song.getString(sorted.get(i)), i));
         }
     }
 
     public Library(CopyOnWriteArrayList<File> files) {
         files.forEach(file -> {
-            if (Song.getIndexString(file) == null) {    //look over with new library
-                addNewSong(Song.getStringFromFile(file), properties.size());
+            if (Song.getIndexString(file) == null) {
+                addNewSong(Song.getString(file), getHighestIndex());
             }
             Arrays.stream(properties.getProperty(Song.getIndexString(file)).split("\n"))    //look over with new library
                     .forEach(playlist -> {
@@ -81,7 +87,7 @@ public class Library {
         File oldFile = new File(uri);
         File song = new File(properties.getProperty("libraryFolder"), uri);
         boolean delete = oldFile.delete();
-        addNewSong(Song.getStringFromFile(song), properties.size());
+        addNewSong(Song.getString(song), properties.size());
     }
 
     public void addNewSong(String uri, int index)  {
@@ -89,10 +95,10 @@ public class Library {
         properties.setProperty(String.valueOf(index), "");
         songs.put(index, uri);
 
-        Object album = new Media(uri).getMetadata().get("album");
+        String album = Song.getAlbum(uri);
         if (!(album == null)) {
-            albums.putIfAbsent(album.toString(), new Album(new Media(uri).getMetadata().get("album artist").toString(), album.toString(), this));
-            albums.get(album.toString()).addSong(Integer.parseInt(Song.getIndexString(uri)));
+            albums.putIfAbsent(album, new Album(Song.getAlbumArtist(uri), album, this));
+            albums.get(album).addSong(Song.getIndex(uri));
         }
     }
 
@@ -100,8 +106,8 @@ public class Library {
         Arrays.stream(properties.getProperty(String.valueOf(index)).split("\n"))
                 .forEach(playlist -> playlists.get(playlist).removeSong(index));
 
-        String album = new Media(songs.get(index)).getMetadata().get("album").toString();
-        if (!album.matches("")) {
+        String album = Song.getAlbum(getSong(index));
+        if (!(album == null)) {
             albums.get(album).removeSong(index);
         }
 

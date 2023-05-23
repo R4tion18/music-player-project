@@ -26,6 +26,11 @@ public class Playlist {
         totalDuration = totalDuration.subtract(getMedia(index).getDuration());
     }
 
+    public void play(boolean shuffle)   {
+        SongQueue queue = new SongQueue(songs);
+        queue.play(shuffle);
+    }
+
     public Media getMedia(int index)    {
         return new Media(library.getSong(index));
     }

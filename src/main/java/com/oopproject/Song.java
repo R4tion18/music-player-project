@@ -2,8 +2,6 @@ package com.oopproject;
 
 import com.mpatric.mp3agic.*;
 
-import javafx.scene.media.Media;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -11,11 +9,11 @@ import java.net.URISyntaxException;
 
 public class Song {
     public static Mp3File getMp3File(String uri)    {
-        return getMp3File(getFileFromString(uri));
+        return getMp3File(getFile(uri));
     }
 
     public static Mp3File getMp3File(URI uri)   {
-        return getMp3File(getFileFromURI(uri));
+        return getMp3File(getFile(uri));
     }
 
     public static Mp3File getMp3File(File file)    {
@@ -35,11 +33,11 @@ public class Song {
     }
 
     public static void setIndex(String uri, Integer index)  {
-        setIndex(getFileFromString(uri), index);
+        setIndex(getFile(uri), index);
     }
 
     public static void setIndex(URI uri, Integer index) {
-        setIndex(getFileFromURI(uri), index);
+        setIndex(getFile(uri), index);
     }
 
     public static void setIndex(File file, Integer index) {
@@ -57,42 +55,42 @@ public class Song {
     }
 
     public static String getIndexString(String uri)    {
-        return getIndexString(getFileFromString(uri));
+        return getIndexString(getFile(uri));
     }
 
     public static String getIndexString(URI uri)    {
-        return getIndexString(getFileFromURI(uri));
+        return getIndexString(getFile(uri));
     }
 
     public static String getIndexString(File file)    {
-        return getMp3File(file).getId3v2Tag().getComment(); //fix for consecutives
+        return getMp3File(file).getId3v2Tag().getComment().split(",")[0];
     }
 
     public static int getIndex(String uri) {
-        return getIndex(getFileFromString(uri));
+        return getIndex(getFile(uri));
     }
 
     public static int getIndex(URI uri) {
-        return getIndex(getFileFromURI(uri));
+        return getIndex(getFile(uri));
     }
 
     public static int getIndex(File file)  {
         return Integer.parseInt(getIndexString(file));
     }
 
-    public static String getStringFromURI(URI uri)  {
+    public static String getString(URI uri)  {
         return uri.toString();
     }
 
-    public static String getStringFromFile(File file)    {
-        return getURIFromFile(file).toString();
+    public static String getString(File file)    {
+        return getURI(file).toString();
     }
 
-    public static URI getURIFromFile(File file) {
+    public static URI getURI(File file) {
         return file.toURI();
     }
 
-    public static URI getURIFromString(String uri) {
+    public static URI getURI(String uri) {
         try {
             return new URI(uri);
         } catch (URISyntaxException e) {
@@ -100,11 +98,11 @@ public class Song {
         }
     }
 
-    public static File getFileFromURI(URI uri)  {
+    public static File getFile(URI uri)  {
         return new File(uri);
     }
 
-    public static File getFileFromString(String uri) {
+    public static File getFile(String uri) {
         try {
             return new File(new URI(uri));
         } catch (URISyntaxException e) {
@@ -112,16 +110,60 @@ public class Song {
         }
     }
 
+    public static void play(String uri)   {
+        play(getFile(uri));
+    }
+
+    public static void play(URI uri)    {
+        play(getFile(uri));
+    }
+
+    public static void play(File file)  {
+
+    }
+
+    public static String getTitle(String uri)   {
+        return getTitle(getFile(uri));
+    }
+
+    public static String getTitle(URI uri) {
+        return getTitle(getFile(uri));
+    }
+
     public static String getTitle(File file) {
         return getMp3File(file).getId3v2Tag().getTitle();
+    }
+
+    public static String getAlbum(String uri)   {
+        return getAlbum(getFile(uri));
+    }
+
+    public static String getAlbum(URI uri)  {
+        return getAlbum(getFile(uri));
     }
 
     public static String getAlbum(File file) {
         return getMp3File(file).getId3v2Tag().getAlbum();
     }
 
+    public static String getAlbumArtist(String uri) {
+        return getAlbumArtist(getFile(uri));
+    }
+
+    public static String getAlbumArtist(URI uri)    {
+        return getAlbumArtist(getFile(uri));
+    }
+
     public static String getAlbumArtist(File file)   {
         return getMp3File(file).getId3v2Tag().getAlbumArtist();
+    }
+
+    public static String getArtist(String uri)  {
+        return getArtist(getFile(uri));
+    }
+
+    public static String getArtist(URI uri) {
+        return getArtist(getFile(uri));
     }
 
     public static String getArtist(File file)    {
