@@ -46,10 +46,6 @@ public class PlayerController implements Initializable {
     //    isFirstSetup = true;
     //  }
 
-        try {
-            Library library = new Library(playerProperties, isFirstSetup);
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
-        }
+        Library library = new Library(playerProperties, isFirstSetup);
     }
 }

@@ -6,17 +6,15 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Optional;
 
-public class Song {
-    public static Mp3File getMp3File(String uri)    {
-        return getMp3File(getFile(uri));
+public record Song(File file) {
+
+    public Mp3File getMp3File() {
+        return getMp3File(file);
     }
 
-    public static Mp3File getMp3File(URI uri)   {
-        return getMp3File(getFile(uri));
-    }
-
-    public static Mp3File getMp3File(File file)    {
+    public static Mp3File getMp3File(File file) {
         Mp3File mp3 = null;
         try {
             mp3 = new Mp3File(file);
@@ -32,73 +30,120 @@ public class Song {
         return mp3;
     }
 
-    public static void setIndex(String uri, Integer index)  {
-        setIndex(getFile(uri), index);
+    public Optional<ID3v2> getTag() {
+        return getTag(file);
     }
 
-    public static void setIndex(URI uri, Integer index) {
-        setIndex(getFile(uri), index);
+    public static Optional<ID3v2> getTag(String uri) {
+        return getTag(getFile(uri));
     }
 
-    public static void setIndex(File file, Integer index) {
-        Mp3File song = getMp3File(file);
-
-        assert song != null;
-        ID3v2 tag;
-        if (song.hasId3v2Tag()) {
-            tag = song.getId3v2Tag();
-        }   else {
-            tag = new ID3v24Tag();
-            song.setId3v2Tag(tag);
+    public static Optional<ID3v2> getTag(File file) {
+        if (getMp3File(file).hasId3v2Tag()) {
+            return Optional.of(getMp3File(file).getId3v2Tag());
         }
-        tag.setComment(index.toString());
+
+        return Optional.empty();
     }
 
-    public static String getIndexString(String uri)    {
+    public void createTag() {
+        createTag(file);
+    }
+
+    public static void createTag(String uri) {
+        createTag(getFile(uri));
+    }
+
+    public static void createTag(File file) {
+        if (getTag(file).isEmpty()) {
+            getMp3File(file).setId3v2Tag(new ID3v24Tag());
+        }
+    }
+
+    public void setIndex(Integer index) {
+        setIndex(file, index);
+    }
+
+    public static void setIndex(String uri, Integer index) {
+        setIndex(getFile(uri), index);
+    }
+
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
+    public static void setIndex(File file, Integer index) {
+        createTag(file);
+        getTag(file).get().setComment(index.toString());
+    }
+
+    public String getIndexString() {
+        return getIndexString(file);
+    }
+
+    public static String getIndexString(String uri) {
         return getIndexString(getFile(uri));
     }
 
-    public static String getIndexString(URI uri)    {
-        return getIndexString(getFile(uri));
-    }
-
-    public static String getIndexString(File file)    {
+    public static String getIndexString(File file) {
         return getMp3File(file).getId3v2Tag().getComment().split(",")[0];
+    }
+
+    public int getIndex() {
+        return getIndex(file);
     }
 
     public static int getIndex(String uri) {
         return getIndex(getFile(uri));
     }
 
-    public static int getIndex(URI uri) {
-        return getIndex(getFile(uri));
-    }
-
-    public static int getIndex(File file)  {
+    public static int getIndex(File file) {
         return Integer.parseInt(getIndexString(file));
     }
 
-    public static void setConsecutive(File file, Integer index)    {
-        Mp3File song = getMp3File(file);
-
-        assert song != null;
-        ID3v2 tag;
-        if (song.hasId3v2Tag()) {
-            tag = song.getId3v2Tag();
-        }   else {
-            tag = new ID3v24Tag();
-            song.setId3v2Tag(tag);
-        }
-
-        tag.setComment(tag.getComment() + "," + index.toString());
+    public void setConsecutive(Integer index) {
+        setConsecutive(file, index);
     }
 
-    public static String getString(URI uri)  {
+    public static void setConsecutive(String uri, Integer index) {
+        setConsecutive(getFile(uri), index);
+    }
+
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
+    public static void setConsecutive(File file, Integer index) {
+        createTag(file);
+        getTag(file).get().setComment(getTag(file).get().getComment() + "," + index.toString());
+    }
+
+    public String getConsecutiveString() {
+        return getConsecutiveString(file);
+    }
+
+    public static String getConsecutiveString(String uri) {
+        return getConsecutiveString(getFile(uri));
+    }
+
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
+    public static String getConsecutiveString(File file) {
+        createTag(file);
+        return getTag(file).get().getComment().split(",")[1];
+    }
+
+    public int getConsecutive() {
+        return getConsecutive(file);
+    }
+
+    public static int getConsecutive(String uri) {
+        return getConsecutive(getFile(uri));
+    }
+
+    public static int getConsecutive(File file) {
+        return Integer.parseInt(getConsecutiveString(file));
+    }
+
+    public static String getString(URI uri) {
         return uri.toString();
     }
 
-    public static String getString(File file)    {
-        return getURI(file).toString();
+    public static String getString(File file) {
+        return getString(getURI(file));
     }
 
     public static URI getURI(File file) {
@@ -113,99 +158,91 @@ public class Song {
         }
     }
 
-    public static File getFile(URI uri)  {
+    public static File getFile(URI uri) {
         return new File(uri);
     }
 
     public static File getFile(String uri) {
-        try {
-            return new File(new URI(uri));
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);  //change exception handling
-        }
+        return getFile(getURI(uri));
     }
 
-    public static void play(String uri)   {
-        play(getFile(uri));
+    public String getTitle() {
+        return getTitle(file);
     }
 
-    public static void play(URI uri)    {
-        play(getFile(uri));
-    }
-
-    public static void play(File file)  {
-
-    }
-
-    public static String getTitle(String uri)   {
+    public static String getTitle(String uri) {
         return getTitle(getFile(uri));
     }
 
-    public static String getTitle(URI uri) {
-        return getTitle(getFile(uri));
-    }
-
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
     public static String getTitle(File file) {
-        return getMp3File(file).getId3v2Tag().getTitle();
+        createTag(file);
+        return getTag(file).get().getTitle();
     }
 
-    public static String getAlbum(String uri)   {
+    public String getAlbum() {
+        return getAlbum(file);
+    }
+
+    public static String getAlbum(String uri) {
         return getAlbum(getFile(uri));
     }
 
-    public static String getAlbum(URI uri)  {
-        return getAlbum(getFile(uri));
-    }
-
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
     public static String getAlbum(File file) {
-        return getMp3File(file).getId3v2Tag().getAlbum();
+        createTag(file);
+        return getTag(file).get().getAlbum();
+    }
+
+    public String getAlbumArtist() {
+        return getAlbumArtist(file);
     }
 
     public static String getAlbumArtist(String uri) {
         return getAlbumArtist(getFile(uri));
     }
 
-    public static String getAlbumArtist(URI uri)    {
-        return getAlbumArtist(getFile(uri));
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
+    public static String getAlbumArtist(File file) {
+        return getTag(file).get().getAlbumArtist();
     }
 
-    public static String getAlbumArtist(File file)   {
-        return getMp3File(file).getId3v2Tag().getAlbumArtist();
+    public String getArtist() {
+        return getArtist(file);
     }
 
-    public static String getArtist(String uri)  {
+    public static String getArtist(String uri) {
         return getArtist(getFile(uri));
     }
 
-    public static String getArtist(URI uri) {
-        return getArtist(getFile(uri));
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
+    public static String getArtist(File file) {
+        return getTag(file).get().getArtist();
     }
 
-    public static String getArtist(File file)    {
-        return getMp3File(file).getId3v2Tag().getArtist();
+    public int getYear() {
+        return getYear(file);
     }
 
-    public static int getYear(String uri)   {
+    public static int getYear(String uri) {
         return getYear(getFile(uri));
     }
 
-    public static int getYear(URI uri)  {
-        return getYear(getFile(uri));
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
+    public static int getYear(File file) {
+        return Integer.parseInt(getTag(file).get().getYear());
     }
 
-    public static int getYear(File file)    {
-        return Integer.parseInt(getMp3File(file).getId3v2Tag().getYear());
+    public int getTrack() {
+        return getTrack(file);
     }
 
-    public static int getTrack(String uri)  {
+    public static int getTrack(String uri) {
         return getTrack(getFile(uri));
     }
 
-    public static int getTrack(URI uri)  {
-        return getTrack(getFile(uri));
-    }
-
-    public static int getTrack(File file)   {
-        return Integer.parseInt(getMp3File(file).getId3v2Tag().getTrack());
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
+    public static int getTrack(File file) {
+        return Integer.parseInt(getTag(file).get().getTrack());
     }
 }
