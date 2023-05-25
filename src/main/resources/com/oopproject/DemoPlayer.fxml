@@ -37,7 +37,7 @@
     <bottom>
         <AnchorPane prefHeight="202.0" prefWidth="574.0" BorderPane.alignment="CENTER">
             <children>
-                <Button layoutX="152.0" layoutY="53.0" mnemonicParsing="false" onAction="#startStopAction" prefHeight="40.0" prefWidth="97.0" text="Start">
+                <Button layoutX="152.0" layoutY="53.0" mnemonicParsing="false" onAction="#playStopAction" prefHeight="40.0" prefWidth="97.0" text="Start">
                     <font>
                         <Font size="18.0" />
                     </font>
@@ -57,7 +57,7 @@
                         <Font size="18.0" />
                     </font>
                 </Button>
-                <Button layoutX="289.0" layoutY="101.0" mnemonicParsing="false" onAction="#randomAction" prefHeight="40.0" prefWidth="97.0" text="Random">
+                <Button layoutX="289.0" layoutY="101.0" mnemonicParsing="false" onAction="#shuffleAction" prefHeight="40.0" prefWidth="97.0" text="Random">
                     <font>
                         <Font size="18.0" />
                     </font>
@@ -88,13 +88,13 @@
    <right>
       <AnchorPane prefHeight="387.0" prefWidth="306.0" BorderPane.alignment="CENTER">
          <children>
-                <Button layoutX="94.0" layoutY="48.0" mnemonicParsing="false" onAction="#volumeAction" prefHeight="40.0" prefWidth="97.0" text="Volume">
+                <Button fx:id="volumeButton" layoutX="95.0" layoutY="48.0" mnemonicParsing="false" onAction="#volumeAction" prefHeight="40.0" prefWidth="97.0" text="Volume">
                     <font>
                         <Font size="18.0" />
                     </font>
                 </Button>
-                <Slider fx:id="volumeSlider" layoutX="210.0" layoutY="11.0" orientation="VERTICAL" prefHeight="102.0" prefWidth="29.0" />
-                <Label fx:id="volumeLabel" alignment="CENTER" layoutX="203.0" layoutY="113.0" prefHeight="29.0" prefWidth="43.0" text="V" />
+                <Slider fx:id="volumeSlider" layoutX="192.0" layoutY="17.0" orientation="VERTICAL" prefHeight="102.0" prefWidth="29.0" visible="false" />
+                <Label fx:id="volumeLabel" alignment="CENTER" layoutX="120.0" layoutY="97.0" prefHeight="29.0" prefWidth="43.0" text="V" />
                 <Button layoutX="93.0" layoutY="174.0" mnemonicParsing="false" onAction="#infoAction" prefHeight="40.0" prefWidth="97.0" text="Info">
                     <font>
                         <Font size="18.0" />

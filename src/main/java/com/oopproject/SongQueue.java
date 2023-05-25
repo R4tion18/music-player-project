@@ -16,15 +16,21 @@ public class SongQueue {
   //This shit is important and cannot be changed
     private int songNumber = 0;
     private ArrayList<Integer> songSequence;
-    private boolean isRandom = false;
+    private boolean isShuffle = false;
 
 
 
     public SongQueue(File directory) {
         files = directory.listFiles();
         songs = new ArrayList<>();
-        if (files != null) {
-            songs.addAll(Arrays.asList(files));
+        try {
+            if (files != null) {
+                songs.addAll(Arrays.asList(files));
+            } else {
+                throw new IllegalArgumentException();
+            }
+        }catch (IllegalArgumentException e){
+            e.printStackTrace();
         }
         songSequence = new ArrayList<>();
         IntStream.
@@ -64,17 +70,18 @@ public class SongQueue {
         return this.getSong();
     }
 
-    public void setRandom() {
-        if(!isRandom){
+    public void setShuffle() {
+        if(!isShuffle){
             Collections.shuffle(songSequence);
-            isRandom = true;
+            isShuffle = true;
         } else{
-            isRandom = false;
+            songNumber = songSequence.get(songNumber);
+            isShuffle = false;
         }
     }
 
     private int nextSongIndex(int songRealIndex){
-        if(!isRandom){
+        if(!isShuffle){
             return songRealIndex;
         }else{
             return songSequence.get(songRealIndex);

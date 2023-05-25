@@ -22,7 +22,6 @@ public class PlayerController implements Initializable {
     @FXML Slider timeSlider;
     @FXML Slider volumeSlider;
 
-
     private Media media;
     private MediaPlayer mediaPlayer;
     private SongQueue songs;
@@ -32,7 +31,7 @@ public class PlayerController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         //Testing code start
-        songs = new SongQueue(new File("HollowKnightTestPlaylist\\"));
+        songs = new SongQueue(new File("C:\\Users\\rikiv\\OneDrive\\Desktop\\MediaMusic\\"));
         //Testing code stop
         volumeSlider.setMax(1.0);
         volumeSlider.setValue(0.5);
@@ -43,14 +42,14 @@ public class PlayerController implements Initializable {
     void nextAction() {
         pauseAction();
         loadSong(songs.getNextSong());
-        startAction();
+        playAction();
     }
     @FXML
     void previousAction() {
         if (mediaPlayer.getCurrentTime().toSeconds() < 2.5){
             pauseAction();
             loadSong(songs.getPreviousSong());
-            startAction();
+            playAction();
         } else {
             mediaPlayer.seek(Duration.seconds(0.0));
         }
@@ -66,24 +65,32 @@ public class PlayerController implements Initializable {
         }
     }
     @FXML
-    void randomAction(){
-        songs.setRandom();
+    void shuffleAction(){
+        songs.setShuffle();
     }
     @FXML
     void volumeAction() {
 
     }
     @FXML
-    void startStopAction() {
+    void playStopAction() {
         if (mediaPlayer.getStatus().toString().equals("STALLED")) {
             pauseAction();
         } else {
             if (!mediaPlayer.getStatus().toString().equals("PLAYING")) {
-                startAction();
+                playAction();
             } else {
                 pauseAction();
             }
         }
+    }
+    @FXML
+    void menuAction(){
+
+    }
+    @FXML
+    void queueAction(){
+
     }
 
     private void loadSong(String songName) {
@@ -97,7 +104,7 @@ public class PlayerController implements Initializable {
                 volumeLabel.setText(String.format("%d", (int) (newValue.doubleValue() * 100)) + "%"));
 
         timeSlider.setValue(0.0);
-        currentTimeLabel.setText("0");
+        currentTimeLabel.setText("0:00");
         mediaPlayer.totalDurationProperty().addListener((observable, oldDuration, newDuration) -> {
             timeSlider.setMax(newDuration.toSeconds());
             totalTimeLabel.setText(timeFormatting(newDuration));
@@ -130,7 +137,7 @@ public class PlayerController implements Initializable {
         songLabel.setText(songs.getName());
     }
 
-    private void startAction() {
+    private void playAction() {
         mediaPlayer.play();
         isPlaying = true;
     }
@@ -151,9 +158,12 @@ public class PlayerController implements Initializable {
             minutes %= 60;
         }
         if (minutes > 0) {
-            return String.format("%02d:%02d", minutes, seconds);
+            if(minutes > 9){
+                return String.format("%02d:%02d", minutes, seconds);
+            }
+            return String.format("%01d:%02d", minutes, seconds);
         } else {
-            return String.format("%02d", seconds);
+            return String.format("0:%02d", seconds);
         }
     }
 
