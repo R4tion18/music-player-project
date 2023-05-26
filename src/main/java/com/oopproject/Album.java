@@ -24,6 +24,15 @@ public class Album extends Playlist  {
         this.year = year;
     }
 
+    public void addFrom(Vector<Integer> indexes)    {
+        if (songs.size() == 0)  {
+            songs = new CopyOnWriteArrayList<Integer>(indexes.size())
+        }
+        for (int index : indexes)   {
+            
+        }
+    }
+
     @Override
     public void addSong(int index) {
         if (getArtist() == null)  {

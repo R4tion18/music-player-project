@@ -88,7 +88,35 @@ public class Library {
         });
     }
 
-    public void addFromFolder(String folderUri) {
+    public void createPlaylist(String name, File folder)    {
+        createPlaylist(name);
+        addFromFolder(folder.toURI().toString())
+            .toStream()
+                .forEach(index -> playlists.get(name).addSong(index));
+    }
+
+    public void createPlaylist(String name, CopyOnWriteArrayList<File> files)   {
+        playlists.putIfAbsent(name, new Playlist(name, this));
+        addMultipleFiles(files).toStream()
+                                .forEach(index -> playlists.get(name).addSong(index));
+    }
+
+    public void createPlaylist(name)    {
+        playlists.putIfAbsent(name, new Playlist(name, this));
+    }
+
+    public void putPlaylist(int index, String playlist)  {
+        properties.setProperty(Integer.toString(index), playlist + "\n");
+    }
+
+    public void createAlbum(String name, String artist, File folder)   {
+        albums.putIfAbsent(name, new Album(name, this));
+        albums.get(name).setArtist(artist);
+        Vector<Integer> indexes = addFromFolder(folder.toURI().toString());
+        albums.get(name).addFrom(indexes);
+    }
+
+    public Vector<Integer> addFromFolder(String folderUri) {
         File folder = null;
         try {
             folder = new File(new URI(folderUri));
@@ -96,16 +124,18 @@ public class Library {
             throw new RuntimeException(e);  //change exception handling
         }
 
-        addMultipleFiles(new CopyOnWriteArrayList<File>(Objects.requireNonNull(folder.listFiles())));
+        return addMultipleFiles(new CopyOnWriteArrayList<File>(Objects.requireNonNull(folder.listFiles())));
     }
 
-    public void addMultipleFiles(CopyOnWriteArrayList<File> files)  {
+    public Vector<Integer> addMultipleFiles(CopyOnWriteArrayList<File> files)  {
+        Vector<Integer> indexes = new Vector<>;
         for (File file : files) {
-            addSongFile(file.toURI().toString());
+            indexes.add(addSongFile(file.toURI().toString()));
         }
+        return indexes;
     }
 
-    public void addSongFile(String uri)    {
+    public int addSongFile(String uri)    {
         File oldFile = null;
         try {
             oldFile = new File(new URI(uri));
@@ -114,10 +144,10 @@ public class Library {
         }
         File song = new File(properties.getProperty("libraryFolder"), uri);
         boolean delete = oldFile.delete();
-        addNewSong(Song.getString(song), properties.size());
+        return addNewSong(Song.getString(song), properties.size());
     }
 
-    public void addNewSong(String uri, int index)  {
+    public int addNewSong(String uri, int index)  {
         Song.setIndex(uri, index);
         properties.setProperty(String.valueOf(index), "");
         songs.put(index, uri);
@@ -127,6 +157,8 @@ public class Library {
             albums.putIfAbsent(album, new Album(album, this));
             albums.get(album).addSong(Song.getIndex(uri));
         }
+
+        return index;
     }
 
     public void deleteSong(int index)   {

@@ -16,6 +16,15 @@ public class Playlist {
         this.library = library;
     }
 
+    public Playlist(String name, Library library, File folder)  {
+        Playlist(name, library, folder.listFiles());
+
+    }
+
+    public Playlist(String name, Library library, File[] files) {
+        Playlist(name, library);
+    }
+
     public String getName() {
         return name;
     }
@@ -34,6 +43,7 @@ public class Playlist {
 
     public void addSong(int index)  {
         songs.add(index);
+        library.putPlaylist(index, name);
         totalDuration = totalDuration.add(getMedia(index).getDuration());
     }
 
