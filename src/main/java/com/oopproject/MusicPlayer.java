@@ -12,11 +12,12 @@ import java.util.Objects;
 public class MusicPlayer extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(MusicPlayer.class.getResource("ActualPlayer.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(MusicPlayer.class.getResource("musicPlayer-overview-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle("MediaPlayer");
         stage.getIcons().add(new Image(Objects.requireNonNull(getClass().getResourceAsStream("icons/AppIcon2.png"))));
         stage.setScene(scene);
+        stage.setResizable(false);
         stage.show();
     }
 

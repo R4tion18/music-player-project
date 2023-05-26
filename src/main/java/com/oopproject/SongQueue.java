@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class SongQueue {
@@ -46,6 +47,12 @@ public class SongQueue {
         return songSequence;
     }
 
+    public ArrayList<String> getSongNames(){
+        return songSequence.stream()
+                .map(i -> songs.get(i).getName())
+                .collect(Collectors.toCollection(ArrayList::new));
+    }
+
     public String getSong() {
         return songs.get(nextSongIndex(songNumber)).toURI().toString();
     }
@@ -70,21 +77,25 @@ public class SongQueue {
         return this.getSong();
     }
 
+
+    public void setSongSequence(ArrayList<Integer> songSequence) {
+        this.songSequence = songSequence;
+    }
     public void setShuffle() {
         if(!isShuffle){
             Collections.shuffle(songSequence);
             isShuffle = true;
         } else{
             songNumber = songSequence.get(songNumber);
+            songSequence = new ArrayList<>();
+            IntStream.
+                    range(0, songs.size()).
+                    forEach(i -> songSequence.add(i));
             isShuffle = false;
         }
     }
 
-    private int nextSongIndex(int songRealIndex){
-        if(!isShuffle){
-            return songRealIndex;
-        }else{
-            return songSequence.get(songRealIndex);
-        }
+    public int nextSongIndex(int songRealIndex){
+        return songSequence.get(songRealIndex);
     }
 }

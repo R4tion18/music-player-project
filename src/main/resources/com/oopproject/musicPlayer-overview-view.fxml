@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="688.0" prefWidth="420.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.oopproject.MusicPlayerOverviewController">
+   <top>
+      <MenuBar BorderPane.alignment="CENTER">
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Close" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Edit">
+            <items>
+              <MenuItem mnemonicParsing="false" text="Delete" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Help">
+            <items>
+              <MenuItem mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+   </top>
+   <bottom>
+      <AnchorPane prefHeight="325.0" prefWidth="420.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button layoutX="173.0" layoutY="137.0" mnemonicParsing="false" onAction="#playStopAction" prefHeight="50.0" prefWidth="75.0" text="Play">
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </Button>
+            <Button layoutX="45.0" layoutY="137.0" mnemonicParsing="false" onAction="#previousAction" prefHeight="50.0" prefWidth="75.0" text="Prev" AnchorPane.leftAnchor="45.0">
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </Button>
+            <Button layoutX="287.0" layoutY="137.0" mnemonicParsing="false" onAction="#nextAction" prefHeight="50.0" prefWidth="75.0" text="Next" AnchorPane.rightAnchor="45.0">
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </Button>
+            <Button layoutX="173.0" layoutY="235.0" mnemonicParsing="false" onAction="#queueAction" prefHeight="50.0" prefWidth="75.0" text="Queue">
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </Button>
+            <Button layoutX="172.0" layoutY="41.0" mnemonicParsing="false" onAction="#menuAction" prefHeight="50.0" prefWidth="75.0" text="Menu">
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </Button>
+         </children>
+      </AnchorPane>
+   </bottom>
+   <center>
+      <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="TOP_LEFT">
+        <tabs>
+          <Tab closable="false" text="Playing">
+               <content>
+                  <AnchorPane prefHeight="299.0" prefWidth="420.0">
+                     <children>
+                        <Label fx:id="songLabel" alignment="CENTER" layoutX="1.0" layoutY="179.0" onMouseClicked="#infoAction" prefHeight="35.0" prefWidth="420.0" text="Song">
+                           <font>
+                              <Font size="17.0" />
+                           </font>
+                        </Label>
+                        <Slider fx:id="timeSlider" layoutX="45.0" layoutY="227.0" prefHeight="30.0" prefWidth="330.0" AnchorPane.leftAnchor="45.0" AnchorPane.rightAnchor="45.0" />
+                        <Label fx:id="currentTimeLabel" alignment="CENTER" layoutX="2.0" layoutY="225.0" prefHeight="35.0" prefWidth="45.0" text="T" AnchorPane.leftAnchor="0.0" />
+                        <Label fx:id="totalTimeLabel" alignment="CENTER" layoutX="372.0" layoutY="225.0" prefHeight="35.0" prefWidth="45.0" text="T" AnchorPane.rightAnchor="2.0" />
+                        <Button layoutX="25.0" layoutY="260.0" mnemonicParsing="false" onAction="#loopAction" prefHeight="41.0" prefWidth="70.0" text="Loop" AnchorPane.leftAnchor="30.0">
+                           <font>
+                              <Font size="17.0" />
+                           </font>
+                        </Button>
+                        <Button layoutX="306.0" layoutY="260.0" mnemonicParsing="false" onAction="#shuffleAction" prefHeight="41.0" prefWidth="70.0" text="Shuffle" AnchorPane.rightAnchor="30.0">
+                           <font>
+                              <Font size="17.0" />
+                           </font>
+                        </Button>
+                        <Slider fx:id="volumeSlider" layoutX="140.0" layoutY="259.0" prefWidth="140.0" />
+                        <Label fx:id="volumeLabel" alignment="CENTER" layoutX="187.0" layoutY="274.0" prefHeight="20.0" prefWidth="45.0" text="V" />
+                        <Button layoutX="85.0" layoutY="20.0" mnemonicParsing="false" onAction="#menuAction" prefHeight="148.0" prefWidth="250.0" text="Debug">
+                           <font>
+                              <Font size="17.0" />
+                           </font>
+                        </Button>
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+            <Tab text="Info">
+               <content>
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                     <children>
+                        <VBox layoutX="28.0" layoutY="25.0" prefHeight="200.0" prefWidth="116.0">
+                           <children>
+                              <Label prefHeight="30.0" prefWidth="134.0" text="Title:">
+                                 <font>
+                                    <Font size="17.0" />
+                                 </font>
+                              </Label>
+                              <Label prefHeight="30.0" prefWidth="154.0" text="Artist:">
+                                 <font>
+                                    <Font size="17.0" />
+                                 </font>
+                              </Label>
+                              <Label prefHeight="30.0" prefWidth="154.0" text="Album:">
+                                 <font>
+                                    <Font size="17.0" />
+                                 </font>
+                              </Label>
+                              <Label prefHeight="30.0" prefWidth="154.0" text="Album Artist:">
+                                 <font>
+                                    <Font size="17.0" />
+                                 </font>
+                              </Label>
+                              <Label prefHeight="30.0" prefWidth="154.0" text="Year:">
+                                 <font>
+                                    <Font size="17.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </VBox>
+                        <VBox layoutX="199.0" layoutY="25.0" prefHeight="200.0" prefWidth="196.0">
+                           <children>
+                              <Label fx:id="titleLabel" prefHeight="30.0" prefWidth="259.0" text="Title">
+                                 <font>
+                                    <Font size="17.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="artistLabel" prefHeight="30.0" prefWidth="278.0" text="Artist">
+                                 <font>
+                                    <Font size="17.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="albumLabel" prefHeight="30.0" prefWidth="282.0" text="Album">
+                                 <font>
+                                    <Font size="17.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="albumArtistLabel" prefHeight="30.0" prefWidth="320.0" text="Album Artist">
+                                 <font>
+                                    <Font size="17.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="yearLabel" prefHeight="30.0" prefWidth="326.0" text="Year">
+                                 <font>
+                                    <Font size="17.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </VBox>
+                     </children>
+                  </AnchorPane>
+               </content></Tab>
+            <Tab text="Songs" />
+            <Tab text="Playlists" />
+            <Tab text="Albums" />
+        </tabs>
+      </TabPane>
+   </center>
+</BorderPane>
