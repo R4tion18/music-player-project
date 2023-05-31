@@ -8,6 +8,7 @@
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.VBox?>
@@ -36,7 +37,7 @@
       </MenuBar>
    </top>
    <bottom>
-      <AnchorPane prefHeight="325.0" prefWidth="420.0" BorderPane.alignment="CENTER">
+      <AnchorPane prefHeight="325.0" prefWidth="420.0" style="-fx-background-color: #27e5ff;" BorderPane.alignment="CENTER">
          <children>
             <Button layoutX="173.0" layoutY="137.0" mnemonicParsing="false" onAction="#playStopAction" prefHeight="50.0" prefWidth="75.0" text="Play">
                <font>
@@ -81,23 +82,23 @@
                         <Slider fx:id="timeSlider" layoutX="45.0" layoutY="227.0" prefHeight="30.0" prefWidth="330.0" AnchorPane.leftAnchor="45.0" AnchorPane.rightAnchor="45.0" />
                         <Label fx:id="currentTimeLabel" alignment="CENTER" layoutX="2.0" layoutY="225.0" prefHeight="35.0" prefWidth="45.0" text="T" AnchorPane.leftAnchor="0.0" />
                         <Label fx:id="totalTimeLabel" alignment="CENTER" layoutX="372.0" layoutY="225.0" prefHeight="35.0" prefWidth="45.0" text="T" AnchorPane.rightAnchor="2.0" />
-                        <Button layoutX="25.0" layoutY="260.0" mnemonicParsing="false" onAction="#loopAction" prefHeight="41.0" prefWidth="70.0" text="Loop" AnchorPane.leftAnchor="30.0">
-                           <font>
-                              <Font size="17.0" />
-                           </font>
-                        </Button>
-                        <Button layoutX="306.0" layoutY="260.0" mnemonicParsing="false" onAction="#shuffleAction" prefHeight="41.0" prefWidth="70.0" text="Shuffle" AnchorPane.rightAnchor="30.0">
-                           <font>
-                              <Font size="17.0" />
-                           </font>
-                        </Button>
                         <Slider fx:id="volumeSlider" layoutX="140.0" layoutY="259.0" prefWidth="140.0" />
                         <Label fx:id="volumeLabel" alignment="CENTER" layoutX="187.0" layoutY="274.0" prefHeight="20.0" prefWidth="45.0" text="V" />
-                        <Button layoutX="85.0" layoutY="20.0" mnemonicParsing="false" onAction="#menuAction" prefHeight="148.0" prefWidth="250.0" text="Debug">
+                        <Button layoutX="124.0" layoutY="49.0" mnemonicParsing="false" prefHeight="129.0" prefWidth="174.0" text="Debug">
                            <font>
                               <Font size="17.0" />
                            </font>
                         </Button>
+                        <ToggleButton layoutX="25.0" layoutY="260.0" mnemonicParsing="false" onAction="#loopAction" prefHeight="41.0" prefWidth="70.0" text="Loop" AnchorPane.leftAnchor="30.0">
+                           <font>
+                              <Font size="17.0" />
+                           </font>
+                        </ToggleButton>
+                        <ToggleButton layoutX="306.0" layoutY="260.0" mnemonicParsing="false" onAction="#shuffleAction" prefHeight="41.0" prefWidth="70.0" text="Shuffle" AnchorPane.rightAnchor="30.0">
+                           <font>
+                              <Font size="17.0" />
+                           </font>
+                        </ToggleButton>
                      </children>
                   </AnchorPane>
                </content>

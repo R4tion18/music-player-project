@@ -76,8 +76,6 @@ public class SongQueue {
         }
         return this.getSong();
     }
-
-
     public void setSongSequence(ArrayList<Integer> songSequence) {
         this.songSequence = songSequence;
     }
@@ -94,8 +92,12 @@ public class SongQueue {
             isShuffle = false;
         }
     }
-
     public int nextSongIndex(int songRealIndex){
         return songSequence.get(songRealIndex);
+    }
+
+    public void modifyQueue(int firstIndex, int secondIndex){
+        System.out.println("firstIndex = " + firstIndex + "\nsecondIndex = " + secondIndex);
+        Collections.swap(songSequence, firstIndex, secondIndex);
     }
 }

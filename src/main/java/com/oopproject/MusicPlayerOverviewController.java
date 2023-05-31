@@ -30,6 +30,7 @@ public class MusicPlayerOverviewController implements Initializable {
     @FXML Slider timeSlider;
     @FXML Slider volumeSlider;
 
+    QueueViewController controller;
     private Media media;
     private MediaPlayer mediaPlayer;
     private SongQueue songs;
@@ -51,6 +52,9 @@ public class MusicPlayerOverviewController implements Initializable {
         pauseAction();
         loadSong(songs.getNextSong());
         playAction();
+        if(controller != null){
+            controller.next();
+        }
     }
     @FXML
     void previousAction() {
@@ -58,6 +62,9 @@ public class MusicPlayerOverviewController implements Initializable {
             pauseAction();
             loadSong(songs.getPreviousSong());
             playAction();
+            if(controller != null){
+                controller.previous();
+            }
         } else {
             mediaPlayer.seek(Duration.seconds(0.0));
         }
@@ -75,6 +82,9 @@ public class MusicPlayerOverviewController implements Initializable {
     @FXML
     void shuffleAction(){
         songs.setShuffle();
+        if(controller != null){
+            controller.shuffle();
+        }
     }
     @FXML
     void volumeAction() {
@@ -102,7 +112,7 @@ public class MusicPlayerOverviewController implements Initializable {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(getClass().getResource("queue-view.fxml"));
             DialogPane view = loader.load();
-            QueueViewController controller = loader.getController();
+            controller = loader.getController();
 
             controller.setSongs(songs);
 
@@ -112,11 +122,8 @@ public class MusicPlayerOverviewController implements Initializable {
             dialog.setDialogPane(view);
 
             Optional<ButtonType> clickedButton = dialog.showAndWait();
-            if(clickedButton.orElse(ButtonType.CANCEL) == ButtonType.OK){
-                songs.setSongSequence(controller.getSongSequence());
-            }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
