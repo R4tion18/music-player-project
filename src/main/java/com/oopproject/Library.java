@@ -22,7 +22,7 @@ public class Library {
     public int getHighestIndex()    {
         return properties.stringPropertyNames()
                 .stream()
-                .mapToInt(Integer::parseInt)
+                .mapToInt(Integer::parseInt)    //may not work, not all are ints, fix
                 .max()
                 .orElse(0);
     }
@@ -77,8 +77,9 @@ public class Library {
     public Library(CopyOnWriteArrayList<File> files) {
         files.forEach(file -> {
             if (Song.getIndexString(file) == null) {
-                addNewSong(Song.getString(file), getHighestIndex());
+                addNewSong(Song.getString(file), getHighestIndex() + 1);
             }
+
             Arrays.stream(properties.getProperty(Song.getIndexString(file)).split("\n"))    //look over with new library
                     .forEach(playlist -> {
                         playlists.putIfAbsent(playlist, new Playlist(playlist, this));
@@ -90,23 +91,35 @@ public class Library {
 
     public void createPlaylist(String name, File folder)    {
         createPlaylist(name);
-        addFromFolder(folder.toURI().toString())
-            .toStream()
-                .forEach(index -> playlists.get(name).addSong(index));
+        addFromFolder(folder.toURI().toString()).forEach(index -> playlists.get(name).addSong(index));
     }
 
     public void createPlaylist(String name, CopyOnWriteArrayList<File> files)   {
-        playlists.putIfAbsent(name, new Playlist(name, this));
-        addMultipleFiles(files).toStream()
-                                .forEach(index -> playlists.get(name).addSong(index));
+        createPlaylist(name);
+        addMultipleFiles(files).forEach(index -> playlists.get(name).addSong(index));
     }
 
-    public void createPlaylist(name)    {
+    public void createPlaylist(String name)    {
         playlists.putIfAbsent(name, new Playlist(name, this));
     }
 
-    public void putPlaylist(int index, String playlist)  {
-        properties.setProperty(Integer.toString(index), playlist + "\n");
+    public void putInPlaylist(int index, String playlist)  {
+        if (!properties.getProperty(String.valueOf(index)).contains(playlist))   {
+            properties.setProperty(Integer.toString(index), playlist + "\n");
+        }
+    }
+
+    public void removeFromPlaylist(int index, String playlist)  {
+        StringBuilder playlists = new StringBuilder(properties.getProperty(String.valueOf(index)));
+        playlists.delete(playlists.indexOf(playlist), playlists.lastIndexOf(playlist) + 1);
+
+        if (playlists.toString().startsWith("\n"))    {
+            playlists.deleteCharAt(0);
+        }   else {
+            playlists.delete(playlists.indexOf("\n\n"),playlists.lastIndexOf("\n\n"));
+        }
+
+        properties.setProperty(String.valueOf(index), playlists.toString());
     }
 
     public void createAlbum(String name, String artist, File folder)   {
@@ -128,7 +141,7 @@ public class Library {
     }
 
     public Vector<Integer> addMultipleFiles(CopyOnWriteArrayList<File> files)  {
-        Vector<Integer> indexes = new Vector<>;
+        Vector<Integer> indexes = new Vector<>();
         for (File file : files) {
             indexes.add(addSongFile(file.toURI().toString()));
         }
@@ -144,16 +157,18 @@ public class Library {
         }
         File song = new File(properties.getProperty("libraryFolder"), uri);
         boolean delete = oldFile.delete();
-        return addNewSong(Song.getString(song), properties.size());
+        return addNewSong(Song.getString(song), getHighestIndex() + 1);
     }
 
     public int addNewSong(String uri, int index)  {
-        Song.setIndex(uri, index);
-        properties.setProperty(String.valueOf(index), "");
-        songs.put(index, uri);
+        if(Song.getIndexString(uri) == null) {
+            Song.setIndex(uri, index);
+            properties.setProperty(String.valueOf(index), "");
+            songs.put(index, uri);
+        }
 
         String album = Song.getAlbum(uri);
-        if (!(album == null)) {
+        if (album != null) {
             albums.putIfAbsent(album, new Album(album, this));
             albums.get(album).addSong(Song.getIndex(uri));
         }

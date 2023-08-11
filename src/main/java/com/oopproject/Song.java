@@ -82,8 +82,9 @@ public record Song(File file) {
         return getIndexString(getFile(uri));
     }
 
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
     public static String getIndexString(File file) {
-        return getMp3File(file).getId3v2Tag().getComment().split(",")[0];
+        return getTag(file).get().getComment().split(",")[0];
     }
 
     public int getIndex() {
@@ -180,6 +181,12 @@ public record Song(File file) {
         return getTag(file).get().getTitle();
     }
 
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
+    public static void setTitle(File file, String title)  {
+        createTag(file);
+        getTag(file).get().setTitle(title);
+    }
+
     public String getAlbum() {
         return getAlbum(file);
     }
@@ -194,6 +201,12 @@ public record Song(File file) {
         return getTag(file).get().getAlbum();
     }
 
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
+    public static void setAlbum(File file, String album)    {
+        createTag(file);
+        getTag(file).get().setAlbum(album);
+    }
+
     public String getAlbumArtist() {
         return getAlbumArtist(file);
     }
@@ -204,7 +217,14 @@ public record Song(File file) {
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     public static String getAlbumArtist(File file) {
+        createTag(file);
         return getTag(file).get().getAlbumArtist();
+    }
+
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
+    public static void setAlbumArtist(File file, String artist) {
+        createTag(file);
+        getTag(file).get().setAlbumArtist(artist);
     }
 
     public String getArtist() {
@@ -217,7 +237,14 @@ public record Song(File file) {
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     public static String getArtist(File file) {
+        createTag(file);
         return getTag(file).get().getArtist();
+    }
+
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
+    public static void setArtist(File file, String artist)  {
+        createTag(file);
+        getTag(file).get().setArtist(artist);
     }
 
     public int getYear() {
@@ -230,7 +257,14 @@ public record Song(File file) {
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     public static int getYear(File file) {
-        return Integer.parseInt(getTag(file).get().getYear());
+        createTag(file);
+        return Integer.parseInt(getTag(file).get().getYear());  //won't work if year field is empty, fix
+    }
+
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
+    public static void setYear(File file, int year) {
+        createTag(file);
+        getTag(file).get().setYear(String.valueOf(year));
     }
 
     public int getTrack() {
@@ -243,6 +277,13 @@ public record Song(File file) {
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     public static int getTrack(File file) {
+        createTag(file);
         return Integer.parseInt(getTag(file).get().getTrack());
+    }
+
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
+    public static void setTrack(File file, int track)   {
+        createTag(file);
+        getTag(file).get().setTrack(String.valueOf(track));
     }
 }

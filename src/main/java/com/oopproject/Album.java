@@ -1,11 +1,24 @@
 package com.oopproject;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Vector;
+import java.util.concurrent.CopyOnWriteArrayList;
+
 public class Album extends Playlist  {
     private String artist = null;
     private int year = 0;
 
     public Album(String name, Library library) {
         super(name, library);
+    }
+
+    public Album(String name, Library library, File folder) {
+        super(name, library, folder);
+    }
+
+    public Album(String name, Library library, File[] files) {
+        super(name, library, files);
     }
 
     public String getArtist() {
@@ -26,10 +39,10 @@ public class Album extends Playlist  {
 
     public void addFrom(Vector<Integer> indexes)    {
         if (songs.size() == 0)  {
-            songs = new CopyOnWriteArrayList<Integer>(indexes.size())
+            songs = new CopyOnWriteArrayList<Integer>(new ArrayList<>(indexes.size()));
         }
         for (int index : indexes)   {
-            
+            songs.add(Song.getTrack(library.getSong(index)), index);
         }
     }
 
@@ -48,6 +61,12 @@ public class Album extends Playlist  {
                 .filter(song ->
                         Song.getTrack(library.getSong(song)) >
                                 Song.getTrack(library.getSong(index)))
-                                .findFirst().ifPresent(song -> songs.add(songs.indexOf(song), index));
+                .findFirst()
+                .ifPresent(song -> songs.add(songs.indexOf(song), index));
+    }
+
+    @Override
+    public void removeSong(int index) {
+        songs.remove(index);
     }
 }
