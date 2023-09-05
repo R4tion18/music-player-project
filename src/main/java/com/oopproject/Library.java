@@ -9,51 +9,30 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+/**
+ * A Library to organise songs into playlists and albums.
+ * @author francescorighi
+ * @author riccardovezzani
+ * @version 2023.8.18
+ * @see Song
+ * @see Playlist
+ * @see Album
+ */
 public class Library {
     private Properties properties;
     private final ConcurrentHashMap<Integer, String> songs = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, Playlist> playlists = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, Album> albums = new ConcurrentHashMap<>();
 
-    public int getLibrarySize() {
-        return songs.size();
-    }
-
-    public int getHighestIndex()    {
-        return properties.stringPropertyNames()
-                .stream()
-                .mapToInt(Integer::parseInt)    //may not work, not all are ints, fix
-                .max()
-                .orElse(0);
-    }
-
-    public int getNumberOfPlaylists()   {
-        return playlists.size();
-    }
-
-    public int getNumberOfAlbums()  {
-        return albums.size();
-    }
-
-    public CopyOnWriteArrayList<File> getFiles(File directory)   {
-        return new CopyOnWriteArrayList<>(List.of(Objects.requireNonNull(directory.listFiles())));
-    }
-
-    public Playlist getPlaylist(String name)    {
-        return playlists.get(name);
-    }
-
-    public Album getAlbum(String name)  {
-        return albums.get(name);
-    }
-
-    public String getSong(int index) {
-        return songs.get(index);
-    }
-
+    /** Initialises a Library at the start of the application.
+     *
+     * @param properties contains the name of the directory where the Library files are stored.
+     * @param isFirstSetup specifies if this is the first time the application was started on this system.
+     * @throws RuntimeException if there is an error when opening the directory.
+     */
     public Library(Properties properties, boolean isFirstSetup) {
         this.properties = properties;
-        File directory = null;
+        File directory;
         try {
             directory = new File(new URI(this.properties.getProperty("libraryFolder")));
         } catch (URISyntaxException e) {
@@ -74,6 +53,9 @@ public class Library {
         }
     }
 
+    /** Creates a new Library instance from a list of files.
+     * @param files is the list of song files in the Library.
+     */
     public Library(CopyOnWriteArrayList<File> files) {
         files.forEach(file -> {
             if (Song.getIndexString(file) == null) {
@@ -89,55 +71,69 @@ public class Library {
         });
     }
 
-    public void createPlaylist(String name, File folder)    {
-        createPlaylist(name);
-        addFromFolder(folder.toURI().toString()).forEach(index -> playlists.get(name).addSong(index));
+    public int getLibrarySize() {
+        return songs.size();
     }
 
-    public void createPlaylist(String name, CopyOnWriteArrayList<File> files)   {
-        createPlaylist(name);
-        addMultipleFiles(files).forEach(index -> playlists.get(name).addSong(index));
+    public int getHighestIndex()    {
+        return properties.stringPropertyNames()
+                .stream()
+                .skip(1)
+                .mapToInt(Integer::parseInt)
+                .max()
+                .orElse(0);
     }
 
-    public void createPlaylist(String name)    {
-        playlists.putIfAbsent(name, new Playlist(name, this));
+    public Vector<String> getSongNames() {
+        return new Vector<>(songs.values());
     }
 
-    public void putInPlaylist(int index, String playlist)  {
-        if (!properties.getProperty(String.valueOf(index)).contains(playlist))   {
-            properties.setProperty(Integer.toString(index), playlist + "\n");
-        }
+    public CopyOnWriteArrayList<File> getFiles(File directory)   {
+        return new CopyOnWriteArrayList<>(List.of(Objects.requireNonNull(directory.listFiles())));
     }
 
-    public void removeFromPlaylist(int index, String playlist)  {
-        StringBuilder playlists = new StringBuilder(properties.getProperty(String.valueOf(index)));
-        playlists.delete(playlists.indexOf(playlist), playlists.lastIndexOf(playlist) + 1);
-
-        if (playlists.toString().startsWith("\n"))    {
-            playlists.deleteCharAt(0);
-        }   else {
-            playlists.delete(playlists.indexOf("\n\n"),playlists.lastIndexOf("\n\n"));
-        }
-
-        properties.setProperty(String.valueOf(index), playlists.toString());
+    public int getNumberOfPlaylists()   {
+        return playlists.size();
     }
 
-    public void createAlbum(String name, String artist, File folder)   {
-        albums.putIfAbsent(name, new Album(name, this));
-        albums.get(name).setArtist(artist);
-        Vector<Integer> indexes = addFromFolder(folder.toURI().toString());
-        albums.get(name).addFrom(indexes);
+    public Vector<String> getPlaylistNames()    {
+        return playlists.values().stream()
+                .map(Playlist::getName)
+                .collect(Collectors.toCollection(Vector::new));
+    }
+
+    public int getNumberOfAlbums()  {
+        return albums.size();
+    }
+
+    public Vector<String> getAlbumNames()   {
+        return albums.values().stream()
+                .map(Album::getName)
+                .collect(Collectors.toCollection(Vector::new));
+    }
+
+    public String getSong(int index) {
+        return songs.get(index);
+    }
+
+    public Playlist getPlaylist(String name)    {
+        return playlists.get(name);
+    }
+
+    public Album getAlbum(String name)  {
+        return albums.get(name);
     }
 
     public Vector<Integer> addFromFolder(String folderUri) {
-        File folder = null;
+        File folder;
+
         try {
             folder = new File(new URI(folderUri));
         } catch (URISyntaxException e) {
             throw new RuntimeException(e);  //change exception handling
         }
 
-        return addMultipleFiles(new CopyOnWriteArrayList<File>(Objects.requireNonNull(folder.listFiles())));
+        return addMultipleFiles(new CopyOnWriteArrayList<>(Objects.requireNonNull(folder.listFiles())));
     }
 
     public Vector<Integer> addMultipleFiles(CopyOnWriteArrayList<File> files)  {
@@ -149,7 +145,7 @@ public class Library {
     }
 
     public int addSongFile(String uri)    {
-        File oldFile = null;
+        File oldFile;
         try {
             oldFile = new File(new URI(uri));
         } catch (URISyntaxException e) {
@@ -189,5 +185,73 @@ public class Library {
         boolean delete = song.delete();
         songs.remove(index);
         properties.remove(String.valueOf(index));
+    }
+
+    public void createPlaylist(String name, File folder)    {
+        playlists.putIfAbsent(name, new Playlist(name, this, folder));
+    }
+
+    public void createPlaylist(String name, CopyOnWriteArrayList<File> files)   {
+        playlists.putIfAbsent(name, new Playlist(name, this, files.toArray(File[]::new)));
+    }
+
+    public void createPlaylist(String name)    {
+        playlists.putIfAbsent(name, new Playlist(name, this));
+    }
+
+    public void putInPlaylist(int index, String playlist)  {
+        if (!properties.getProperty(String.valueOf(index)).contains(playlist))   {
+            properties.setProperty(Integer.toString(index), playlist + "\n");
+        }
+    }
+
+    public void removeFromPlaylist(int index, String playlist)  {
+        StringBuilder songPlaylists = new StringBuilder(properties.getProperty(String.valueOf(index)));
+        songPlaylists.delete(songPlaylists.indexOf(playlist), songPlaylists.lastIndexOf(playlist) + 1);
+
+        if (songPlaylists.toString().startsWith("\n"))    {
+            songPlaylists.deleteCharAt(0);
+        }   else {
+            songPlaylists.delete(songPlaylists.indexOf("\n\n"), songPlaylists.lastIndexOf("\n\n"));
+        }
+
+        properties.setProperty(String.valueOf(index), songPlaylists.toString());
+    }
+
+    public void deletePlaylist(String playlist, Boolean fromLibrary)    {
+        if (fromLibrary)    {
+            playlists.get(playlist).getSongs().forEach(this::deleteSong);
+        }   else {
+            playlists.get(playlist).getSongs().forEach(i -> removeFromPlaylist(i, playlist));
+        }
+
+        playlists.remove(playlist);
+    }
+
+    public void createAlbum(String name, String artist, CopyOnWriteArrayList<File> files)   {
+        albums.putIfAbsent(name, new Album(name, this, files.toArray(File[]::new)));
+        albums.get(name).setArtist(artist);
+    }
+
+    public void createAlbum(String name, String artist, File folder)   {
+        albums.putIfAbsent(name, new Album(name, this, folder));
+        albums.get(name).setArtist(artist);
+    }
+
+    public void createAlbum(String name, String artist) {
+        albums.putIfAbsent(name, new Album(name, this));
+        albums.get(name).setArtist(artist);
+    }
+
+    public void createAlbum(String name)    {
+        albums.putIfAbsent(name, new Album(name, this));
+    }
+
+    public void deleteAlbum(String album, Boolean fromLibrary)   {
+        if (fromLibrary)    {
+            albums.get(album).getSongs().forEach(this::deleteSong);
+        }
+
+        albums.remove(album);
     }
 }

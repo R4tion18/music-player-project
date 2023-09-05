@@ -1,16 +1,14 @@
 package com.oopproject;
 
 import javafx.scene.media.Media;
-import javafx.util.Duration;
 
 import java.io.File;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class Playlist {
     private String name;
-    private Duration totalDuration;
     protected CopyOnWriteArrayList<Integer> songs = new CopyOnWriteArrayList<>();
-    protected final Library library;
+    private final Library library;
 
     public Playlist(String name, Library library) {
         this.name = name;
@@ -18,13 +16,11 @@ public class Playlist {
     }
 
     public Playlist(String name, Library library, File folder)  {
-        this.library = library;
-        new Playlist(name, library, folder.listFiles());
+        this(name, library, folder.listFiles());
     }
 
     public Playlist(String name, Library library, File[] files) {
-        this.library = library;
-        new Playlist(name, library);
+        this(name, library);
         library.addMultipleFiles(new CopyOnWriteArrayList<>(files)).forEach(this::addSong);
     }
 
@@ -49,20 +45,20 @@ public class Playlist {
             songs.add(index);
         }
 
-        library.putInPlaylist(index, getName());
+        getLibrary().putInPlaylist(index, getName());
     }
 
     public void removeSong(int index)   {
         songs.remove(Integer.valueOf(index));
-        library.removeFromPlaylist(index, getName());
+        getLibrary().removeFromPlaylist(index, getName());
     }
-
-    public void play(boolean shuffle)   {
-        SongQueue queue = new SongQueue(getSongs(), getLibrary());
-        queue.play(shuffle);
-    }
-
-    public Media getMedia(int index)    {
-        return new Media(library.getSong(index));
-    }
+    //
+    //public void play(boolean shuffle)   {
+    //    SongQueue queue = new SongQueue(getSongs(), getLibrary());
+    //    queue.play(shuffle);
+    //}
+    //
+    //public Media getMedia(int index)    {
+    //    return new Media(library.getSong(index));
+    //}
 }
