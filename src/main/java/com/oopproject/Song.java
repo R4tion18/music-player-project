@@ -1,6 +1,6 @@
 /*package com.oopproject;
 
-import com.mpatric.mp3agic.*;
+import com.oopproject.mp3agic.*;
 
 import java.io.File;
 import java.io.IOException;

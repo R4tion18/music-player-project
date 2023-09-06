@@ -62,12 +62,12 @@ public class MusicPlayerOverviewController implements Initializable {
         allSavedAlbum = FXCollections.observableArrayList();
         allSavedSong = FXCollections.observableArrayList();
         //Testing code start
-        songs = new SongQueue(new File("C:\\Users\\rikiv\\OneDrive\\Desktop\\MediaMusic\\"));
+        songs = new SongQueue(new File("/Users/Francesco/IdeaProjects/music-player-project/src/test/resources/test-songs"));
         IntStream.range(0, songs.getSongSequence().size()).forEach(i -> allSavedSong.add(songs.getSongNames().get((i + songs.getSongNumber() + 1) % songs.getSongSequence().size())));
         //Testing code stop
         songListView.setItems(allSavedSong);
-        //playlistListView.setItems(allSavedPlaylist);
-        //albumListView.setItems(allSavedAlbum);
+        playlistListView.setItems(allSavedPlaylist);
+        albumListView.setItems(allSavedAlbum);
         volumeSlider.setMax(1.0);
         volumeSlider.setValue(0.5);
         volumeLabel.setText("50%");
