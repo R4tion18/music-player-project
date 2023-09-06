@@ -1,5 +1,7 @@
 package com.oopproject;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -7,10 +9,14 @@ import javafx.fxml.Initializable;
 import java.io.IOException;
 import java.net.URL;
 import java.io.File;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.stream.IntStream;
 
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Modality;
@@ -18,6 +24,7 @@ import javafx.util.Duration;
 
 public class MusicPlayerOverviewController implements Initializable {
 
+    @FXML ListView<String> songListView;
     @FXML Label songLabel;
     @FXML Label currentTimeLabel;
     @FXML Label totalTimeLabel;
@@ -29,6 +36,10 @@ public class MusicPlayerOverviewController implements Initializable {
     @FXML Label yearLabel;
     @FXML Slider timeSlider;
     @FXML Slider volumeSlider;
+    @FXML Button playPauseButton;
+    @FXML Button nextButton;
+    @FXML Button previousButton;
+    @FXML Button queueButton;
 
     QueueViewController controller;
     private Media media;
@@ -36,16 +47,23 @@ public class MusicPlayerOverviewController implements Initializable {
     private SongQueue songs;
     private boolean isPlaying = false;
     private  boolean isLooping = false;
-
+    public ObservableList<String> allSavedSong;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         //Testing code start
+        allSavedSong = FXCollections.observableArrayList();
         songs = new SongQueue(new File("C:\\Users\\rikiv\\OneDrive\\Desktop\\MediaMusic\\"));
+        IntStream.range(0, songs.getSongSequence().size()).forEach(i -> allSavedSong.add(songs.getSongNames().get((i + songs.getSongNumber() + 1) % songs.getSongSequence().size())));
+        songListView.setItems(allSavedSong);
         //Testing code stop
         volumeSlider.setMax(1.0);
         volumeSlider.setValue(0.5);
         volumeLabel.setText("50%");
         loadSong(songs.getSong());
+        setImage(playPauseButton, "icons/playIcon1.png");
+        setImage(nextButton, "icons/nextIcon.png");
+        setImage(previousButton, "icons/previousIcon.png");
+        setImage(queueButton, "icons/queueIcon.png");
     }
     @FXML
     void nextAction() {
@@ -91,7 +109,7 @@ public class MusicPlayerOverviewController implements Initializable {
 
     }
     @FXML
-    void playStopAction() {
+    void playPauseAction() {
         if (mediaPlayer.getStatus().toString().equals("STALLED")) {
             pauseAction();
         } else {
@@ -108,22 +126,27 @@ public class MusicPlayerOverviewController implements Initializable {
     }
     @FXML
     void queueAction(){
-        try {
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("queue-view.fxml"));
-            DialogPane view = loader.load();
-            controller = loader.getController();
+        if(controller == null) {
+            try {
+                FXMLLoader loader = new FXMLLoader();
+                loader.setLocation(getClass().getResource("queue-view.fxml"));
+                DialogPane view = loader.load();
+                controller = loader.getController();
 
-            controller.setSongs(songs);
+                controller.setSongs(songs);
 
-            Dialog<ButtonType> dialog = new Dialog<>();
-            dialog.setTitle("Songs Queue");
-            dialog.initModality(Modality.WINDOW_MODAL);
-            dialog.setDialogPane(view);
+                Dialog<ButtonType> dialog = new Dialog<>();
+                dialog.setTitle("Songs Queue");
+                dialog.initModality(Modality.WINDOW_MODAL);
+                dialog.setDialogPane(view);
 
-            Optional<ButtonType> clickedButton = dialog.showAndWait();
-        } catch (IOException e) {
-            e.printStackTrace();
+                Optional<ButtonType> clickedButton = dialog.showAndWait();
+                if (clickedButton.orElse(ButtonType.CANCEL) == ButtonType.OK) {
+                    controller = null;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -179,11 +202,15 @@ public class MusicPlayerOverviewController implements Initializable {
     private void playAction() {
         mediaPlayer.play();
         isPlaying = true;
+        setImage(playPauseButton, "icons/pauseIcon.png");
+
     }
 
     private void pauseAction() {
         mediaPlayer.pause();
         isPlaying = false;
+        setImage(playPauseButton, "icons/playIcon1.png");
+
     }
 
     public String timeFormatting(Duration time) {
@@ -204,6 +231,14 @@ public class MusicPlayerOverviewController implements Initializable {
         } else {
             return String.format("0:%02d", seconds);
         }
+    }
+
+    private void setImage(Button button, String uri){
+        ImageView thisImageView =
+                new ImageView( new Image(Objects.requireNonNull(getClass().getResourceAsStream(uri))));
+        thisImageView.setFitHeight(40);
+        thisImageView.setFitWidth(50.0);
+        button.setGraphic(thisImageView);
     }
 
     //Debug methods

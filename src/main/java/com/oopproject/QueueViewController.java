@@ -3,6 +3,7 @@ package com.oopproject;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 
@@ -13,7 +14,10 @@ import java.util.stream.IntStream;
 public class QueueViewController{
     @FXML ListView<String> queueListView;
     @FXML ScrollPane queueScrollPane;
+    @FXML Button plusButton;
+    @FXML Button minusButton;
 
+    MusicPlayerOverviewController controller;
     SongQueue songs;
     ObservableList<String> queue;
 
@@ -28,7 +32,7 @@ public class QueueViewController{
             System.out.println(queueListView.getSelectionModel().getSelectedIndex());
             songs.modifyQueue(
                     (queueListView.getSelectionModel().getSelectedIndex() + songs.getSongNumber() + 1) % getSongSequence().size(),
-                    queueListView.getSelectionModel().getSelectedIndex() + songs.getSongNumber() % getSongSequence().size());
+                    (queueListView.getSelectionModel().getSelectedIndex() + songs.getSongNumber()) % getSongSequence().size());
             Collections.swap(queue,
                     queueListView.getSelectionModel().getSelectedIndex(),
                     queueListView.getSelectionModel().getSelectedIndex() - 1);
