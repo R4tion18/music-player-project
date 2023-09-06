@@ -173,13 +173,29 @@
                <content>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0">
                      <children>
-                        <ListView fx:id="songListView" layoutX="14.0" layoutY="8.0" prefHeight="296.0" prefWidth="262.0" />
+                        <ListView fx:id="songListView" layoutX="14.0" layoutY="14.0" prefHeight="290.0" prefWidth="262.0" />
                         <Button layoutX="307.0" layoutY="14.0" mnemonicParsing="false" prefHeight="68.0" prefWidth="73.0" text="Button" />
                      </children>
                   </AnchorPane>
                </content></Tab>
-            <Tab text="Playlists" />
-            <Tab text="Albums" />
+            <Tab text="Playlists">
+               <content>
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                     <children>
+                        <ListView fx:id="playlistListView" layoutX="14.0" layoutY="14.0" prefHeight="286.0" prefWidth="261.0" />
+                        <Button layoutX="304.0" layoutY="14.0" mnemonicParsing="false" prefHeight="81.0" prefWidth="85.0" text="Button" />
+                     </children>
+                  </AnchorPane>
+               </content></Tab>
+            <Tab text="Albums">
+               <content>
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                     <children>
+                        <ListView fx:id="albumListView" layoutX="14.0" layoutY="14.0" prefHeight="286.0" prefWidth="267.0" />
+                        <Button layoutX="297.0" layoutY="14.0" mnemonicParsing="false" prefHeight="89.0" prefWidth="97.0" text="Button" />
+                     </children>
+                  </AnchorPane>
+               </content></Tab>
         </tabs>
       </TabPane>
    </center>

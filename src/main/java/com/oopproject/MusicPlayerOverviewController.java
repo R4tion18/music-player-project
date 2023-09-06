@@ -25,6 +25,8 @@ import javafx.util.Duration;
 public class MusicPlayerOverviewController implements Initializable {
 
     @FXML ListView<String> songListView;
+    @FXML ListView<String> playlistListView;
+    @FXML ListView<String> albumListView;
     @FXML Label songLabel;
     @FXML Label currentTimeLabel;
     @FXML Label totalTimeLabel;
@@ -48,14 +50,21 @@ public class MusicPlayerOverviewController implements Initializable {
     private boolean isPlaying = false;
     private  boolean isLooping = false;
     public ObservableList<String> allSavedSong;
+    public ObservableList<String> allSavedPlaylist;
+    public ObservableList<String> allSavedAlbum;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        //Testing code start
+        allSavedPlaylist = FXCollections.observableArrayList();
+        allSavedAlbum = FXCollections.observableArrayList();
         allSavedSong = FXCollections.observableArrayList();
+        //Testing code start
         songs = new SongQueue(new File("C:\\Users\\rikiv\\OneDrive\\Desktop\\MediaMusic\\"));
         IntStream.range(0, songs.getSongSequence().size()).forEach(i -> allSavedSong.add(songs.getSongNames().get((i + songs.getSongNumber() + 1) % songs.getSongSequence().size())));
-        songListView.setItems(allSavedSong);
         //Testing code stop
+        songListView.setItems(allSavedSong);
+        //playlistListView.setItems(allSavedPlaylist);
+        //albumListView.setItems(allSavedAlbum);
         volumeSlider.setMax(1.0);
         volumeSlider.setValue(0.5);
         volumeLabel.setText("50%");
