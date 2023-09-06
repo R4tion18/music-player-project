@@ -15,13 +15,6 @@ import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 
 public class PlayerController implements Initializable {
-
-    private File directory;
-    private File[] files;
-    private ArrayList<File> songs;
-    private Media media;
-    private MediaPlayer mediaPlayer;
-    private int songNumber;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         Properties defaultProps = new Properties();
@@ -40,11 +33,11 @@ public class PlayerController implements Initializable {
             throw new RuntimeException(e);
         }
 
-    //  if (playerProperties.getProperty("libraryFolder", "").equals(""))   {
-    //    ask for directory;
-    //    playerProperties.setProperty("libraryFolder", directory);
-    //    isFirstSetup = true;
-    //  }
+        if (playerProperties.getProperty("libraryFolder", "").isEmpty())   {
+            //ask for directory;
+            //playerProperties.setProperty("libraryFolder", directory);
+            isFirstSetup = true;
+        }
 
         Library library = new Library(playerProperties, isFirstSetup);
     }

@@ -46,9 +46,9 @@ public record Song(File file) {
         try {
             mp3 = new Mp3File(file);
         } catch (IOException e) {
-            e.printStackTrace();    //change exception handling
+            //e.printStackTrace();    //change exception handling
         } catch (UnsupportedTagException e) {
-            e.getCause().printStackTrace(); //change exception handling
+            //e.printStackTrace(); //change exception handling
         } catch (InvalidDataException e) {
             System.out.println(e.getMessage());
             throw new RuntimeException(e);  //change exception handling

@@ -40,7 +40,7 @@ public class Album extends Playlist  {
     }
 
     public void addFrom(Vector<Integer> indexes)    {
-        if (songs.size() == 0)  {
+        if (songs.isEmpty())  {
             songs = new CopyOnWriteArrayList<>(new ArrayList<>(indexes.size()));
         }
         for (int index : indexes)   {
