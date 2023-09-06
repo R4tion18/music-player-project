@@ -5,6 +5,7 @@ module com.oopproject {
     requires javafx.media;
 
     requires org.controlsfx.controls;
+    requires mp3agic;
 
     opens com.oopproject to javafx.fxml;
     exports com.oopproject;
