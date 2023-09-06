@@ -8,4 +8,5 @@ module com.oopproject {
 
     opens com.oopproject to javafx.fxml;
     exports com.oopproject;
+
 }
