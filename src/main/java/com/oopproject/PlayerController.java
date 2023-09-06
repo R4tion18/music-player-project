@@ -13,7 +13,7 @@ import java.util.ResourceBundle;
 
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-
+/*
 public class PlayerController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -41,4 +41,4 @@ public class PlayerController implements Initializable {
 
         Library library = new Library(playerProperties, isFirstSetup);
     }
-}
+}*/

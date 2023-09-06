@@ -17,19 +17,20 @@ import java.util.stream.IntStream;
  * @see Song
  * @see Playlist
  * @see Album
- */
+ *//*
 public class Library {
     private Properties properties;
     private final ConcurrentHashMap<Integer, String> songs = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, Playlist> playlists = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, Album> albums = new ConcurrentHashMap<>();
-
+*/
     /** Initialises a Library at the start of the application.
      *
      * @param properties contains the name of the directory where the Library files are stored.
      * @param isFirstSetup specifies if this is the first time the application was started on this system.
      * @throws RuntimeException if there is an error when opening the directory.
      */
+    /*
     public Library(Properties properties, boolean isFirstSetup) {
         this.properties = properties;
         File directory;
@@ -52,10 +53,11 @@ public class Library {
                     .forEachOrdered(i -> addNewSong(Song.getString(sorted.get(i)), i));
         }
     }
-
+*/
     /** Creates a new Library instance from a list of files.
      * @param files is the list of song files in the Library.
      */
+    /*
     public Library(CopyOnWriteArrayList<File> files) {
         files.forEach(file -> {
             if (Song.getIndexString(file) == null) {
@@ -255,3 +257,4 @@ public class Library {
         albums.remove(album);
     }
 }
+*/

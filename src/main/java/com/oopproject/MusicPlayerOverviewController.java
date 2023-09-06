@@ -9,6 +9,7 @@ import javafx.fxml.Initializable;
 import java.io.IOException;
 import java.net.URL;
 import java.io.File;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -19,6 +20,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.stage.DirectoryChooser;
+import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.util.Duration;
 
@@ -74,91 +77,6 @@ public class MusicPlayerOverviewController implements Initializable {
         setImage(previousButton, "icons/previousIcon.png");
         setImage(queueButton, "icons/queueIcon.png");
     }
-    @FXML
-    void nextAction() {
-        pauseAction();
-        loadSong(songs.getNextSong());
-        playAction();
-        if(controller != null){
-            controller.next();
-        }
-    }
-    @FXML
-    void previousAction() {
-        if (mediaPlayer.getCurrentTime().toSeconds() < 2.5){
-            pauseAction();
-            loadSong(songs.getPreviousSong());
-            playAction();
-            if(controller != null){
-                controller.previous();
-            }
-        } else {
-            mediaPlayer.seek(Duration.seconds(0.0));
-        }
-    }
-    @FXML
-    void loopAction() {
-        if(!isLooping) {
-            mediaPlayer.setOnEndOfMedia(() -> mediaPlayer.seek(Duration.seconds(0.0)));
-            isLooping = true;
-        }else{
-            mediaPlayer.setOnEndOfMedia(this::nextAction);
-            isLooping = false;
-        }
-    }
-    @FXML
-    void shuffleAction(){
-        songs.setShuffle();
-        if(controller != null){
-            controller.shuffle();
-        }
-    }
-    @FXML
-    void volumeAction() {
-
-    }
-    @FXML
-    void playPauseAction() {
-        if (mediaPlayer.getStatus().toString().equals("STALLED")) {
-            pauseAction();
-        } else {
-            if (!mediaPlayer.getStatus().toString().equals("PLAYING")) {
-                playAction();
-            } else {
-                pauseAction();
-            }
-        }
-    }
-    @FXML
-    void menuAction(){
-
-    }
-    @FXML
-    void queueAction(){
-        if(controller == null) {
-            try {
-                FXMLLoader loader = new FXMLLoader();
-                loader.setLocation(getClass().getResource("queue-view.fxml"));
-                DialogPane view = loader.load();
-                controller = loader.getController();
-
-                controller.setSongs(songs);
-
-                Dialog<ButtonType> dialog = new Dialog<>();
-                dialog.setTitle("Songs Queue");
-                dialog.initModality(Modality.WINDOW_MODAL);
-                dialog.setDialogPane(view);
-
-                Optional<ButtonType> clickedButton = dialog.showAndWait();
-                if (clickedButton.orElse(ButtonType.CANCEL) == ButtonType.OK) {
-                    controller = null;
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     private void loadSong(String songName) {
         media = new Media(songName);
         mediaPlayer = new MediaPlayer(media);
@@ -207,6 +125,97 @@ public class MusicPlayerOverviewController implements Initializable {
         albumArtistLabel.setText("protoAlbumArtist.");
         yearLabel.setText("protoYear.");
     }
+    @FXML
+    void nextAction() {
+        pauseAction();
+        loadSong(songs.getNextSong());
+        playAction();
+        if(controller != null){
+            controller.next();
+        }
+    }
+    @FXML
+    void previousAction() {
+        if (mediaPlayer.getCurrentTime().toSeconds() < 2.5){
+            pauseAction();
+            loadSong(songs.getPreviousSong());
+            playAction();
+            if(controller != null){
+                controller.previous();
+            }
+        } else {
+            mediaPlayer.seek(Duration.seconds(0.0));
+        }
+    }
+    @FXML
+    void loopAction() {
+        if(!isLooping) {
+            mediaPlayer.setOnEndOfMedia(() -> mediaPlayer.seek(Duration.seconds(0.0)));
+            isLooping = true;
+        }else{
+            mediaPlayer.setOnEndOfMedia(this::nextAction);
+            isLooping = false;
+        }
+    }
+    @FXML
+    void shuffleAction(){
+        songs.setShuffle();
+        if(controller != null){
+            controller.shuffle();
+        }
+    }
+    @FXML
+    void playPauseAction() {
+        if (mediaPlayer.getStatus().toString().equals("STALLED")) {
+            pauseAction();
+        } else {
+            if (!mediaPlayer.getStatus().toString().equals("PLAYING")) {
+                playAction();
+            } else {
+                pauseAction();
+            }
+        }
+    }
+    @FXML void handleOpen(){
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        File startingDirectory = directoryChooser.showDialog(null);
+        if (startingDirectory != null){
+            //Here you need to select the Directory that will contain all the saved songs
+            System.out.println(startingDirectory.getAbsolutePath());
+        }else{
+            new Alert(Alert.AlertType.ERROR, "Could not load directory").showAndWait();
+        }
+    }
+    @FXML
+    void menuAction(){
+
+    }
+    @FXML
+    void queueAction(){
+        if(controller == null) {
+            try {
+                FXMLLoader loader = new FXMLLoader();
+                loader.setLocation(getClass().getResource("queue-view.fxml"));
+                DialogPane view = loader.load();
+                controller = loader.getController();
+
+                controller.setSongs(songs);
+
+                Dialog<ButtonType> dialog = new Dialog<>();
+                dialog.setTitle("Songs Queue");
+                dialog.initModality(Modality.WINDOW_MODAL);
+                dialog.setDialogPane(view);
+
+                Optional<ButtonType> clickedButton = dialog.showAndWait();
+                if (clickedButton.orElse(ButtonType.CANCEL) == ButtonType.OK) {
+                    controller = null;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 
     private void playAction() {
         mediaPlayer.play();

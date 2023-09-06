@@ -37,7 +37,7 @@ javafx {
 dependencies {
     implementation('org.controlsfx:controlsfx:11.1.2')
     implementation group: 'org.openjfx', name: 'javafx-media', version: '21-ea+17'
-    implementation group: 'com.mpatric', name: 'mp3agic', version: '0.9.1'
+  //  implementation group: 'com.mpatric', name: 'mp3agic', version: '0.9.1'
     testImplementation("org.junit.jupiter:junit-jupiter-api:${junitVersion}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${junitVersion}")
 }

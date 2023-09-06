@@ -4,7 +4,7 @@ import javafx.scene.media.Media;
 
 import java.io.File;
 import java.util.concurrent.CopyOnWriteArrayList;
-
+/*
 public class Playlist {
     private String name;
     protected CopyOnWriteArrayList<Integer> songs = new CopyOnWriteArrayList<>();
@@ -62,3 +62,4 @@ public class Playlist {
     //    return new Media(library.getSong(index));
     //}
 }
+*/

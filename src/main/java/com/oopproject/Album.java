@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Vector;
 import java.util.concurrent.CopyOnWriteArrayList;
-
+/*
 public class Album extends Playlist  {
     private int year = 0;
     private String artist = null;
@@ -87,3 +87,4 @@ public class Album extends Playlist  {
         songs.remove(Integer.valueOf(index));
     }
 }
+*/
