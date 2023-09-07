@@ -1,5 +1,8 @@
 package com.oopproject;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -17,20 +20,19 @@ import java.util.stream.IntStream;
  * @see Song
  * @see Playlist
  * @see Album
- *//*
+ */
 public class Library {
     private Properties properties;
     private final ConcurrentHashMap<Integer, String> songs = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, Playlist> playlists = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, Album> albums = new ConcurrentHashMap<>();
-*/
+
     /** Initialises a Library at the start of the application.
      *
      * @param properties contains the name of the directory where the Library files are stored.
      * @param isFirstSetup specifies if this is the first time the application was started on this system.
      * @throws RuntimeException if there is an error when opening the directory.
      */
-    /*
     public Library(Properties properties, boolean isFirstSetup) {
         this.properties = properties;
         File directory;
@@ -53,11 +55,11 @@ public class Library {
                     .forEachOrdered(i -> addNewSong(Song.getString(sorted.get(i)), i));
         }
     }
-*/
+
     /** Creates a new Library instance from a list of files.
      * @param files is the list of song files in the Library.
      */
-    /*
+
     public Library(CopyOnWriteArrayList<File> files) {
         files.forEach(file -> {
             if (Song.getIndexString(file) == null) {
@@ -86,8 +88,11 @@ public class Library {
                 .orElse(0);
     }
 
-    public Vector<String> getSongNames() {
-        return new Vector<>(songs.values());
+    public ObservableList<String> getSongNames() {
+        return FXCollections.observableArrayList(songs.values()
+                .stream()
+                .map(Song::getTitle)
+                .toList());
     }
 
     public CopyOnWriteArrayList<File> getFiles(File directory)   {
@@ -98,20 +103,22 @@ public class Library {
         return playlists.size();
     }
 
-    public Vector<String> getPlaylistNames()    {
-        return playlists.values().stream()
+    public ObservableList<String> getPlaylistNames()    {
+        return FXCollections.observableArrayList(playlists.values()
+                .stream()
                 .map(Playlist::getName)
-                .collect(Collectors.toCollection(Vector::new));
+                .toList());
     }
 
     public int getNumberOfAlbums()  {
         return albums.size();
     }
 
-    public Vector<String> getAlbumNames()   {
-        return albums.values().stream()
+    public ObservableList<String> getAlbumNames()   {
+        return FXCollections.observableArrayList(albums.values()
+                .stream()
                 .map(Album::getName)
-                .collect(Collectors.toCollection(Vector::new));
+                .toList());
     }
 
     public String getSong(int index) {
@@ -257,4 +264,3 @@ public class Library {
         albums.remove(album);
     }
 }
-*/
