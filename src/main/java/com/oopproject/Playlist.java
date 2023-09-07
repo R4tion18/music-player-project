@@ -1,7 +1,5 @@
 package com.oopproject;
 
-import javafx.scene.media.Media;
-
 import java.io.File;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -32,8 +30,12 @@ public class Playlist {
         this.name = name;
     }
 
-    public CopyOnWriteArrayList<Integer> getSongs() {
+    public CopyOnWriteArrayList<Integer> getSongIndexes() {
         return songs;
+    }
+
+    public CopyOnWriteArrayList<String> getSongURIs() {
+        return new CopyOnWriteArrayList<>(songs.stream().map(library::getSong).toList());
     }
 
     public Library getLibrary() {

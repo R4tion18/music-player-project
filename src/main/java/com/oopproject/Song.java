@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Objects;
 import java.util.Optional;
 
 public record Song(File file) {
@@ -89,7 +90,12 @@ public record Song(File file) {
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     public static String getIndexString(File file) {
-        return getTag(file).get().getComment().split(",")[0];
+        createTag(file);
+        if (getTag(file).get().getComment() == null)  {
+            return null;
+        }   else {
+            return getTag(file).get().getComment().split(",")[0];
+        }
     }
 
     public int getIndex() {
@@ -101,7 +107,7 @@ public record Song(File file) {
     }
 
     public static int getIndex(File file) {
-        return Integer.parseInt(getIndexString(file));
+        return Integer.parseInt(Objects.requireNonNull(getIndexString(file)));
     }
 
     public void setIndex(Integer index) {
@@ -129,7 +135,11 @@ public record Song(File file) {
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     public static String getConsecutiveString(File file) {
         createTag(file);
-        return getTag(file).get().getComment().split(",")[1];
+        if (getTag(file).get().getComment() == null) {
+            return null;
+        }   else {
+            return getTag(file).get().getComment().split(",")[1];
+        }
     }
 
     public int getConsecutive() {
@@ -142,7 +152,7 @@ public record Song(File file) {
 
     public static int getConsecutive(File file) {
         try {
-            return Integer.parseInt(getConsecutiveString(file));
+            return Integer.parseInt(Objects.requireNonNull(getConsecutiveString(file)));
         }   catch (NumberFormatException e) {
             return -1;
         }

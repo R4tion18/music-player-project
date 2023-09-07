@@ -22,7 +22,7 @@ import java.util.stream.IntStream;
  * @see Album
  */
 public class Library {
-    private Properties properties;
+    private final Properties properties;
     private final ConcurrentHashMap<Integer, String> songs = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, Playlist> playlists = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, Album> albums = new ConcurrentHashMap<>();
@@ -44,7 +44,7 @@ public class Library {
         CopyOnWriteArrayList<File> files = getFiles(directory);
 
         if (!isFirstSetup)  {
-            new Library(files);
+            fillWith(files);
         } else {
             CopyOnWriteArrayList<File> sorted = new CopyOnWriteArrayList<>();
             files.stream()
@@ -60,18 +60,21 @@ public class Library {
      * @param files is the list of song files in the Library.
      */
 
-    public Library(CopyOnWriteArrayList<File> files) {
+    public void fillWith(CopyOnWriteArrayList<File> files) {
         files.forEach(file -> {
-            if (Song.getIndexString(file) == null) {
+            Song song = new Song(file);
+            if (song.getIndexString() == null) {
                 addNewSong(Song.getString(file), getHighestIndex() + 1);
             }
 
-            Arrays.stream(properties.getProperty(Song.getIndexString(file)).split("\n"))    //look over with new library
-                    .forEach(playlist -> {
-                        playlists.putIfAbsent(playlist, new Playlist(playlist, this));
-                        playlists.get(playlist)
-                                .addSong(Song.getIndex(file));
-                    });
+            if (!properties.getProperty(String.valueOf(getHighestIndex())/*song.getIndexString()*/).isEmpty())  {
+                Arrays.stream(properties.getProperty(song.getIndexString()).split("\n"))
+                        .forEach(playlist -> {
+                            playlists.putIfAbsent(playlist, new Playlist(playlist, this));
+                            playlists.get(playlist)
+                                    .addSong(song.getIndex());
+                        });
+            }
         });
     }
 
@@ -80,9 +83,9 @@ public class Library {
     }
 
     public int getHighestIndex()    {
-        return properties.stringPropertyNames()
+        return this.properties.stringPropertyNames()
                 .stream()
-                .skip(1)
+                .filter(string -> !string.contentEquals("libraryFolder"))
                 .mapToInt(Integer::parseInt)
                 .max()
                 .orElse(0);
@@ -97,6 +100,10 @@ public class Library {
 
     public CopyOnWriteArrayList<File> getFiles(File directory)   {
         return new CopyOnWriteArrayList<>(List.of(Objects.requireNonNull(directory.listFiles())));
+    }
+
+    public CopyOnWriteArrayList<String> getSongURIs()   {
+        return new CopyOnWriteArrayList<>(songs.values());
     }
 
     public int getNumberOfPlaylists()   {
@@ -166,17 +173,21 @@ public class Library {
     }
 
     public int addNewSong(String uri, int index)  {
-        if(Song.getIndexString(uri) == null) {
-            Song.setIndex(uri, index);
+        Song song = new Song(Song.getFile(uri));
+
+        if(song.getIndexString() == null) {
+            song.setIndex(index);
             properties.setProperty(String.valueOf(index), "");
             songs.put(index, uri);
         }
 
-        String album = Song.getAlbum(uri);
+        String album = song.getAlbum();
         if (album != null) {
             albums.putIfAbsent(album, new Album(album, this));
-            albums.get(album).addSong(Song.getIndex(uri));
+            albums.get(album).addSong(/*song.getIndex()*/index);
         }
+
+        //System.out.println(Song.getIndexString(uri));
 
         return index;
     }
@@ -229,9 +240,9 @@ public class Library {
 
     public void deletePlaylist(String playlist, Boolean fromLibrary)    {
         if (fromLibrary)    {
-            playlists.get(playlist).getSongs().forEach(this::deleteSong);
+            playlists.get(playlist).getSongIndexes().forEach(this::deleteSong);
         }   else {
-            playlists.get(playlist).getSongs().forEach(i -> removeFromPlaylist(i, playlist));
+            playlists.get(playlist).getSongIndexes().forEach(i -> removeFromPlaylist(i, playlist));
         }
 
         playlists.remove(playlist);
@@ -258,7 +269,7 @@ public class Library {
 
     public void deleteAlbum(String album, Boolean fromLibrary)   {
         if (fromLibrary)    {
-            albums.get(album).getSongs().forEach(this::deleteSong);
+            albums.get(album).getSongIndexes().forEach(this::deleteSong);
         }
 
         albums.remove(album);
