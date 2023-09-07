@@ -8,5 +8,5 @@ module com.oopproject {
 
     opens com.oopproject to javafx.fxml;
     exports com.oopproject;
-
+    exports com.oopproject.mp3agic;
 }

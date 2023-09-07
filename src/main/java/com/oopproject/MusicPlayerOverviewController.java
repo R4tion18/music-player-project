@@ -9,10 +9,7 @@ import javafx.fxml.Initializable;
 import java.io.IOException;
 import java.net.URL;
 import java.io.File;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.stream.IntStream;
 
 import javafx.scene.control.*;
@@ -55,13 +52,40 @@ public class MusicPlayerOverviewController implements Initializable {
     public ObservableList<String> allSavedSong;
     public ObservableList<String> allSavedPlaylist;
     public ObservableList<String> allSavedAlbum;
+    public Library library;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         allSavedPlaylist = FXCollections.observableArrayList();
         allSavedAlbum = FXCollections.observableArrayList();
         allSavedSong = FXCollections.observableArrayList();
-        //Testing code start
+
+        Properties defaultProps = new Properties();
+        boolean isFirstSetup = false;
+
+        try {
+            defaultProps.load(MusicPlayerOverviewController.class.getResourceAsStream("default.properties"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        Properties playerProperties = new Properties(defaultProps);
+        try {
+            playerProperties.load(MusicPlayerOverviewController.class.getResourceAsStream("library.properties"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        if (playerProperties.getProperty("libraryFolder", "").isEmpty())   {
+            //ask for directory;
+            //playerProperties.setProperty("libraryFolder", directory);
+            isFirstSetup = true;
+        }
+
+        if (!isFirstSetup)    {
+            library = new Library(playerProperties, isFirstSetup);
+        }
+
         songs = new SongQueue(new File("/Users/Francesco/IdeaProjects/music-player-project/src/test/resources/test-songs"));
         IntStream.range(0, songs.getSongSequence().size()).forEach(i -> allSavedSong.add(songs.getSongNames().get((i + songs.getSongNumber() + 1) % songs.getSongSequence().size())));
         //Testing code stop
