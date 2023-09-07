@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.IntStream;
 
 import javafx.scene.control.*;
@@ -86,7 +87,9 @@ public class MusicPlayerOverviewController implements Initializable {
             library = new Library(playerProperties, isFirstSetup);
         }
 
-        songs = new SongQueue(new File("/Users/Francesco/IdeaProjects/music-player-project/src/test/resources/test-songs"));
+        songs = new SongQueue(new CopyOnWriteArrayList<>(Arrays.stream(Objects.requireNonNull(new File("C:\\Users\\rikiv\\OneDrive\\Desktop\\MediaMusic").listFiles()))
+                        .map(f ->f.toURI().toString())
+                        .toList()));
         IntStream.range(0, songs.getSongSequence().size()).forEach(i -> allSavedSong.add(songs.getSongNames().get((i + songs.getSongNumber() + 1) % songs.getSongSequence().size())));
         //Testing code stop
         songListView.setItems(allSavedSong);
@@ -201,6 +204,69 @@ public class MusicPlayerOverviewController implements Initializable {
         }
     }
     @FXML
+    void menuAction(){
+
+    }
+    @FXML
+    void queueAction(){
+        if(controller == null) {
+            try {
+                FXMLLoader loader = new FXMLLoader();
+                loader.setLocation(getClass().getResource("queue-view.fxml"));
+                DialogPane view = loader.load();
+                controller = loader.getController();
+
+                controller.setSongs(songs);
+
+                Dialog<ButtonType> dialog = new Dialog<>();
+                dialog.setTitle("Songs Queue");
+                dialog.initModality(Modality.WINDOW_MODAL);
+                dialog.setDialogPane(view);
+
+                Optional<ButtonType> clickedButton = dialog.showAndWait();
+                if (clickedButton.orElse(ButtonType.CANCEL) == ButtonType.OK) {
+                    controller = null;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    @FXML
+    void playSongAction(){
+
+    }
+    @FXML
+    void playPlaylistAction(){
+
+    }
+    @FXML
+    void playAlbumAction(){
+
+    }
+    @FXML
+    void addToQueueSAction(){
+    }
+    @FXML
+    void addToQueueMAction(){
+
+    }
+
+    private void playAction() {
+        mediaPlayer.play();
+        isPlaying = true;
+        setImage(playPauseButton, "icons/pauseIcon.png");
+
+    }
+
+    private void pauseAction() {
+        mediaPlayer.pause();
+        isPlaying = false;
+        setImage(playPauseButton, "icons/playIcon1.png");
+
+    }
+
+    @FXML
     private void handleOpen(){
         DirectoryChooser directoryChooser = new DirectoryChooser();
         File startingDirectory = directoryChooser.showDialog(null);
@@ -236,51 +302,6 @@ public class MusicPlayerOverviewController implements Initializable {
     private void handleClose() {
         System.exit(0);
     }
-    @FXML
-    void menuAction(){
-
-    }
-    @FXML
-    void queueAction(){
-        if(controller == null) {
-            try {
-                FXMLLoader loader = new FXMLLoader();
-                loader.setLocation(getClass().getResource("queue-view.fxml"));
-                DialogPane view = loader.load();
-                controller = loader.getController();
-
-                controller.setSongs(songs);
-
-                Dialog<ButtonType> dialog = new Dialog<>();
-                dialog.setTitle("Songs Queue");
-                dialog.initModality(Modality.WINDOW_MODAL);
-                dialog.setDialogPane(view);
-
-                Optional<ButtonType> clickedButton = dialog.showAndWait();
-                if (clickedButton.orElse(ButtonType.CANCEL) == ButtonType.OK) {
-                    controller = null;
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-
-    private void playAction() {
-        mediaPlayer.play();
-        isPlaying = true;
-        setImage(playPauseButton, "icons/pauseIcon.png");
-
-    }
-
-    private void pauseAction() {
-        mediaPlayer.pause();
-        isPlaying = false;
-        setImage(playPauseButton, "icons/playIcon1.png");
-
-    }
-
     public String timeFormatting(Duration time) {
         int minutes = (int) time.toMinutes();
         int seconds = (int) time.toSeconds();

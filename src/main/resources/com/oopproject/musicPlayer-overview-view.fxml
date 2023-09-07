@@ -175,8 +175,9 @@
                <content>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0">
                      <children>
-                        <ListView fx:id="songListView" layoutX="14.0" layoutY="14.0" prefHeight="290.0" prefWidth="262.0" />
-                        <Button layoutX="307.0" layoutY="14.0" mnemonicParsing="false" prefHeight="68.0" prefWidth="73.0" text="Button" />
+                        <ListView fx:id="songListView" layoutX="14.0" layoutY="14.0" prefHeight="290.0" prefWidth="262.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+                        <Button layoutX="289.0" layoutY="14.0" mnemonicParsing="false" onAction="#playSongAction" prefHeight="70.0" prefWidth="95.0" text="Play song" AnchorPane.rightAnchor="35.0" AnchorPane.topAnchor="10.0" />
+                        <Button layoutX="289.0" layoutY="98.0" mnemonicParsing="false" onAction="#addToQueueSAction" prefHeight="70.0" prefWidth="95.0" text="Add to queue" AnchorPane.rightAnchor="35.0" AnchorPane.topAnchor="100.0" />
                      </children>
                   </AnchorPane>
                </content></Tab>
@@ -184,8 +185,9 @@
                <content>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0">
                      <children>
-                        <ListView fx:id="playlistListView" layoutX="14.0" layoutY="14.0" prefHeight="286.0" prefWidth="261.0" />
-                        <Button layoutX="304.0" layoutY="14.0" mnemonicParsing="false" prefHeight="81.0" prefWidth="85.0" text="Button" />
+                        <ListView fx:id="playlistListView" layoutX="14.0" layoutY="14.0" prefHeight="290.0" prefWidth="262.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+                        <Button layoutX="304.0" layoutY="14.0" mnemonicParsing="false" onAction="#playPlaylistAction" prefHeight="70.0" prefWidth="95.0" text="Play playlist" AnchorPane.rightAnchor="35.0" AnchorPane.topAnchor="10.0" />
+                        <Button layoutX="289.0" layoutY="97.0" mnemonicParsing="false" onAction="#addToQueueMAction" prefHeight="70.0" prefWidth="95.0" text="Add to queue" AnchorPane.rightAnchor="35.0" AnchorPane.topAnchor="100.0" />
                      </children>
                   </AnchorPane>
                </content></Tab>
@@ -193,8 +195,9 @@
                <content>
                   <AnchorPane prefHeight="200.0" prefWidth="200.0">
                      <children>
-                        <ListView fx:id="albumListView" layoutX="14.0" layoutY="14.0" prefHeight="286.0" prefWidth="267.0" />
-                        <Button layoutX="297.0" layoutY="14.0" mnemonicParsing="false" prefHeight="89.0" prefWidth="97.0" text="Button" />
+                        <ListView fx:id="albumListView" layoutX="14.0" layoutY="14.0" prefHeight="290.0" prefWidth="262.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+                        <Button layoutX="297.0" layoutY="14.0" mnemonicParsing="false" onAction="#playAlbumAction" prefHeight="70.0" prefWidth="95.0" text="Play album" AnchorPane.rightAnchor="35.0" AnchorPane.topAnchor="10.0" />
+                        <Button layoutX="299.0" layoutY="107.0" mnemonicParsing="false" onAction="#addToQueueMAction" prefHeight="70.0" prefWidth="95.0" text="Add to queue" AnchorPane.rightAnchor="35.0" AnchorPane.topAnchor="100.0" />
                      </children>
                   </AnchorPane>
                </content></Tab>
