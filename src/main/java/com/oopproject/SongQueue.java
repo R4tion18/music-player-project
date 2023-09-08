@@ -1,5 +1,8 @@
 package com.oopproject;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -10,7 +13,7 @@ public class SongQueue {
 
     private ArrayList<String> queue;
     private int songNumber = 0;
-    private ArrayList<Integer> songSequence;
+    private ObservableList<Integer> songSequence;
     private boolean isShuffle = false;
 
 
@@ -18,7 +21,7 @@ public class SongQueue {
     public SongQueue(CopyOnWriteArrayList<String> newSongs) {
         queue = new ArrayList<>();
         queue.addAll(newSongs);
-        songSequence = new ArrayList<>();
+        songSequence = FXCollections.observableArrayList();
         IntStream.
                 range(0, queue.size()).
                 forEach(i -> songSequence.add(i));
@@ -28,7 +31,7 @@ public class SongQueue {
         return songNumber;
     }
 
-    public ArrayList<Integer> getSongSequence() {
+    public ObservableList<Integer> getSongSequence() {
         return songSequence;
     }
 
@@ -70,7 +73,14 @@ public class SongQueue {
         queue.addAll(newSongs);
     }
     public void removeSong(int index){
-        queue.remove(index);
+        int realIndex = songSequence.get(index);
+        queue.remove(realIndex);
+        songSequence.remove(index);
+        for(int i = 0; i < songSequence.size(); i++){
+            if (songSequence.get(i) > realIndex){
+               songSequence.set(i, songSequence.get(i) - 1);
+            }
+        }
     }
     public void setShuffle() {
         if(!isShuffle){
@@ -78,7 +88,7 @@ public class SongQueue {
             isShuffle = true;
         } else{
             songNumber = songSequence.get(songNumber);
-            songSequence = new ArrayList<>();
+            songSequence.clear();
             IntStream.
                     range(0, queue.size()).
                     forEach(i -> songSequence.add(i));

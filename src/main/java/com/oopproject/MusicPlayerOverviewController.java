@@ -223,10 +223,8 @@ public class MusicPlayerOverviewController implements Initializable {
                 dialog.initModality(Modality.WINDOW_MODAL);
                 dialog.setDialogPane(view);
 
-                Optional<ButtonType> clickedButton = dialog.showAndWait();
-                if (clickedButton.orElse(ButtonType.CANCEL) == ButtonType.OK) {
-                    controller = null;
-                }
+                dialog.showAndWait();
+                controller = null;
             } catch (IOException e) {
                 e.printStackTrace();
             }

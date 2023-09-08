@@ -29,6 +29,11 @@
                </font>
             </Button>
             <Button fx:id="minusButton" layoutX="465.0" layoutY="84.0" mnemonicParsing="false" onAction="#minusAction" prefHeight="55.0" prefWidth="55.0" />
+            <Button layoutX="465.0" layoutY="271.0" mnemonicParsing="false" onAction="#removeAction" prefHeight="55.0" prefWidth="55.0" text="Remove">
+               <font>
+                  <Font size="10.0" />
+               </font>
+            </Button>
          </children>
       </AnchorPane>
    </content>
