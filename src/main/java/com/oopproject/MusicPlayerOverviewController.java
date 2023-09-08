@@ -6,6 +6,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.io.File;
@@ -50,60 +52,56 @@ public class MusicPlayerOverviewController implements Initializable {
     private SongQueue songs;
     private boolean isPlaying = false;
     private  boolean isLooping = false;
-    public ObservableList<String> allSavedSong;
-    public ObservableList<String> allSavedPlaylist;
-    public ObservableList<String> allSavedAlbum;
     public Library library;
+    public Properties playerProperties;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        allSavedPlaylist = FXCollections.observableArrayList();
-        allSavedAlbum = FXCollections.observableArrayList();
-        allSavedSong = FXCollections.observableArrayList();
+        volumeSlider.setMax(1.0);
+        volumeSlider.setValue(0.5);
+        volumeLabel.setText("50%");
+        //loadSong(songs.getSong());
+        setImage(playPauseButton, "icons/playIcon1.png");
+        setImage(nextButton, "icons/nextIcon.png");
+        setImage(previousButton, "icons/previousIcon.png");
+        setImage(queueButton, "icons/queueIcon.png");
 
-        Properties defaultProps = new Properties();
-        boolean isFirstSetup = false;
-
+        Properties defaultProperties = new Properties();
         try {
-            defaultProps.load(MusicPlayerOverviewController.class.getResourceAsStream("default.properties"));
+            defaultProperties.load(MusicPlayerOverviewController.class.getResourceAsStream("default.properties"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        Properties playerProperties = new Properties(defaultProps);
+        playerProperties = new Properties(defaultProperties);
         try {
-            playerProperties.load(MusicPlayerOverviewController.class.getResourceAsStream("library.properties"));
+            playerProperties.load(MusicPlayerOverviewController.class.getResourceAsStream("player.properties"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
         if (playerProperties.getProperty("libraryFolder", "").isEmpty())   {
-            //ask for directory;
-            //playerProperties.setProperty("libraryFolder", directory);
-            isFirstSetup = true;
+            new Alert(Alert.AlertType.INFORMATION, "No directory has been selected. Open a directory on your computer to setup the player. ").showAndWait();
+        }   else {
+            loadLibrary(false);
         }
-
-        if (!isFirstSetup)    {
-            library = new Library(playerProperties, isFirstSetup);
-        }
-
-        songs = new SongQueue(new CopyOnWriteArrayList<>(Arrays.stream(Objects.requireNonNull(new File("C:\\Users\\rikiv\\OneDrive\\Desktop\\MediaMusic").listFiles()))
-                        .map(f ->f.toURI().toString())
-                        .toList()));
-        IntStream.range(0, songs.getSongSequence().size()).forEach(i -> allSavedSong.add(songs.getSongNames().get((i + songs.getSongNumber() + 1) % songs.getSongSequence().size())));
-        //Testing code stop
-        songListView.setItems(allSavedSong);
-        playlistListView.setItems(allSavedPlaylist);
-        albumListView.setItems(allSavedAlbum);
-        volumeSlider.setMax(1.0);
-        volumeSlider.setValue(0.5);
-        volumeLabel.setText("50%");
-        loadSong(songs.getSong());
-        setImage(playPauseButton, "icons/playIcon1.png");
-        setImage(nextButton, "icons/nextIcon.png");
-        setImage(previousButton, "icons/previousIcon.png");
-        setImage(queueButton, "icons/queueIcon.png");
     }
+
+    private void loadLibrary(boolean isFirstSetup)  {
+        library = new Library(playerProperties, isFirstSetup);
+        //songs = new SongQueue(new File("/Users/Francesco/IdeaProjects/music-player-project/src/test/resources/test-songs"));
+        //IntStream.range(0, songs.getSongSequence().size()).forEach(i -> allSavedSong.add(songs.getSongNames().get((i + songs.getSongNumber() + 1) % songs.getSongSequence().size())));
+        //Testing code stop
+        songListView.setItems(library.getSongNames());
+        playlistListView.setItems(library.getPlaylistNames());
+        albumListView.setItems(library.getAlbumNames());
+        try (FileOutputStream properties = new FileOutputStream("src/main/resources/com/oopproject/player.properties")) {
+            playerProperties.store(properties, null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void loadSong(String songName) {
         media = new Media(songName);
         mediaPlayer = new MediaPlayer(media);
@@ -203,6 +201,17 @@ public class MusicPlayerOverviewController implements Initializable {
             }
         }
     }
+    @FXML void handleOpen(){
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        File startingDirectory = directoryChooser.showDialog(null);
+        if (startingDirectory != null){
+            System.out.println(startingDirectory.getAbsolutePath());
+            playerProperties.setProperty("libraryFolder", startingDirectory.toURI().toString());
+            loadLibrary(true);
+        }else{
+            new Alert(Alert.AlertType.ERROR, "Could not load directory").showAndWait();
+        }
+    }
     @FXML
     void menuAction(){
 
@@ -264,17 +273,6 @@ public class MusicPlayerOverviewController implements Initializable {
 
     }
 
-    @FXML
-    private void handleOpen(){
-        DirectoryChooser directoryChooser = new DirectoryChooser();
-        File startingDirectory = directoryChooser.showDialog(null);
-        if (startingDirectory != null){
-            //Here you need to select the Directory that will contain all the saved songs
-            System.out.println(startingDirectory.getAbsolutePath());
-        }else{
-            new Alert(Alert.AlertType.ERROR, "Could not load directory").showAndWait();
-        }
-    }
     @FXML
     private void handleAddSong(){
         //If the folder is not selected, select the folder first.

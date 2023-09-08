@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Objects;
 import java.util.Optional;
 
 public record Song(File file) {
@@ -45,16 +46,32 @@ public record Song(File file) {
         Mp3File mp3 = null;
         try {
             mp3 = new Mp3File(file);
-        } catch (IOException e) {
-            //e.printStackTrace();    //change exception handling
-        } catch (UnsupportedTagException e) {
-            //e.printStackTrace(); //change exception handling
-        } catch (InvalidDataException e) {
-            System.out.println(e.getMessage());
-            throw new RuntimeException(e);  //change exception handling
+        } catch (IOException | UnsupportedTagException | InvalidDataException e) {
+            throw new RuntimeException(e);
         }
 
         return mp3;
+    }
+
+    public static void save(Mp3File mp3)    {
+        File mp3File = new File(mp3.getFilename());
+        File directory = mp3File.getParentFile().getParentFile();
+        File tempFile = new File(directory.getPath() + mp3File.getName());
+
+        try {
+            mp3.save(tempFile.getPath());
+        } catch (IOException | NotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+
+        Mp3File tempMp3 = getMp3File(tempFile);
+        try {
+            tempMp3.save(mp3File.getPath());
+        } catch (IOException | NotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+
+        boolean deleted = tempFile.delete();
     }
 
     public Optional<ID3v2> getTag() {
@@ -66,17 +83,25 @@ public record Song(File file) {
     }
 
     public static Optional<ID3v2> getTag(File file) {
-        if (getMp3File(file).hasId3v2Tag()) {
-            return Optional.of(getMp3File(file).getId3v2Tag());
+        return getTag(getMp3File(file));
+    }
+
+    public static Optional<ID3v2> getTag(Mp3File mp3) {
+        if (mp3.hasId3v2Tag()) {
+            return Optional.of(mp3.getId3v2Tag());
         }
 
         return Optional.empty();
     }
 
-    public static void createTag(File file) {
-        if (getTag(file).isEmpty()) {
-            getMp3File(file).setId3v2Tag(new ID3v24Tag());
+    public static Mp3File createTag(File file) {
+        Mp3File mp3 = getMp3File(file);
+
+        if (getTag(mp3).isEmpty()) {
+            mp3.setId3v2Tag(new ID3v24Tag());
         }
+
+        return mp3;
     }
 
     public String getIndexString() {
@@ -89,7 +114,12 @@ public record Song(File file) {
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     public static String getIndexString(File file) {
-        return getTag(file).get().getComment().split(",")[0];
+        createTag(file);
+        if (getTag(file).get().getComment() == null)  {
+            return null;
+        }   else {
+            return getTag(file).get().getComment().split(",")[0];
+        }
     }
 
     public int getIndex() {
@@ -101,7 +131,7 @@ public record Song(File file) {
     }
 
     public static int getIndex(File file) {
-        return Integer.parseInt(getIndexString(file));
+        return Integer.parseInt(Objects.requireNonNull(getIndexString(file)));
     }
 
     public void setIndex(Integer index) {
@@ -114,8 +144,9 @@ public record Song(File file) {
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     public static void setIndex(File file, Integer index) {
-        createTag(file);
-        getTag(file).get().setComment(index.toString());
+        Mp3File mp3 = createTag(file);
+        getTag(mp3).get().setComment(index.toString());
+        save(mp3);
     }
 
     public String getConsecutiveString() {
@@ -129,7 +160,11 @@ public record Song(File file) {
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     public static String getConsecutiveString(File file) {
         createTag(file);
-        return getTag(file).get().getComment().split(",")[1];
+        if (getTag(file).get().getComment() == null) {
+            return null;
+        }   else {
+            return getTag(file).get().getComment().split(",")[1];
+        }
     }
 
     public int getConsecutive() {
@@ -142,7 +177,7 @@ public record Song(File file) {
 
     public static int getConsecutive(File file) {
         try {
-            return Integer.parseInt(getConsecutiveString(file));
+            return Integer.parseInt(Objects.requireNonNull(getConsecutiveString(file)));
         }   catch (NumberFormatException e) {
             return -1;
         }
@@ -158,8 +193,9 @@ public record Song(File file) {
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     public static void setConsecutive(File file, Integer index) {
-        createTag(file);
-        getTag(file).get().setComment(getTag(file).get().getComment() + "," + index.toString());
+        Mp3File mp3 = createTag(file);
+        getTag(mp3).get().setComment(getTag(file).get().getComment() + "," + index.toString());
+        save(mp3);
     }
 
     public String getTitle() {
@@ -186,8 +222,9 @@ public record Song(File file) {
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     public static void setTitle(File file, String title)  {
-        createTag(file);
-        getTag(file).get().setTitle(title);
+        Mp3File mp3 = createTag(file);
+        getTag(mp3).get().setTitle(title);
+        save(mp3);
     }
 
     public String getAlbum() {
@@ -214,8 +251,9 @@ public record Song(File file) {
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     public static void setAlbum(File file, String album)    {
-        createTag(file);
-        getTag(file).get().setAlbum(album);
+        Mp3File mp3 = createTag(file);
+        getTag(mp3).get().setAlbum(album);
+        save(mp3);
     }
 
     public String getAlbumArtist() {
@@ -242,8 +280,9 @@ public record Song(File file) {
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     public static void setAlbumArtist(File file, String artist) {
-        createTag(file);
-        getTag(file).get().setAlbumArtist(artist);
+        Mp3File mp3 = createTag(file);
+        getTag(mp3).get().setAlbumArtist(artist);
+        save(mp3);
     }
 
     public String getArtist() {
@@ -270,8 +309,9 @@ public record Song(File file) {
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     public static void setArtist(File file, String artist)  {
-        createTag(file);
-        getTag(file).get().setArtist(artist);
+        Mp3File mp3 = createTag(file);
+        getTag(mp3).get().setArtist(artist);
+        save(mp3);
     }
 
     public int getYear() {
@@ -302,8 +342,9 @@ public record Song(File file) {
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     public static void setYear(File file, int year) {
-        createTag(file);
-        getTag(file).get().setYear(String.valueOf(year));
+        Mp3File mp3 = createTag(file);
+        getTag(mp3).get().setYear(String.valueOf(year));
+        save(mp3);
     }
 
     public int getTrack() {
@@ -330,7 +371,8 @@ public record Song(File file) {
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     public static void setTrack(File file, int track)   {
-        createTag(file);
-        getTag(file).get().setTrack(String.valueOf(track));
+        Mp3File mp3 = createTag(file);
+        getTag(mp3).get().setTrack(String.valueOf(track));
+        save(mp3);
     }
 }

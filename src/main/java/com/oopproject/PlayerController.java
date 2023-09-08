@@ -28,7 +28,7 @@ public class PlayerController implements Initializable {
 
         Properties playerProperties = new Properties(defaultProps);
         try {
-            playerProperties.load(PlayerController.class.getResourceAsStream("library.properties"));
+            playerProperties.load(PlayerController.class.getResourceAsStream("player.properties"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
