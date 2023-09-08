@@ -83,8 +83,8 @@
                            </font>
                         </Label>
                         <Slider fx:id="timeSlider" layoutX="45.0" layoutY="227.0" prefHeight="30.0" prefWidth="330.0" AnchorPane.leftAnchor="45.0" AnchorPane.rightAnchor="45.0" />
-                        <Label fx:id="currentTimeLabel" alignment="CENTER" layoutX="2.0" layoutY="225.0" prefHeight="35.0" prefWidth="45.0" text="T" AnchorPane.leftAnchor="0.0" />
-                        <Label fx:id="totalTimeLabel" alignment="CENTER" layoutX="372.0" layoutY="225.0" prefHeight="35.0" prefWidth="45.0" text="T" AnchorPane.rightAnchor="2.0" />
+                        <Label fx:id="currentTimeLabel" alignment="CENTER" layoutX="2.0" layoutY="225.0" prefHeight="35.0" prefWidth="45.0" text="0:00" AnchorPane.leftAnchor="0.0" />
+                        <Label fx:id="totalTimeLabel" alignment="CENTER" layoutX="372.0" layoutY="225.0" prefHeight="35.0" prefWidth="45.0" text="0:00" AnchorPane.rightAnchor="2.0" />
                         <Slider fx:id="volumeSlider" layoutX="140.0" layoutY="259.0" prefWidth="140.0" />
                         <Label fx:id="volumeLabel" alignment="CENTER" layoutX="187.0" layoutY="274.0" prefHeight="20.0" prefWidth="45.0" text="V" />
                         <Button layoutX="124.0" layoutY="49.0" mnemonicParsing="false" prefHeight="129.0" prefWidth="174.0" text="Debug">
