@@ -209,6 +209,10 @@ public record Song(File file) {
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     public static String getTitle(File file) {
         createTag(file);
+
+        if (getTag(file).get().getTitle() == null)  {
+            return file.getName();
+        }
         return getTag(file).get().getTitle();
     }
 

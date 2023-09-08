@@ -4,8 +4,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -22,6 +24,8 @@ import java.util.stream.IntStream;
  * @see Album
  */
 public class Library {
+    public ConcurrentHashMap<String, Integer> index;
+    //public ObservableList<String> titles;
     private final Properties properties;
     private final ConcurrentHashMap<Integer, String> songs = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, Playlist> playlists = new ConcurrentHashMap<>();
@@ -58,7 +62,6 @@ public class Library {
     /** Creates a new Library instance from a list of files.
      * @param files is the list of song files in the Library.
      */
-
     public void fillWith(CopyOnWriteArrayList<File> files) {
         files.forEach(file -> {
             Song song = new Song(file);
@@ -92,11 +95,21 @@ public class Library {
                 .orElse(0);
     }
 
-    public ObservableList<String> getSongNames() {
-        return FXCollections.observableArrayList(songs.values()
-                .stream()
-                .map(Song::getTitle)
-                .toList());
+    public ObservableList<String> getSongTitles() {
+        updateIndex();
+        return FXCollections.observableArrayList(index.keySet());
+    }
+
+    public void updateIndex()  {
+        index = new ConcurrentHashMap<>();
+        for (String uri : getSongURIs()) {
+            String title = Song.getTitle(uri);
+            Integer songIndex = Song.getIndex(uri);
+            while (index.containsKey(title))    {
+                title += " ";
+            }
+            index.putIfAbsent(title, songIndex);
+        }
     }
 
     public CopyOnWriteArrayList<File> getFiles(File directory)   {
@@ -163,14 +176,22 @@ public class Library {
 
     public int addSongFile(String uri)    {
         File oldFile;
+        String directoryPath;
         try {
             oldFile = new File(new URI(uri));
+            directoryPath = new File(new URI(properties.getProperty("libraryFolder"))).getPath();
         } catch (URISyntaxException e) {
-            throw new RuntimeException(e);  //change exception handling
+            throw new RuntimeException(e);
         }
-        File song = new File(properties.getProperty("libraryFolder"), uri);
-        boolean deleted = oldFile.delete();
-        return addNewSong(Song.getString(song), getHighestIndex() + 1);
+
+        File newFile = new File(directoryPath, oldFile.getName());
+        try {
+            Files.copy(oldFile.toPath(), newFile.toPath());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return addNewSong(Song.getString(newFile), getHighestIndex() + 1);
     }
 
     public int addNewSong(String uri, int index)  {

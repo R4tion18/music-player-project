@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.IntStream;
 
@@ -92,14 +93,9 @@ public class MusicPlayerOverviewController implements Initializable {
         //songs = new SongQueue(new File("/Users/Francesco/IdeaProjects/music-player-project/src/test/resources/test-songs"));
         //IntStream.range(0, songs.getSongSequence().size()).forEach(i -> allSavedSong.add(songs.getSongNames().get((i + songs.getSongNumber() + 1) % songs.getSongSequence().size())));
         //Testing code stop
-        songListView.setItems(library.getSongNames());
+        songListView.setItems(library.getSongTitles());
         playlistListView.setItems(library.getPlaylistNames());
         albumListView.setItems(library.getAlbumNames());
-        try (FileOutputStream properties = new FileOutputStream("src/main/resources/com/oopproject/player.properties")) {
-            playerProperties.store(properties, null);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     private void loadSong(String songName) {
@@ -144,11 +140,11 @@ public class MusicPlayerOverviewController implements Initializable {
         isLooping = false;
         mediaPlayer.setOnEndOfMedia(this::nextAction);
         songLabel.setText(songs.getName());
-        titleLabel.setText("protoTitle.");
-        artistLabel.setText("protoArtist.");
-        albumLabel.setText("protoAlbum.");
-        albumArtistLabel.setText("protoAlbumArtist.");
-        yearLabel.setText("protoYear.");
+        titleLabel.setText(Song.getTitle(songName));
+        artistLabel.setText(Song.getArtist(songName));
+        albumLabel.setText(Song.getAlbum(songName));
+        albumArtistLabel.setText(Song.getAlbumArtist(songName));
+        yearLabel.setText(String.valueOf(Song.getYear(songName)));
     }
     @FXML
     void nextAction() {
@@ -201,17 +197,7 @@ public class MusicPlayerOverviewController implements Initializable {
             }
         }
     }
-    @FXML void handleOpen(){
-        DirectoryChooser directoryChooser = new DirectoryChooser();
-        File startingDirectory = directoryChooser.showDialog(null);
-        if (startingDirectory != null){
-            System.out.println(startingDirectory.getAbsolutePath());
-            playerProperties.setProperty("libraryFolder", startingDirectory.toURI().toString());
-            loadLibrary(true);
-        }else{
-            new Alert(Alert.AlertType.ERROR, "Could not load directory").showAndWait();
-        }
-    }
+
     @FXML
     void menuAction(){
 
@@ -272,7 +258,17 @@ public class MusicPlayerOverviewController implements Initializable {
         mediaPlayer.pause();
         isPlaying = false;
         setImage(playPauseButton, "icons/playIcon1.png");
+    }
 
+    @FXML void handleOpen(){
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        File startingDirectory = directoryChooser.showDialog(null);
+        if (startingDirectory != null){
+            playerProperties.setProperty("libraryFolder", startingDirectory.toURI().toString());
+            loadLibrary(true);
+        }else{
+            new Alert(Alert.AlertType.ERROR, "Could not load directory").showAndWait();
+        }
     }
 
     @FXML
@@ -281,11 +277,13 @@ public class MusicPlayerOverviewController implements Initializable {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("MP3 files (*.mp3)", "*.mp3"));
         File newSong = fileChooser.showOpenDialog(null);
+
         if (newSong != null){
-            System.out.println(newSong.getAbsolutePath());
+            library.addSongFile(newSong.toURI().toString());
         }else{
             new Alert(Alert.AlertType.ERROR, "Could not load that file.").showAndWait();
         }
+        songListView.setItems(library.getSongTitles());
     }
 
     @FXML
@@ -298,6 +296,11 @@ public class MusicPlayerOverviewController implements Initializable {
     }
     @FXML
     private void handleClose() {
+        try (FileOutputStream properties = new FileOutputStream("src/main/resources/com/oopproject/player.properties")) {
+            playerProperties.store(properties, null);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         System.exit(0);
     }
     public String timeFormatting(Duration time) {
