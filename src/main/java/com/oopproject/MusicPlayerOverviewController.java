@@ -87,8 +87,6 @@ public class MusicPlayerOverviewController implements Initializable {
     }
 
     private void loadLibrary(boolean isFirstSetup)  {
-        System.out.println(playerProperties.getProperty("libraryFolder"));
-
         library = new Library(playerProperties, isFirstSetup);
         //songs = new SongQueue(new File("/Users/Francesco/IdeaProjects/music-player-project/src/test/resources/test-songs"));
         //IntStream.range(0, songs.getSongSequence().size()).forEach(i -> allSavedSong.add(songs.getSongNames().get((i + songs.getSongNumber() + 1) % songs.getSongSequence().size())));
@@ -98,7 +96,6 @@ public class MusicPlayerOverviewController implements Initializable {
         albumListView.setItems(library.getAlbumNames());
         try (FileOutputStream properties = new FileOutputStream("src/main/resources/com/oopproject/player.properties")) {
             playerProperties.store(properties, null);
-            System.out.println(properties);
         } catch (IOException e) {
             e.printStackTrace();
         }
