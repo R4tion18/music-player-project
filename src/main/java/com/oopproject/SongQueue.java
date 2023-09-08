@@ -16,6 +16,10 @@ public class SongQueue {
     private ObservableList<Integer> songSequence;
     private boolean isShuffle = false;
 
+    public SongQueue()  {
+        queue = new ArrayList<>();
+        songSequence = FXCollections.observableArrayList();
+    }
 
 
     public SongQueue(CopyOnWriteArrayList<String> newSongs) {

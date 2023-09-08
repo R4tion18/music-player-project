@@ -50,7 +50,7 @@ public class MusicPlayerOverviewController implements Initializable {
     QueueViewController controller;
     private Media media;
     private MediaPlayer mediaPlayer;
-    private SongQueue songs;
+    private SongQueue songs = new SongQueue();
     private boolean isPlaying = false;
     private  boolean isLooping = false;
     public Library library;
@@ -187,6 +187,12 @@ public class MusicPlayerOverviewController implements Initializable {
     }
     @FXML
     void playPauseAction() {
+        if (mediaPlayer == null)    {
+            if (songs.getSongNames().isEmpty())   {
+                return;
+            }
+            loadSong(songs.getSong());
+        }
         if (mediaPlayer.getStatus().toString().equals("STALLED")) {
             pauseAction();
         } else {
@@ -226,24 +232,57 @@ public class MusicPlayerOverviewController implements Initializable {
         }
     }
     @FXML
-    void playSongAction(){
-
+    void playSongAction(){  //works only when nothing is playing
+        if (songListView.getSelectionModel().getSelectedIndex() >= 0)   {
+            songs = new SongQueue();
+            addToQueueSAction();
+            loadSong(songs.getSong());
+            playAction();
+        }
     }
     @FXML
-    void playPlaylistAction(){
-
+    void playPlaylistAction(){  //works only when nothing is playing
+        if (playlistListView.getSelectionModel().getSelectedIndex() >= 0)   {
+            songs = new SongQueue();
+            addToQueuePAction();
+            loadSong(songs.getSong());
+            playAction();
+        }
     }
     @FXML
-    void playAlbumAction(){
-
+    void playAlbumAction(){ //works only when nothing is playing
+        if (albumListView.getSelectionModel().getSelectedIndex() >= 0)   {
+            songs = new SongQueue();
+            addToQueueAAction();
+            loadSong(songs.getSong());
+            playAction();
+        }
     }
     @FXML
     void addToQueueSAction(){
+        if (songListView.getSelectionModel().getSelectedIndex() >= 0)   {
+            songs.addSong(library.getSong(library.getIndex(songListView.getSelectionModel().getSelectedItem())));
+        }
     }
+
     @FXML
+    void addToQueueAAction()    {
+        if (albumListView.getSelectionModel().getSelectedIndex() >= 0)   {
+            songs.addSongs(new ArrayList<>(library.getAlbum(albumListView.getSelectionModel().getSelectedItem()).getSongURIs()));
+        }
+    }
+
+    @FXML
+    void addToQueuePAction()  {
+        if (playlistListView.getSelectionModel().getSelectedIndex() >= 0)   {
+            songs.addSongs(new ArrayList<>(library.getPlaylist(playlistListView.getSelectionModel().getSelectedItem()).getSongURIs()));
+        }
+    }
+
+    /*@FXML
     void addToQueueMAction(){
 
-    }
+    }*/
 
     private void playAction() {
         mediaPlayer.play();

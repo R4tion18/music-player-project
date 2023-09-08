@@ -125,10 +125,7 @@ public class Library {
     }
 
     public ObservableList<String> getPlaylistNames()    {
-        return FXCollections.observableArrayList(playlists.values()
-                .stream()
-                .map(Playlist::getName)
-                .toList());
+        return FXCollections.observableArrayList(playlists.keySet());
     }
 
     public int getNumberOfAlbums()  {
@@ -136,10 +133,11 @@ public class Library {
     }
 
     public ObservableList<String> getAlbumNames()   {
-        return FXCollections.observableArrayList(albums.values()
-                .stream()
-                .map(Album::getName)
-                .toList());
+        return FXCollections.observableArrayList(albums.keySet());
+    }
+
+    public int getIndex(String title)   {
+        return index.get(title);
     }
 
     public String getSong(int index) {

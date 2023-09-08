@@ -362,7 +362,11 @@ public record Song(File file) {
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     public static int getTrack(File file) {
         createTag(file);
-        return Integer.parseInt(getTag(file).get().getTrack());
+        try {
+            return Integer.parseInt(getTag(file).get().getTrack());
+        }   catch (NumberFormatException e) {
+            return 0;
+        }
     }
 
     public void setTrack(int track)  {

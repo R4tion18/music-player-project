@@ -65,11 +65,15 @@ public class Album extends Playlist  {
          }
 
         songs.stream()
-                .mapToInt(s -> s)
+                .mapToInt(i -> i)
                 .filter(s ->
                         Song.getTrack(getLibrary().getSong(s)) > song.getTrack())
                 .findFirst()
                 .ifPresent(s -> songs.add(songs.indexOf(s), index));
+
+        if(!songs.contains(index))   {
+            songs.add(index);
+        }
     }
 
     @Override

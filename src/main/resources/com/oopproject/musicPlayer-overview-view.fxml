@@ -187,7 +187,7 @@
                      <children>
                         <ListView fx:id="playlistListView" layoutX="14.0" layoutY="14.0" prefHeight="290.0" prefWidth="262.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
                         <Button layoutX="304.0" layoutY="14.0" mnemonicParsing="false" onAction="#playPlaylistAction" prefHeight="70.0" prefWidth="95.0" text="Play playlist" AnchorPane.rightAnchor="35.0" AnchorPane.topAnchor="10.0" />
-                        <Button layoutX="289.0" layoutY="97.0" mnemonicParsing="false" onAction="#addToQueueMAction" prefHeight="70.0" prefWidth="95.0" text="Add to queue" AnchorPane.rightAnchor="35.0" AnchorPane.topAnchor="100.0" />
+                        <Button layoutX="289.0" layoutY="97.0" mnemonicParsing="false" onAction="#addToQueuePAction" prefHeight="70.0" prefWidth="95.0" text="Add to queue" AnchorPane.rightAnchor="35.0" AnchorPane.topAnchor="100.0" />
                      </children>
                   </AnchorPane>
                </content></Tab>
@@ -197,7 +197,7 @@
                      <children>
                         <ListView fx:id="albumListView" layoutX="14.0" layoutY="14.0" prefHeight="290.0" prefWidth="262.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
                         <Button layoutX="297.0" layoutY="14.0" mnemonicParsing="false" onAction="#playAlbumAction" prefHeight="70.0" prefWidth="95.0" text="Play album" AnchorPane.rightAnchor="35.0" AnchorPane.topAnchor="10.0" />
-                        <Button layoutX="299.0" layoutY="107.0" mnemonicParsing="false" onAction="#addToQueueMAction" prefHeight="70.0" prefWidth="95.0" text="Add to queue" AnchorPane.rightAnchor="35.0" AnchorPane.topAnchor="100.0" />
+                        <Button layoutX="299.0" layoutY="107.0" mnemonicParsing="false" onAction="#addToQueueAAction" prefHeight="70.0" prefWidth="95.0" text="Add to queue" AnchorPane.rightAnchor="35.0" AnchorPane.topAnchor="100.0" />
                      </children>
                   </AnchorPane>
                </content></Tab>
