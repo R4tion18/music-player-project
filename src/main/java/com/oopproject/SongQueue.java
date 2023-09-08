@@ -1,41 +1,26 @@
 package com.oopproject;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 public class SongQueue {
-    //This shit can be changed, songs must be a list of something (String, File, URI) that represent
-    //the song queue and can be converted to URI.toString for the media player
-    private File[] files;
-    private ArrayList<File> songs;
 
-
-  //This shit is important and cannot be changed
+    private ArrayList<String> queue;
     private int songNumber = 0;
     private ArrayList<Integer> songSequence;
     private boolean isShuffle = false;
 
 
 
-    public SongQueue(File directory) {
-        files = directory.listFiles();
-        songs = new ArrayList<>();
-        try {
-            if (files != null) {
-                songs.addAll(Arrays.asList(files));
-            } else {
-                throw new IllegalArgumentException();
-            }
-        }catch (IllegalArgumentException e){
-            e.printStackTrace();
-        }
+    public SongQueue(CopyOnWriteArrayList<String> newSongs) {
+        queue = new ArrayList<>();
+        queue.addAll(newSongs);
         songSequence = new ArrayList<>();
         IntStream.
-                range(0, songs.size()).
+                range(0, queue.size()).
                 forEach(i -> songSequence.add(i));
     }
 
@@ -49,19 +34,19 @@ public class SongQueue {
 
     public ArrayList<String> getSongNames(){
         return songSequence.stream()
-                .map(i -> songs.get(i).getName())
+                .map(i -> Song.getFile(queue.get(i)).getName())
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
     public String getSong() {
-        return songs.get(nextSongIndex(songNumber)).toURI().toString();
+        return queue.get(nextSongIndex(songNumber));
     }
 
     public String getName(){
-        return songs.get(nextSongIndex(songNumber)).getName();
+        return Song.getFile(queue.get(nextSongIndex(songNumber))).getName();
     }
     public String getNextSong(){
-        if (songNumber == songs.size() - 1) {
+        if (songNumber == queue.size() - 1) {
             songNumber = 0;
         } else {
             songNumber++;
@@ -70,14 +55,22 @@ public class SongQueue {
     }
     public String getPreviousSong(){
         if (songNumber == 0) {
-            songNumber = songs.size() - 1;
+            songNumber = queue.size() - 1;
         } else {
             songNumber--;
         }
         return this.getSong();
     }
-    public void setSongSequence(ArrayList<Integer> songSequence) {
-        this.songSequence = songSequence;
+    public void addSong(String newSong){
+        songSequence.add(queue.size());
+        queue.add(newSong);
+    }
+    public void addSongs(ArrayList<String> newSongs){
+        songSequence.addAll(IntStream.range(queue.size(), queue.size() + newSongs.size() - 1).boxed().toList());
+        queue.addAll(newSongs);
+    }
+    public void removeSong(int index){
+        queue.remove(index);
     }
     public void setShuffle() {
         if(!isShuffle){
@@ -87,7 +80,7 @@ public class SongQueue {
             songNumber = songSequence.get(songNumber);
             songSequence = new ArrayList<>();
             IntStream.
-                    range(0, songs.size()).
+                    range(0, queue.size()).
                     forEach(i -> songSequence.add(i));
             isShuffle = false;
         }

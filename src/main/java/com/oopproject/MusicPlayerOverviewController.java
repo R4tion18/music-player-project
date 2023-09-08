@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.IntStream;
 
 import javafx.scene.control.*;
@@ -240,7 +241,25 @@ public class MusicPlayerOverviewController implements Initializable {
             }
         }
     }
+    @FXML
+    void playSongAction(){
 
+    }
+    @FXML
+    void playPlaylistAction(){
+
+    }
+    @FXML
+    void playAlbumAction(){
+
+    }
+    @FXML
+    void addToQueueSAction(){
+    }
+    @FXML
+    void addToQueueMAction(){
+
+    }
 
     private void playAction() {
         mediaPlayer.play();
@@ -256,6 +275,31 @@ public class MusicPlayerOverviewController implements Initializable {
 
     }
 
+    @FXML
+    private void handleAddSong(){
+        //If the folder is not selected, select the folder first.
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("MP3 files (*.mp3)", "*.mp3"));
+        File newSong = fileChooser.showOpenDialog(null);
+        if (newSong != null){
+            System.out.println(newSong.getAbsolutePath());
+        }else{
+            new Alert(Alert.AlertType.ERROR, "Could not load that file.").showAndWait();
+        }
+    }
+
+    @FXML
+    private void handleAbout() {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Music Mp3 Player");
+        alert.setHeaderText("About");
+        alert.setContentText("Author: 301114@studenti.unimore.it & 302418@studenti.unimore.it");
+        alert.showAndWait();
+    }
+    @FXML
+    private void handleClose() {
+        System.exit(0);
+    }
     public String timeFormatting(Duration time) {
         int minutes = (int) time.toMinutes();
         int seconds = (int) time.toSeconds();
