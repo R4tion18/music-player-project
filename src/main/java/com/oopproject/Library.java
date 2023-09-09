@@ -24,7 +24,7 @@ import java.util.stream.IntStream;
  * @see Album
  */
 public class Library {
-    public ConcurrentHashMap<String, Integer> index;
+    public ConcurrentHashMap<String, Integer> titleIndex;
     //public ObservableList<String> titles;
     private final Properties properties;
     private final ConcurrentHashMap<Integer, String> songs = new ConcurrentHashMap<>();
@@ -82,6 +82,10 @@ public class Library {
         });
     }
 
+    public String getLibraryFolder()    {
+        return properties.getProperty("libraryFolder");
+    }
+
     public int getLibrarySize() {
         return songs.size();
     }
@@ -97,18 +101,18 @@ public class Library {
 
     public ObservableList<String> getSongTitles() {
         updateIndex();
-        return FXCollections.observableArrayList(index.keySet());
+        return FXCollections.observableArrayList(titleIndex.keySet());
     }
 
     public void updateIndex()  {
-        index = new ConcurrentHashMap<>();
+        titleIndex = new ConcurrentHashMap<>();
         for (String uri : getSongURIs()) {
             String title = Song.getTitle(uri);
             Integer songIndex = Song.getIndex(uri);
-            while (index.containsKey(title))    {
+            while (titleIndex.containsKey(title))    {
                 title += " ";
             }
-            index.putIfAbsent(title, songIndex);
+            titleIndex.putIfAbsent(title, songIndex);
         }
     }
 
@@ -137,7 +141,7 @@ public class Library {
     }
 
     public int getIndex(String title)   {
-        return index.get(title);
+        return titleIndex.get(title);
     }
 
     public String getSong(int index) {
@@ -220,15 +224,28 @@ public class Library {
 
     public void deleteSong(int index)   {
         Arrays.stream(properties.getProperty(String.valueOf(index)).split("\n"))
-                .forEach(playlist -> playlists.get(playlist).removeSong(index));
+                .forEach(playlist -> {
+                    if (playlists.get(playlist) != null)   {
+                        playlists.get(playlist).removeSong(index);
+                    }
+                });
 
         String album = Song.getAlbum(getSong(index));
         if (!(album == null)) {
             albums.get(album).removeSong(index);
         }
 
-        File song = new File(songs.get(index));
-        boolean deleted = song.delete();
+        File song = null;
+        try {
+            song = new File(new URI(songs.get(index)));
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            Files.delete(song.toPath());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         songs.remove(index);
         properties.remove(String.valueOf(index));
     }

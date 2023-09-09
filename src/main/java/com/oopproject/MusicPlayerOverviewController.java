@@ -139,7 +139,7 @@ public class MusicPlayerOverviewController implements Initializable {
         });
         isLooping = false;
         mediaPlayer.setOnEndOfMedia(this::nextAction);
-        songLabel.setText(songs.getName());
+        songLabel.setText(Song.getTitle(songName));
         titleLabel.setText(Song.getTitle(songName));
         artistLabel.setText(Song.getArtist(songName));
         albumLabel.setText(Song.getAlbum(songName));
@@ -231,6 +231,7 @@ public class MusicPlayerOverviewController implements Initializable {
             }
         }
     }
+
     @FXML
     void playSongAction(){
         if (songListView.getSelectionModel().getSelectedIndex() >= 0)   {
@@ -288,10 +289,23 @@ public class MusicPlayerOverviewController implements Initializable {
         }
     }
 
-    /*@FXML
-    void addToQueueMAction(){
+    @FXML
+    void removeAction() {
+        if (songListView.getSelectionModel().getSelectedIndex() >= 0)   {
+            library.deleteSong(library.getIndex(songListView.getSelectionModel().getSelectedItem()));
+        }
+        songListView.setItems(library.getSongTitles());
+    }
 
-    }*/
+    @FXML
+    void showPlaylistAction()   {
+
+    }
+
+    @FXML
+    void showAlbumAction()  {
+
+    }
 
     private void playAction() {
         mediaPlayer.play();
@@ -324,12 +338,32 @@ public class MusicPlayerOverviewController implements Initializable {
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("MP3 files (*.mp3)", "*.mp3"));
         File newSong = fileChooser.showOpenDialog(null);
 
-        if (newSong != null){
+        if (newSong != null && !playerProperties.getProperty("libraryFolder").isEmpty())    {
             library.addSongFile(newSong.toURI().toString());
-        }else{
+        }   else {
             new Alert(Alert.AlertType.ERROR, "Could not load that file.").showAndWait();
         }
         songListView.setItems(library.getSongTitles());
+    }
+
+    @FXML
+    private void handleCreatePlaylist() {
+
+    }
+
+    @FXML
+    private void handleCreateAlbum()    {
+
+    }
+
+    @FXML
+    private void handleAddSongToP() {
+
+    }
+
+    @FXML
+    private void handleAddSongToA()   {
+
     }
 
     @FXML
