@@ -234,7 +234,9 @@ public class MusicPlayerOverviewController implements Initializable {
     @FXML
     void playSongAction(){
         if (songListView.getSelectionModel().getSelectedIndex() >= 0)   {
-            mediaPlayer.dispose();
+            if (mediaPlayer != null)    {
+                mediaPlayer.dispose();
+            }
             songs = new SongQueue();
             addToQueueSAction();
             loadSong(songs.getSong());
@@ -244,7 +246,9 @@ public class MusicPlayerOverviewController implements Initializable {
     @FXML
     void playPlaylistAction(){
         if (playlistListView.getSelectionModel().getSelectedIndex() >= 0)   {
-            mediaPlayer.dispose();
+            if (mediaPlayer != null)    {
+                mediaPlayer.dispose();
+            }
             songs = new SongQueue();
             addToQueuePAction();
             loadSong(songs.getSong());
@@ -254,7 +258,9 @@ public class MusicPlayerOverviewController implements Initializable {
     @FXML
     void playAlbumAction(){
         if (albumListView.getSelectionModel().getSelectedIndex() >= 0)   {
-            mediaPlayer.dispose();
+            if (mediaPlayer != null)    {
+                mediaPlayer.dispose();
+            }
             songs = new SongQueue();
             addToQueueAAction();
             loadSong(songs.getSong());
