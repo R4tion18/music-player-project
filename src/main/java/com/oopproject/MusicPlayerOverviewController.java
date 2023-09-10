@@ -6,11 +6,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
+import java.net.URISyntaxException;
 import java.net.URL;
-import java.io.File;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -69,14 +67,14 @@ public class MusicPlayerOverviewController implements Initializable {
 
         Properties defaultProperties = new Properties();
         try {
-            defaultProperties.load(MusicPlayerOverviewController.class.getResourceAsStream("default.properties"));
+            defaultProperties.load(getClass().getResourceAsStream("default.properties"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
         playerProperties = new Properties(defaultProperties);
         try {
-            playerProperties.load(MusicPlayerOverviewController.class.getResourceAsStream("player.properties"));
+            playerProperties.load(getClass().getResourceAsStream("player.properties"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -358,12 +356,20 @@ public class MusicPlayerOverviewController implements Initializable {
 
     @FXML
     private void handleAddSongToP() {
-
+        if (songListView.getSelectionModel().getSelectedIndex() >= 0 && playlistListView.getSelectionModel().getSelectedIndex() >= 0)   {
+            library.getPlaylist(playlistListView.getSelectionModel().getSelectedItem()).addSong(library.getIndex(songListView.getSelectionModel().getSelectedItem()));
+        }   else {
+            new Alert(Alert.AlertType.ERROR, "To add a song to a playlist, select the playlist in the playlists tab, the song in the songs tab, then press add song to playlist").showAndWait();
+        }
     }
 
     @FXML
     private void handleAddSongToA()   {
-
+        if (songListView.getSelectionModel().getSelectedIndex() >= 0 && albumListView.getSelectionModel().getSelectedIndex() >= 0)   {
+            library.getAlbum(albumListView.getSelectionModel().getSelectedItem()).addSong(library.getIndex(songListView.getSelectionModel().getSelectedItem()));
+        }   else {
+            new Alert(Alert.AlertType.ERROR, "To add a song to an album, select the album in the albums tab, the song in the songs tab, then press add song to album").showAndWait();
+        }
     }
 
     @FXML
@@ -376,10 +382,15 @@ public class MusicPlayerOverviewController implements Initializable {
     }
     @FXML
     private void handleClose() {
-        try (FileOutputStream properties = new FileOutputStream("src/main/resources/com/oopproject/player.properties")) {
+        try (FileOutputStream properties = new FileOutputStream("src" + File.separator
+                + "main" + File.separator
+                + "resources" + File.separator
+                + "com" + File.separator
+                + "oopproject" + File.separator
+                + "player.properties")) {
             playerProperties.store(properties, null);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
         System.exit(0);
     }
