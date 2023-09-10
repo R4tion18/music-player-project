@@ -65,6 +65,7 @@ public class QueueViewController{
         queue.remove(index);
     }
     public void setSongs(SongQueue songs) {
+        queue.clear();
         this.songs = songs;
         IntStream.range(0, getSongSequence().size()).forEach(i -> queue.add(songs.getSongNames().get((i + songs.getSongNumber() + 1) % getSongSequence().size())));
         queueListView.setItems(queue);

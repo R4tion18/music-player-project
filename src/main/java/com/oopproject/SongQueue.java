@@ -12,8 +12,8 @@ import java.util.stream.IntStream;
 public class SongQueue {
 
     private ArrayList<String> queue;
-    private int songNumber = 0;
     private ObservableList<Integer> songSequence;
+    private int songNumber = 0;
     private boolean isShuffle = false;
 
     public SongQueue()  {
