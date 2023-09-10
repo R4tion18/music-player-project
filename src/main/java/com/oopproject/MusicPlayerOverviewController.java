@@ -7,12 +7,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 
 import java.io.*;
-import java.net.URISyntaxException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.net.URL;
+import java.io.File;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.stream.IntStream;
 
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -29,6 +29,7 @@ public class MusicPlayerOverviewController implements Initializable {
     @FXML ListView<String> songListView;
     @FXML ListView<String> playlistListView;
     @FXML ListView<String> albumListView;
+    @FXML ImageView coverImageView;
     @FXML Label songLabel;
     @FXML Label currentTimeLabel;
     @FXML Label totalTimeLabel;
@@ -44,6 +45,8 @@ public class MusicPlayerOverviewController implements Initializable {
     @FXML Button nextButton;
     @FXML Button previousButton;
     @FXML Button queueButton;
+    @FXML ToggleButton loopButton;
+    @FXML ToggleButton shuffleButton;
 
     QueueViewController controller;
     private Media media;
@@ -51,6 +54,7 @@ public class MusicPlayerOverviewController implements Initializable {
     private SongQueue songs = new SongQueue();
     private boolean isPlaying = false;
     private  boolean isLooping = false;
+    private boolean isShuffled = false;
     public Library library;
     public Properties playerProperties;
 
@@ -59,11 +63,18 @@ public class MusicPlayerOverviewController implements Initializable {
         volumeSlider.setMax(1.0);
         volumeSlider.setValue(0.5);
         volumeLabel.setText("50%");
-        //loadSong(songs.getSong());
+      /*  songs =
+                new SongQueue(new CopyOnWriteArrayList<>(Arrays.stream(Objects.requireNonNull(new File("C" +
+                                ":\\Users\\rikiv\\OneDrive\\Desktop" + "\\MediaMusic")
+                        .listFiles()))
+                        .map(f -> f.toURI().toString()).toList()));
+        loadSong(songs.getSong());*/
         setImage(playPauseButton, "icons/playIcon1.png");
         setImage(nextButton, "icons/nextIcon.png");
         setImage(previousButton, "icons/previousIcon.png");
         setImage(queueButton, "icons/queueIcon.png");
+        setImage(loopButton, "icons/loopIcon.png");
+        setImage(shuffleButton, "icons/shuffleIcon.png");
 
         Properties defaultProperties = new Properties();
         try {
@@ -137,6 +148,8 @@ public class MusicPlayerOverviewController implements Initializable {
         });
         isLooping = false;
         mediaPlayer.setOnEndOfMedia(this::nextAction);
+        coverImageView.setImage(( new Image(Objects.requireNonNull(getClass().getResourceAsStream("icons" +
+                "/musicalNoteIcon.png")))));
         songLabel.setText(Song.getTitle(songName));
         titleLabel.setText(Song.getTitle(songName));
         artistLabel.setText(Song.getArtist(songName));
@@ -170,14 +183,23 @@ public class MusicPlayerOverviewController implements Initializable {
     void loopAction() {
         if(!isLooping) {
             mediaPlayer.setOnEndOfMedia(() -> mediaPlayer.seek(Duration.seconds(0.0)));
+            setImage(loopButton, "icons/loopPressedIcon.png");
             isLooping = true;
         }else{
             mediaPlayer.setOnEndOfMedia(this::nextAction);
+            setImage(loopButton, "icons/loopIcon.png");
             isLooping = false;
         }
     }
     @FXML
     void shuffleAction(){
+        if(!isShuffled){
+            setImage(shuffleButton, "icons/shufflePressedIcon.png");
+            isShuffled = true;
+        }else{
+            setImage(shuffleButton, "icons/shuffleIcon.png");
+            isShuffled = false;
+        }
         songs.setShuffle();
         if(controller != null){
             controller.shuffle();
@@ -202,10 +224,6 @@ public class MusicPlayerOverviewController implements Initializable {
         }
     }
 
-    @FXML
-    void menuAction(){
-
-    }
     @FXML
     void queueAction(){
         if(controller == null) {
@@ -270,6 +288,9 @@ public class MusicPlayerOverviewController implements Initializable {
     void addToQueueSAction(){
         if (songListView.getSelectionModel().getSelectedIndex() >= 0)   {
             songs.addSong(library.getSong(library.getIndex(songListView.getSelectionModel().getSelectedItem())));
+            if(controller != null){
+                controller.setSongs(songs);
+            }
         }
     }
 
@@ -277,6 +298,9 @@ public class MusicPlayerOverviewController implements Initializable {
     void addToQueueAAction()    {
         if (albumListView.getSelectionModel().getSelectedIndex() >= 0)   {
             songs.addSongs(new ArrayList<>(library.getAlbum(albumListView.getSelectionModel().getSelectedItem()).getSongURIs()));
+            if(controller != null){
+                controller.setSongs(songs);
+            }
         }
     }
 
@@ -284,6 +308,9 @@ public class MusicPlayerOverviewController implements Initializable {
     void addToQueuePAction()  {
         if (playlistListView.getSelectionModel().getSelectedIndex() >= 0)   {
             songs.addSongs(new ArrayList<>(library.getPlaylist(playlistListView.getSelectionModel().getSelectedItem()).getSongURIs()));
+            if(controller != null){
+                controller.setSongs(songs);
+            }
         }
     }
 
@@ -414,7 +441,7 @@ public class MusicPlayerOverviewController implements Initializable {
         }
     }
 
-    private void setImage(Button button, String uri){
+    private <T extends ButtonBase> void setImage(T button, String uri){
         ImageView thisImageView =
                 new ImageView( new Image(Objects.requireNonNull(getClass().getResourceAsStream(uri))));
         thisImageView.setFitHeight(40);

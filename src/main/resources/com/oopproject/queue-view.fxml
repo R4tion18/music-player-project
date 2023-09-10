@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<DialogPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="405.0" prefWidth="541.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.oopproject.QueueViewController">
+<DialogPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="405.0" prefWidth="541.0" style="-fx-background-color: #79BAD5;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.oopproject.QueueViewController">
     <expandableContent>
       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="320.0" />
     </expandableContent>
@@ -23,13 +23,13 @@
                   <ListView fx:id="queueListView" editable="true" prefHeight="351.0" prefWidth="444.0" />
                </content>
             </ScrollPane>
-            <Button fx:id="plusButton" layoutX="465.0" layoutY="14.0" mnemonicParsing="false" onAction="#plusAction" prefHeight="55.0" prefWidth="55.0">
+            <Button fx:id="plusButton" layoutX="465.0" layoutY="14.0" mnemonicParsing="false" onAction="#plusAction" prefHeight="55.0" prefWidth="55.0" style="-fx-background-color: transparent;">
                <font>
                   <Font size="17.0" />
                </font>
             </Button>
-            <Button fx:id="minusButton" layoutX="465.0" layoutY="84.0" mnemonicParsing="false" onAction="#minusAction" prefHeight="55.0" prefWidth="55.0" />
-            <Button layoutX="465.0" layoutY="271.0" mnemonicParsing="false" onAction="#removeAction" prefHeight="55.0" prefWidth="55.0" text="Remove">
+            <Button fx:id="minusButton" layoutX="465.0" layoutY="84.0" mnemonicParsing="false" onAction="#minusAction" prefHeight="55.0" prefWidth="55.0" style="-fx-background-color: transparent;" />
+            <Button layoutX="465.0" layoutY="271.0" mnemonicParsing="false" onAction="#removeAction" prefHeight="55.0" prefWidth="55.0" style="-fx-background-color: white;" text="Remove">
                <font>
                   <Font size="10.0" />
                </font>
