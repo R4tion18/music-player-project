@@ -2,9 +2,10 @@ package com.oopproject;
 
 import java.io.File;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
 
 public class Playlist {
-    private String name;
+    private final String name;
     protected CopyOnWriteArrayList<Integer> songs = new CopyOnWriteArrayList<>();
     private final Library library;
 
@@ -27,7 +28,10 @@ public class Playlist {
     }
 
     public void setName(String name) {
-        this.name = name;
+        library.createPlaylist(name);
+        songs.forEach(library.getPlaylist(name)::addSong);
+        songs.forEach(this::removeSong);
+        library.deletePlaylist(this.name, false);
     }
 
     public CopyOnWriteArrayList<Integer> getSongIndexes() {
@@ -35,7 +39,7 @@ public class Playlist {
     }
 
     public CopyOnWriteArrayList<String> getSongURIs() {
-        return new CopyOnWriteArrayList<>(songs.stream().map(library::getSong).toList());
+        return this.songs.stream().map(library::getSong).collect(Collectors.toCollection(CopyOnWriteArrayList::new));
     }
 
     public Library getLibrary() {
@@ -54,13 +58,4 @@ public class Playlist {
         songs.remove(Integer.valueOf(index));
         getLibrary().removeFromPlaylist(index, getName());
     }
-    //
-    //public void play(boolean shuffle)   {
-    //    SongQueue queue = new SongQueue(getSongs(), getLibrary());
-    //    queue.play(shuffle);
-    //}
-    //
-    //public Media getMedia(int index)    {
-    //    return new Media(library.getSong(index));
-    //}
 }

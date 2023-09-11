@@ -41,7 +41,7 @@ public class SongQueue {
 
     public ArrayList<String> getSongNames(){
         return songSequence.stream()
-                .map(i -> Song.getFile(queue.get(i)).getName())
+                .map(i -> Song.getTitle(queue.get(i)))
                 .collect(Collectors.toCollection(ArrayList::new));
     }
 
@@ -73,7 +73,7 @@ public class SongQueue {
         queue.add(newSong);
     }
     public void addSongs(ArrayList<String> newSongs){
-        songSequence.addAll(IntStream.range(queue.size(), queue.size() + newSongs.size() - 1).boxed().toList());
+        songSequence.addAll(IntStream.range(queue.size(), queue.size() + newSongs.size()).boxed().toList());
         queue.addAll(newSongs);
     }
     public void removeSong(int index){

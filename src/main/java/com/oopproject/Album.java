@@ -23,6 +23,11 @@ public class Album extends Playlist  {
         getLibrary().addMultipleFiles(new CopyOnWriteArrayList<>(files)).forEach(this::addSong);
     }
 
+    @Override
+    public void setName(String name)    {
+
+    }
+
     public String getArtist() {
         return artist;
     }

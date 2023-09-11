@@ -1,18 +1,14 @@
 package com.oopproject;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 
-import java.io.*;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.io.File;
 import java.util.*;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -49,6 +45,7 @@ public class MusicPlayerOverviewController implements Initializable {
     @FXML ToggleButton shuffleButton;
 
     QueueViewController controller;
+    PlaylistViewController playlistViewController;
     private Media media;
     private MediaPlayer mediaPlayer;
     private SongQueue songs = new SongQueue();
@@ -99,9 +96,6 @@ public class MusicPlayerOverviewController implements Initializable {
 
     private void loadLibrary(boolean isFirstSetup)  {
         library = new Library(playerProperties, isFirstSetup);
-        //songs = new SongQueue(new File("/Users/Francesco/IdeaProjects/music-player-project/src/test/resources/test-songs"));
-        //IntStream.range(0, songs.getSongSequence().size()).forEach(i -> allSavedSong.add(songs.getSongNames().get((i + songs.getSongNumber() + 1) % songs.getSongSequence().size())));
-        //Testing code stop
         songListView.setItems(library.getSongTitles());
         playlistListView.setItems(library.getPlaylistNames());
         albumListView.setItems(library.getAlbumNames());
@@ -351,7 +345,24 @@ public class MusicPlayerOverviewController implements Initializable {
 
     @FXML
     void showPlaylistAction()   {
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("playlist-view.fxml"));
+            DialogPane view = loader.load();
+            playlistViewController = loader.getController();
 
+            playlistViewController.setSongs(this, playlistListView.getSelectionModel().getSelectedItem());
+
+
+            Dialog<ButtonType> dialog = new Dialog<>();
+            dialog.setTitle("View playlist: ");
+            dialog.initModality(Modality.WINDOW_MODAL);
+            dialog.setDialogPane(view);
+
+            dialog.showAndWait();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -455,6 +466,9 @@ public class MusicPlayerOverviewController implements Initializable {
     private void handleAddSongToP() {
         if (songListView.getSelectionModel().getSelectedIndex() >= 0 && playlistListView.getSelectionModel().getSelectedIndex() >= 0)   {
             library.getPlaylist(playlistListView.getSelectionModel().getSelectedItem()).addSong(library.getIndex(songListView.getSelectionModel().getSelectedItem()));
+            if (playlistViewController != null) {
+                playlistViewController.setSongs(this, playlistListView.getSelectionModel().getSelectedItem());
+            }
         }   else {
             new Alert(Alert.AlertType.INFORMATION, "To add a song to a playlist, select the playlist in the playlists tab, the song in the songs tab, then press add song to playlist").showAndWait();
         }

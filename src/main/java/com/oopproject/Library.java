@@ -25,7 +25,6 @@ import java.util.stream.IntStream;
  */
 public class Library {
     public ConcurrentHashMap<String, Integer> titleIndex;
-    //public ObservableList<String> titles;
     private final Properties properties;
     private final ConcurrentHashMap<Integer, String> songs = new ConcurrentHashMap<>();
     private final ConcurrentHashMap<String, Playlist> playlists = new ConcurrentHashMap<>();
@@ -235,7 +234,7 @@ public class Library {
             albums.get(album).removeSong(index);
         }
 
-        File song = null;
+        File song;
         try {
             song = new File(new URI(songs.get(index)));
         } catch (URISyntaxException e) {
@@ -264,18 +263,20 @@ public class Library {
 
     public void putInPlaylist(int index, String playlist)  {
         if (!properties.getProperty(String.valueOf(index)).contains(playlist))   {
-            properties.setProperty(Integer.toString(index), playlist + "\n");
+            properties.setProperty(Integer.toString(index), properties.getProperty(String.valueOf(index)) + playlist + "\n");
         }
     }
 
     public void removeFromPlaylist(int index, String playlist)  {
         StringBuilder songPlaylists = new StringBuilder(properties.getProperty(String.valueOf(index)));
-        songPlaylists.delete(songPlaylists.indexOf(playlist), songPlaylists.lastIndexOf(playlist) + 1);
+        songPlaylists.delete(songPlaylists.indexOf(playlist), songPlaylists.lastIndexOf(playlist) + playlist.length());
 
         if (songPlaylists.toString().startsWith("\n"))    {
             songPlaylists.deleteCharAt(0);
         }   else {
-            songPlaylists.delete(songPlaylists.indexOf("\n\n"), songPlaylists.lastIndexOf("\n\n"));
+            if (songPlaylists.toString().contains("\n\n"))   {
+                songPlaylists.delete(songPlaylists.indexOf("\n\n"), songPlaylists.lastIndexOf("\n\n"));
+            }
         }
 
         properties.setProperty(String.valueOf(index), songPlaylists.toString());

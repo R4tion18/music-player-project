@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<DialogPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="405.0" prefWidth="541.0" style="-fx-background-color: #79BAD5;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.oopproject.PlaylistViewController">
+   <expandableContent>
+      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="320.0" />
+   </expandableContent>
+   <buttonTypes>
+      <ButtonType fx:constant="OK" />
+   </buttonTypes>
+   <content>
+      <AnchorPane prefHeight="200.0" prefWidth="360.0">
+         <children>
+            <ScrollPane fx:id="playlistScrollPane" prefHeight="353.0" prefWidth="447.0">
+               <content>
+                  <ListView fx:id="playlistListView" editable="true" prefHeight="351.0" prefWidth="444.0" />
+               </content>
+            </ScrollPane>
+            <Label fx:id="nameLabel" alignment="CENTER" layoutX="446.0" layoutY="-14.0" prefHeight="55.0" prefWidth="94.0" AnchorPane.topAnchor="-14.0" />
+            <Button layoutX="465.0" layoutY="52.0" mnemonicParsing="false" onAction="#editAction" prefHeight="55.0" prefWidth="55.0" style="-fx-background-color: white;" text="Edit">
+               <font>
+                  <Font size="10.0" />
+               </font></Button>
+            <Button layoutX="465.0" layoutY="271.0" mnemonicParsing="false" onAction="#removeAction" prefHeight="55.0" prefWidth="55.0" style="-fx-background-color: white;" text="Remove">
+               <font>
+                  <Font size="10.0" />
+               </font>
+            </Button>
+         </children>
+      </AnchorPane>
+   </content>
+</DialogPane>
