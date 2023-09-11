@@ -157,6 +157,33 @@ public class MusicPlayerOverviewController implements Initializable {
         albumArtistLabel.setText(Song.getAlbumArtist(songName));
         yearLabel.setText(String.valueOf(Song.getYear(songName)));
     }
+
+    public String textInput(String currentDefinition, String currentField, String newDefinition, String title) throws IllegalAccessException {
+        String text = "";
+        try {
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(getClass().getResource("text-input-view.fxml"));
+            DialogPane view = loader.load();
+            TextInputViewController inputController = loader.getController();
+
+            inputController.setCurrentDefinition(currentDefinition);
+            inputController.setCurrentField(currentField);
+            inputController.setNewDefinition(newDefinition);
+
+            TextInputDialog dialog = new TextInputDialog();
+            dialog.setTitle(title);
+            dialog.initModality(Modality.WINDOW_MODAL);
+            dialog.setDialogPane(view);
+
+            inputController.setDialog(dialog);
+            text = inputController.getValue();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return text;
+    }
+
     @FXML
     void nextAction() {
         pauseAction();
@@ -373,12 +400,55 @@ public class MusicPlayerOverviewController implements Initializable {
 
     @FXML
     private void handleCreatePlaylist() {
+        String playlistName;
+        try {
+            playlistName = textInput("", "Playlist name: ", "", "Create playlist");
+        } catch (IllegalAccessException e) {
+            playlistName = "";
+        }
 
+        if (!playlistName.isEmpty()) {
+            while (library.getPlaylistNames().contains(playlistName))   {
+                playlistName += " ";
+            }
+            library.createPlaylist(playlistName);
+        }
+
+        playlistListView.setItems(library.getPlaylistNames());
     }
 
     @FXML
     private void handleCreateAlbum()    {
+        String albumTitle;
+        String albumArtist;
+        String albumYear;
 
+        try {
+            albumTitle = textInput("", "Album title: ", "", "Create album");
+        } catch (IllegalAccessException e) {
+            return;
+        }
+
+        try {
+            albumArtist = textInput("", "Album author: ", "", "Create album");
+        } catch (IllegalAccessException e) {
+            return;
+        }
+
+        try {
+            albumYear = textInput("", "Album year: ", "", "Create album");
+        } catch (IllegalAccessException e) {
+            return;
+        }
+
+        DirectoryChooser directoryChooser = new DirectoryChooser();
+        File albumDirectory = directoryChooser.showDialog(null);
+        if (albumDirectory != null && !albumTitle.isEmpty() && !albumArtist.isEmpty() && !albumYear.isEmpty()) {
+            while (library.getAlbumNames().contains(albumTitle))    {
+                albumTitle += " ";
+            }
+            library.createAlbum(albumTitle, albumArtist, albumDirectory);
+        }
     }
 
     @FXML
@@ -386,7 +456,7 @@ public class MusicPlayerOverviewController implements Initializable {
         if (songListView.getSelectionModel().getSelectedIndex() >= 0 && playlistListView.getSelectionModel().getSelectedIndex() >= 0)   {
             library.getPlaylist(playlistListView.getSelectionModel().getSelectedItem()).addSong(library.getIndex(songListView.getSelectionModel().getSelectedItem()));
         }   else {
-            new Alert(Alert.AlertType.ERROR, "To add a song to a playlist, select the playlist in the playlists tab, the song in the songs tab, then press add song to playlist").showAndWait();
+            new Alert(Alert.AlertType.INFORMATION, "To add a song to a playlist, select the playlist in the playlists tab, the song in the songs tab, then press add song to playlist").showAndWait();
         }
     }
 
@@ -395,7 +465,7 @@ public class MusicPlayerOverviewController implements Initializable {
         if (songListView.getSelectionModel().getSelectedIndex() >= 0 && albumListView.getSelectionModel().getSelectedIndex() >= 0)   {
             library.getAlbum(albumListView.getSelectionModel().getSelectedItem()).addSong(library.getIndex(songListView.getSelectionModel().getSelectedItem()));
         }   else {
-            new Alert(Alert.AlertType.ERROR, "To add a song to an album, select the album in the albums tab, the song in the songs tab, then press add song to album").showAndWait();
+            new Alert(Alert.AlertType.INFORMATION, "To add a song to an album, select the album in the albums tab, the song in the songs tab, then press add song to album").showAndWait();
         }
     }
 

@@ -20,7 +20,7 @@ public class Album extends Playlist  {
 
     public Album(String name, Library library, File[] files) {
         this(name, library);
-        getLibrary().addMultipleFiles(new CopyOnWriteArrayList<File>(files)).forEach(this::addSong);
+        getLibrary().addMultipleFiles(new CopyOnWriteArrayList<>(files)).forEach(this::addSong);
     }
 
     public String getArtist() {
@@ -29,6 +29,7 @@ public class Album extends Playlist  {
 
     public void setArtist(String artist) {
         this.artist = artist;
+        songs.forEach(index -> Song.setArtist(getLibrary().getSong(index), artist));
     }
 
     public int getYear() {
@@ -37,6 +38,11 @@ public class Album extends Playlist  {
 
     public void setYear(int year) {
         this.year = year;
+        songs.forEach(index -> {
+            if (Song.getYear(getLibrary().getSong(index)) == 0) {
+                Song.setYear(getLibrary().getSong(index), year);
+            }
+        });
     }
 
     public void addFrom(Vector<Integer> indexes)    {
@@ -51,6 +57,7 @@ public class Album extends Playlist  {
     @Override
     public void addSong(int index) {
         Song song = new Song(Song.getFile(getLibrary().getSong(index)));
+        song.setAlbum(getName());
 
         if (getArtist() == null)  {
             setArtist(song.getArtist());
