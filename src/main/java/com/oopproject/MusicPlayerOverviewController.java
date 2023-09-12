@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 
+import java.io.ByteArrayInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
@@ -145,8 +146,12 @@ public class MusicPlayerOverviewController implements Initializable {
         });
         isLooping = false;
         mediaPlayer.setOnEndOfMedia(this::nextAction);
-        coverImageView.setImage(( new Image(Objects.requireNonNull(getClass().getResourceAsStream("icons" +
-                "/musicalNoteIcon.png")))));
+        if (Song.getTag(songName).get().getAlbumImage() == null)    {
+            coverImageView.setImage(( new Image(Objects.requireNonNull(getClass().getResourceAsStream("icons" +
+                    "/musicalNoteIcon.png")))));
+        }   else {
+            coverImageView.setImage(( new Image(new ByteArrayInputStream(Song.getTag(songName).get().getAlbumImage()))));
+        }
         songLabel.setText(Song.getTitle(songName));
         titleLabel.setText(Song.getTitle(songName));
         artistLabel.setText(Song.getArtist(songName));
