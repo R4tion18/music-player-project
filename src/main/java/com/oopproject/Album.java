@@ -3,8 +3,12 @@ package com.oopproject;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Vector;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
+
+import static java.lang.Integer.compare;
 
 public class Album extends Playlist  {
     private int year = 0;
@@ -25,7 +29,9 @@ public class Album extends Playlist  {
 
     @Override
     public void setName(String name)    {
-
+        getLibrary().createAlbum(name, getArtist());
+        getLibrary().getAlbum(name).addFrom(new Vector<>(songs));
+        getLibrary().deleteAlbum(getName(), false);
     }
 
     public String getArtist() {
@@ -34,7 +40,7 @@ public class Album extends Playlist  {
 
     public void setArtist(String artist) {
         this.artist = artist;
-        songs.forEach(index -> Song.setArtist(getLibrary().getSong(index), artist));
+        songs.forEach(index -> Song.setAlbumArtist(getLibrary().getSong(index), artist));
     }
 
     public int getYear() {
@@ -52,11 +58,16 @@ public class Album extends Playlist  {
 
     public void addFrom(Vector<Integer> indexes)    {
         if (songs.isEmpty())  {
-            songs = new CopyOnWriteArrayList<>(new ArrayList<>(indexes.size()));
+            songs = new CopyOnWriteArrayList<>(indexes);
         }
-        for (int index : indexes)   {
-            songs.add(Song.getTrack(getLibrary().getSong(index)), index);
-        }
+        indexes.forEach(index -> {
+            if (Song.getTrack(getLibrary().getSong(index)) >= 0) {
+                songs.add(Song.getTrack(getLibrary().getSong(index)) - 1, index);
+            } else {
+                songs.add(index);
+            }
+            Song.setAlbum(getLibrary().getSong(index), getName());
+        });
     }
 
     @Override
@@ -94,9 +105,17 @@ public class Album extends Playlist  {
 
         songs.stream()
                 .filter(s ->
-                        Song.getTrack(getLibrary().getSong(s)) >= index)
+                        Song.getTrack(getLibrary().getSong(s)) >= Song.getTrack(getLibrary().getSong(index)))
                 .forEach(s ->
                         Song.setTrack(getLibrary().getSong(s), Song.getTrack(getLibrary().getSong(s)) - 1));
+
+        Song.setAlbum(getLibrary().getSong(index), "");
+    }
+
+    public void refreshOrder()  {
+        Integer[] indexes = getSongIndexes().toArray(new Integer[0]);
+        songs.forEach(index -> indexes[Song.getTrack(getLibrary().getSong(index)) - 1] = index);
+        songs = new CopyOnWriteArrayList<>(indexes);
     }
 
     public void removeSongNotTrack(int index)   {

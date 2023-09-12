@@ -104,7 +104,6 @@ public class SongQueue {
     }
 
     public void modifyQueue(int firstIndex, int secondIndex){
-        System.out.println("firstIndex = " + firstIndex + "\nsecondIndex = " + secondIndex);
         Collections.swap(songSequence, firstIndex, secondIndex);
     }
 }

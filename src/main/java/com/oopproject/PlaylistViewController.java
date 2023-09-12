@@ -39,7 +39,8 @@ public class PlaylistViewController {
             }
             controller.library.getPlaylist(name).setName(newName);
 
-            setNameLabel(newName);
+            name = newName;
+            setNameLabel(name);
             controller.playlistListView.setItems(controller.library.getPlaylistNames());
         }
     }
@@ -58,10 +59,10 @@ public class PlaylistViewController {
     public void setSongs(MusicPlayerOverviewController controller, String name) {
         initialize();
         this.controller = controller;
-        this.songs = new SongQueue(controller.library.getPlaylist(name).getSongURIs());
-        IntStream.range(0, getSongSequence().size()).forEach(i -> songList.add(songs.getSongNames().get((i + songs.getSongNumber() + 1) % getSongSequence().size())));
-        playlistListView.setItems(songList);
         this.name = name;
+        this.songs = new SongQueue(controller.library.getPlaylist(name).getSongURIs());
+        IntStream.range(0, getSongSequence().size()).forEach(i -> songList.add(songs.getSongNames().get((i + songs.getSongNumber()) % getSongSequence().size())));
+        playlistListView.setItems(songList);
         setNameLabel(name);
     }
 

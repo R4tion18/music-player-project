@@ -1,6 +1,7 @@
 package com.oopproject;
 
 import java.io.File;
+import java.util.Comparator;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
@@ -39,7 +40,10 @@ public class Playlist {
     }
 
     public CopyOnWriteArrayList<String> getSongURIs() {
-        return this.songs.stream().map(library::getSong).collect(Collectors.toCollection(CopyOnWriteArrayList::new));
+        return this.songs.stream()
+                .map(library::getSong)
+                .sorted(Comparator.comparingInt(Song::getTrack))
+                .collect(Collectors.toCollection(CopyOnWriteArrayList::new));
     }
 
     public Library getLibrary() {

@@ -46,6 +46,7 @@ public class MusicPlayerOverviewController implements Initializable {
 
     QueueViewController controller;
     PlaylistViewController playlistViewController;
+    AlbumViewController albumViewController;
     private Media media;
     private MediaPlayer mediaPlayer;
     private SongQueue songs = new SongQueue();
@@ -345,29 +346,49 @@ public class MusicPlayerOverviewController implements Initializable {
 
     @FXML
     void showPlaylistAction()   {
-        try {
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(getClass().getResource("playlist-view.fxml"));
-            DialogPane view = loader.load();
-            playlistViewController = loader.getController();
+        if (playlistListView.getSelectionModel().getSelectedIndex() >= 0)   {
+            try {
+                FXMLLoader loader = new FXMLLoader();
+                loader.setLocation(getClass().getResource("playlist-view.fxml"));
+                DialogPane view = loader.load();
+                playlistViewController = loader.getController();
 
-            playlistViewController.setSongs(this, playlistListView.getSelectionModel().getSelectedItem());
+                playlistViewController.setSongs(this, playlistListView.getSelectionModel().getSelectedItem());
 
+                Dialog<ButtonType> dialog = new Dialog<>();
+                dialog.setTitle("View playlist");
+                dialog.initModality(Modality.WINDOW_MODAL);
+                dialog.setDialogPane(view);
 
-            Dialog<ButtonType> dialog = new Dialog<>();
-            dialog.setTitle("View playlist: ");
-            dialog.initModality(Modality.WINDOW_MODAL);
-            dialog.setDialogPane(view);
-
-            dialog.showAndWait();
-        } catch (IOException e) {
-            e.printStackTrace();
+                dialog.showAndWait();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     @FXML
     void showAlbumAction()  {
+        albumViewController = null;
+        if (albumListView.getSelectionModel().getSelectedIndex() >= 0)   {
+            try {
+                FXMLLoader loader = new FXMLLoader();
+                loader.setLocation(getClass().getResource("album-view.fxml"));
+                DialogPane view = loader.load();
+                albumViewController = loader.getController();
 
+                albumViewController.setSongs(this, albumListView.getSelectionModel().getSelectedItem());
+
+                Dialog<ButtonType> dialog = new Dialog<>();
+                dialog.setTitle("View album");
+                dialog.initModality(Modality.WINDOW_MODAL);
+                dialog.setDialogPane(view);
+
+                dialog.showAndWait();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void playAction() {

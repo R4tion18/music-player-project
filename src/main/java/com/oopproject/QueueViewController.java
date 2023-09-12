@@ -34,7 +34,6 @@ public class QueueViewController{
     @FXML
     void plusAction(){
         if(queueListView.getSelectionModel().getSelectedIndex() != 0) {
-            System.out.println(queueListView.getSelectionModel().getSelectedIndex());
             songs.modifyQueue(
                     (queueListView.getSelectionModel().getSelectedIndex() + songs.getSongNumber() + 1) % getSongSequence().size(),
                     (queueListView.getSelectionModel().getSelectedIndex() + songs.getSongNumber()) % getSongSequence().size());
@@ -54,7 +53,6 @@ public class QueueViewController{
                     queueListView.getSelectionModel().getSelectedIndex(),
                     queueListView.getSelectionModel().getSelectedIndex() + 1);
             queueListView.getSelectionModel().selectIndices(queueListView.getSelectionModel().getSelectedIndex() + 1);
-
         }
     }
 
