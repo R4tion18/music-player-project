@@ -9,6 +9,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.io.File;
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -481,6 +483,51 @@ public class MusicPlayerOverviewController implements Initializable {
             }
             library.createAlbum(albumTitle, albumArtist, albumDirectory);
         }
+
+        albumListView.setItems(library.getAlbumNames());
+        songListView.setItems(library.getSongTitles());
+    }
+
+    @FXML
+    private void  handleEditSong()    {
+        if (songListView.getSelectionModel().getSelectedIndex() >= 0)   {
+            Song song = new Song(Song.getFile(library.getSong(library.getIndex(songListView.getSelectionModel().getSelectedItem()))));
+            CopyOnWriteArrayList<String> names = new CopyOnWriteArrayList<>(new String[]{"title", "album", "artist", "album artist", "year"});
+            CopyOnWriteArrayList<String> current = new CopyOnWriteArrayList<>(new String[]{
+                    song.getTitle(),
+                    song.getAlbum(),
+                    song.getArtist(),
+                    song.getAlbumArtist(),
+                    String.valueOf(song.getYear())
+            });
+            CopyOnWriteArrayList<String> changed = new CopyOnWriteArrayList<>();
+
+            for (String name : names) {
+                try {
+                    changed.add(textInput("current " + name, current.get(names.indexOf(name)), "new " + name, "Edit " + name));
+                } catch (IllegalAccessException e) {
+                    return;
+                }
+            }
+
+            if (!changed.get(0).isEmpty() && !changed.get(0).equals(names.get(0)))  {
+                song.setTitle(changed.get(0));
+            }
+            if (!changed.get(1).isEmpty() && !changed.get(1).equals(names.get(1)))  {
+                song.setAlbum(changed.get(1));
+            }
+            if (!changed.get(2).isEmpty() && !changed.get(2).equals(names.get(2)))  {
+                song.setArtist(changed.get(2));
+            }
+            if (!changed.get(3).isEmpty() && !changed.get(3).equals(names.get(3)))  {
+                song.setAlbumArtist(changed.get(3));
+            }
+            if (!changed.get(4).isEmpty() && !changed.get(4).equals(names.get(4)))  {
+                song.setYear(Integer.parseInt(changed.get(4)));
+            }
+
+            songListView.setItems(library.getSongTitles());
+        }
     }
 
     @FXML
@@ -501,6 +548,23 @@ public class MusicPlayerOverviewController implements Initializable {
             library.getAlbum(albumListView.getSelectionModel().getSelectedItem()).addSong(library.getIndex(songListView.getSelectionModel().getSelectedItem()));
         }   else {
             new Alert(Alert.AlertType.INFORMATION, "To add a song to an album, select the album in the albums tab, the song in the songs tab, then press add song to album").showAndWait();
+        }
+    }
+
+    @FXML
+    private void handleRemovePlaylist() {
+        if (playlistListView.getSelectionModel().getSelectedIndex() >= 0)   {
+            library.deletePlaylist(playlistListView.getSelectionModel().getSelectedItem(), false);
+            playlistListView.setItems(library.getPlaylistNames());
+        }
+    }
+
+    @FXML
+    private void handleRemoveAlbum()    {
+        if (albumListView.getSelectionModel().getSelectedIndex() >= 0)  {
+            library.deleteAlbum(albumListView.getSelectionModel().getSelectedItem(), true);
+            albumListView.setItems(library.getAlbumNames());
+            songListView.setItems(library.getSongTitles());
         }
     }
 

@@ -22,6 +22,9 @@
                   <MenuItem mnemonicParsing="false" onAction="#handleCreateAlbum" text="Create album..." />
                   <MenuItem mnemonicParsing="false" onAction="#handleAddSongToP" text="Add song to playlist" />
                   <MenuItem mnemonicParsing="false" onAction="#handleAddSongToA" text="Add song to album" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleRemovePlaylist" text="Remove playlist" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleRemoveAlbum" text="Remove album" />
+                  <MenuItem mnemonicParsing="false" onAction="#handleEditSong" text="Edit song data" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Help">

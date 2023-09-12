@@ -312,6 +312,8 @@ public class Library {
     }
 
     public void deleteAlbum(String album, Boolean fromLibrary)   {
+        albums.get(album).getSongIndexes().forEach(index -> Song.setAlbum(getSong(index), ""));
+
         if (fromLibrary)    {
             albums.get(album).getSongIndexes().forEach(this::deleteSong);
         }
