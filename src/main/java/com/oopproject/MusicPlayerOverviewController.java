@@ -50,7 +50,7 @@ public class MusicPlayerOverviewController implements Initializable {
     QueueViewController controller;
     PlaylistViewController playlistViewController;
     AlbumViewController albumViewController;
-    private Media media;
+
     private MediaPlayer mediaPlayer;
     private SongQueue songs = new SongQueue();
     private boolean isPlaying = false;
@@ -64,12 +64,6 @@ public class MusicPlayerOverviewController implements Initializable {
         volumeSlider.setMax(1.0);
         volumeSlider.setValue(0.5);
         volumeLabel.setText("50%");
-      /*  songs =
-                new SongQueue(new CopyOnWriteArrayList<>(Arrays.stream(Objects.requireNonNull(new File("C" +
-                                ":\\Users\\rikiv\\OneDrive\\Desktop" + "\\MediaMusic")
-                        .listFiles()))
-                        .map(f -> f.toURI().toString()).toList()));
-        loadSong(songs.getSong());*/
         setImage(playPauseButton, "icons/playIcon1.png");
         setImage(nextButton, "icons/nextIcon.png");
         setImage(previousButton, "icons/previousIcon.png");
@@ -106,8 +100,7 @@ public class MusicPlayerOverviewController implements Initializable {
     }
 
     private void loadSong(String songName) {
-        media = new Media(songName);
-        mediaPlayer = new MediaPlayer(media);
+        mediaPlayer = new MediaPlayer(new Media(songName));
         mediaPlayer.volumeProperty().bindBidirectional(volumeSlider.valueProperty());
         volumeSlider.valueChangingProperty().addListener((observable, wasChanging, isChanging) ->
                 volumeLabel.setText(String.format("%d", (int) (volumeSlider.getValue() * 100)) + "%"));
@@ -621,20 +614,5 @@ public class MusicPlayerOverviewController implements Initializable {
         thisImageView.setFitHeight(40);
         thisImageView.setFitWidth(50.0);
         button.setGraphic(thisImageView);
-    }
-
-    //Debug methods
-    @FXML
-    void infoAction() {
-        System.out.println(mediaPlayer.getStatus());
-        System.out.println(media.getDuration());
-        System.out.println(mediaPlayer.getCurrentTime());
-    }
-
-    @FXML
-    void debugAction() {
-        System.out.println(songs.getSongSequence());
-        System.out.println(songs.getSongNumber());
-        System.out.println(songs.getSongSequence().get(songs.getSongNumber()));
     }
 }

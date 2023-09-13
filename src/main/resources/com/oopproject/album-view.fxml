@@ -4,42 +4,49 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<DialogPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="405.0" prefWidth="541.0" style="-fx-background-color: #79BAD5;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.oopproject.AlbumViewController">
+<DialogPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="405.0"
+            prefWidth="541.0" style="-fx-background-color: #79BAD5;" xmlns="http://javafx.com/javafx/17.0.2-ea"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.oopproject.AlbumViewController">
     <expandableContent>
-        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="320.0" />
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="320.0"/>
     </expandableContent>
-    <buttonTypes>
-        <ButtonType fx:constant="OK" />
-    </buttonTypes>
     <content>
         <AnchorPane prefHeight="200.0" prefWidth="360.0">
-            <children>
-                <ScrollPane fx:id="albumScrollPane" prefHeight="353.0" prefWidth="447.0">
-                    <content>
-                        <ListView fx:id="albumListView" editable="true" prefHeight="351.0" prefWidth="444.0" />
-                    </content>
-                </ScrollPane>
-            <Label fx:id="titleLabel" alignment="CENTER" layoutX="478.0" layoutY="9.0" minHeight="30.0" prefWidth="92.0" text="Label" AnchorPane.rightAnchor="-10.0" AnchorPane.topAnchor="-10.0" />
-            <Label fx:id="artistLabel" alignment="CENTER" layoutX="478.0" layoutY="26.0" minHeight="30.0" prefWidth="92.0" text="Label" AnchorPane.rightAnchor="-10.0" AnchorPane.topAnchor="20.0" />
-            <Label fx:id="yearLabel" alignment="CENTER" layoutX="478.0" layoutY="43.0" minHeight="30.0" prefWidth="92.0" text="Label" AnchorPane.rightAnchor="-10.0" AnchorPane.topAnchor="50.0" />
-            <Button layoutX="465.0" layoutY="99.0" mnemonicParsing="false" onAction="#editAction" prefHeight="55.0" prefWidth="55.0" style="-fx-background-color: white;" text="Edit">
-               <font>
-                  <Font size="10.0" />
-               </font>
+            <ScrollPane fx:id="albumScrollPane" prefHeight="353.0" prefWidth="447.0">
+                <ListView fx:id="albumListView" editable="true" prefHeight="351.0" prefWidth="444.0"/>
+            </ScrollPane>
+            <Label fx:id="titleLabel" alignment="CENTER" layoutX="478.0" layoutY="9.0" minHeight="30.0"
+                   prefWidth="92.0" text="Label" AnchorPane.rightAnchor="-10.0" AnchorPane.topAnchor="-10.0"/>
+            <Label fx:id="artistLabel" alignment="CENTER" layoutX="478.0" layoutY="26.0" minHeight="30.0"
+                   prefWidth="92.0" text="Label" AnchorPane.rightAnchor="-10.0" AnchorPane.topAnchor="20.0"/>
+            <Label fx:id="yearLabel" alignment="CENTER" layoutX="478.0" layoutY="43.0" minHeight="30.0"
+                   prefWidth="92.0" text="Label" AnchorPane.rightAnchor="-10.0" AnchorPane.topAnchor="50.0"/>
+            <Button layoutX="465.0" layoutY="99.0" mnemonicParsing="false" onAction="#editAction" prefHeight="55.0"
+                    prefWidth="55.0" style="-fx-background-color: white;" text="Edit">
+                <font>
+                    <Font size="10.0"/>
+                </font>
             </Button>
-                <Button fx:id="plusButton" layoutX="465.0" layoutY="160.0" mnemonicParsing="false" onAction="#plusAction" prefHeight="55.0" prefWidth="55.0" style="-fx-background-color: transparent;">
-                    <font>
-                        <Font size="17.0" />
-                    </font>
-                </Button>
-                <Button fx:id="minusButton" layoutX="465.0" layoutY="221.0" mnemonicParsing="false" onAction="#minusAction" prefHeight="55.0" prefWidth="55.0" style="-fx-background-color: transparent;" />
-                <Button layoutX="465.0" layoutY="283.0" mnemonicParsing="false" onAction="#removeAction" prefHeight="55.0" prefWidth="55.0" style="-fx-background-color: white;" text="Remove">
-                    <font>
-                        <Font size="10.0" />
-                    </font>
-                </Button>
-            <Button layoutX="469.0" layoutY="326.0" mnemonicParsing="false" onAction="#saveAction" prefHeight="24.0" prefWidth="70.0" style="-fx-background-color: white;" text="Save " AnchorPane.bottomAnchor="-49.0" AnchorPane.rightAnchor="80.0" />
-            </children>
+            <Button fx:id="plusButton" layoutX="465.0" layoutY="160.0" mnemonicParsing="false"
+                    onAction="#plusAction" prefHeight="55.0" prefWidth="55.0"
+                    style="-fx-background-color: transparent;">
+                <font>
+                    <Font size="17.0"/>
+                </font>
+            </Button>
+            <Button fx:id="minusButton" layoutX="465.0" layoutY="221.0" mnemonicParsing="false"
+                    onAction="#minusAction" prefHeight="55.0" prefWidth="55.0"
+                    style="-fx-background-color: transparent;"/>
+            <Button layoutX="465.0" layoutY="283.0" mnemonicParsing="false" onAction="#removeAction"
+                    prefHeight="55.0" prefWidth="55.0" style="-fx-background-color: white;" text="Remove">
+                <font>
+                    <Font size="10.0"/>
+                </font>
+            </Button>
+            <Button layoutX="469.0" layoutY="326.0" mnemonicParsing="false" onAction="#saveAction" prefHeight="24.0"
+                    prefWidth="70.0" style="-fx-background-color: white;" text="Save "
+                    AnchorPane.bottomAnchor="-49.0" AnchorPane.rightAnchor="80.0"/>
         </AnchorPane>
     </content>
+    <ButtonType fx:constant="OK"/>
 </DialogPane>

@@ -117,8 +117,4 @@ public class Album extends Playlist  {
         songs.forEach(index -> indexes[Song.getTrack(getLibrary().getSong(index)) - 1] = index);
         songs = new CopyOnWriteArrayList<>(indexes);
     }
-
-    public void removeSongNotTrack(int index)   {
-        songs.remove(Integer.valueOf(index));
-    }
 }

@@ -5,15 +5,19 @@
 
 <DialogPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="160.0" prefWidth="480.0" style="-fx-background-color: #79BAD5;" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.oopproject.TextInputViewController">
     <header>
-      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="480.0">
-         <children>
-            <Label fx:id="currentDefinition" prefHeight="65.0" prefWidth="140.0" text="Label" AnchorPane.bottomAnchor="105.0" AnchorPane.rightAnchor="320.0" />
-            <Label fx:id="currentField" prefHeight="55.0" prefWidth="150.0" text="Label" AnchorPane.leftAnchor="170.0" />
-            <Label fx:id="newDefinition" prefHeight="55.0" prefWidth="140.0" text="Label" AnchorPane.rightAnchor="320.0" AnchorPane.topAnchor="55.0" />
-            <TextField fx:id="newField" prefHeight="35.0" prefWidth="160.0" AnchorPane.leftAnchor="160.0" AnchorPane.topAnchor="65.0" />
-            <Button layoutX="346.0" layoutY="70.0" mnemonicParsing="false" onAction="#confirmAction" prefHeight="25.0" prefWidth="120.0" text="Confirm" AnchorPane.bottomAnchor="65.0" AnchorPane.rightAnchor="20.0" />
-            <Button layoutX="346.0" layoutY="121.0" mnemonicParsing="false" onAction="#cancelAction" prefHeight="25.0" prefWidth="120.0" text="Cancel" AnchorPane.bottomAnchor="16.0" AnchorPane.rightAnchor="20.0" />
-         </children></AnchorPane>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="480.0">
+            <Label fx:id="currentDefinition" prefHeight="65.0" prefWidth="140.0" text="Label"
+                   AnchorPane.bottomAnchor="105.0" AnchorPane.rightAnchor="320.0"/>
+            <Label fx:id="currentField" prefHeight="55.0" prefWidth="150.0" text="Label" AnchorPane.leftAnchor="170.0"/>
+            <Label fx:id="newDefinition" prefHeight="55.0" prefWidth="140.0" text="Label" AnchorPane.rightAnchor="320.0"
+                   AnchorPane.topAnchor="55.0"/>
+            <TextField fx:id="newField" prefHeight="35.0" prefWidth="160.0" AnchorPane.leftAnchor="160.0"
+                       AnchorPane.topAnchor="65.0"/>
+            <Button layoutX="346.0" layoutY="70.0" mnemonicParsing="false" onAction="#confirmAction" prefHeight="25.0"
+                    prefWidth="120.0" text="Confirm" AnchorPane.bottomAnchor="65.0" AnchorPane.rightAnchor="20.0"/>
+            <Button layoutX="346.0" layoutY="121.0" mnemonicParsing="false" onAction="#cancelAction" prefHeight="25.0"
+                    prefWidth="120.0" text="Cancel" AnchorPane.bottomAnchor="16.0" AnchorPane.rightAnchor="20.0"/>
+        </AnchorPane>
     </header>
     <content>
       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="320.0" />

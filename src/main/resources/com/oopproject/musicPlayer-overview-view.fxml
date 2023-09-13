@@ -8,190 +8,202 @@
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="688.0" prefWidth="420.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.oopproject.MusicPlayerOverviewController">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
-        <menus>
-          <Menu mnemonicParsing="false" text="File">
-            <items>
-              <MenuItem mnemonicParsing="false" onAction="#handleOpen" text="Open..." />
-                  <MenuItem mnemonicParsing="false" onAction="#handleAddSong" text="Add Song..." />
-                  <MenuItem mnemonicParsing="false" onAction="#handleClose" text="Close" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Edit">
-            <items>
-              <MenuItem mnemonicParsing="false" onAction="#handleCreatePlaylist" text="Create playlist..." />
-                  <MenuItem mnemonicParsing="false" onAction="#handleCreateAlbum" text="Create album..." />
-                  <MenuItem mnemonicParsing="false" onAction="#handleAddSongToP" text="Add song to playlist" />
-                  <MenuItem mnemonicParsing="false" onAction="#handleAddSongToA" text="Add song to album" />
-                  <MenuItem mnemonicParsing="false" onAction="#handleRemovePlaylist" text="Remove playlist" />
-                  <MenuItem mnemonicParsing="false" onAction="#handleRemoveAlbum" text="Remove album" />
-                  <MenuItem mnemonicParsing="false" onAction="#handleEditSong" text="Edit song data" />
-            </items>
-          </Menu>
-          <Menu mnemonicParsing="false" text="Help">
-            <items>
-              <MenuItem mnemonicParsing="false" onAction="#handleAbout" text="About" />
-            </items>
-          </Menu>
-        </menus>
+         <Menu mnemonicParsing="false" text="File">
+            <MenuItem mnemonicParsing="false" onAction="#handleOpen" text="Open..."/>
+            <MenuItem mnemonicParsing="false" onAction="#handleAddSong" text="Add Song..."/>
+            <MenuItem mnemonicParsing="false" onAction="#handleClose" text="Close"/>
+         </Menu>
+         <Menu mnemonicParsing="false" text="Edit">
+            <MenuItem mnemonicParsing="false" onAction="#handleCreatePlaylist" text="Create playlist..."/>
+            <MenuItem mnemonicParsing="false" onAction="#handleCreateAlbum" text="Create album..."/>
+            <MenuItem mnemonicParsing="false" onAction="#handleAddSongToP" text="Add song to playlist"/>
+            <MenuItem mnemonicParsing="false" onAction="#handleAddSongToA" text="Add song to album"/>
+            <MenuItem mnemonicParsing="false" onAction="#handleRemovePlaylist" text="Remove playlist"/>
+            <MenuItem mnemonicParsing="false" onAction="#handleRemoveAlbum" text="Remove album"/>
+            <MenuItem mnemonicParsing="false" onAction="#handleEditSong" text="Edit song data"/>
+         </Menu>
+         <Menu mnemonicParsing="false" text="Help">
+            <MenuItem mnemonicParsing="false" onAction="#handleAbout" text="About"/>
+         </Menu>
       </MenuBar>
    </top>
    <bottom>
-      <AnchorPane prefHeight="325.0" prefWidth="420.0" style="-fx-background-color: #79BAD5;" BorderPane.alignment="CENTER">
-         <children>
-            <Button fx:id="previousButton" layoutX="45.0" layoutY="137.0" mnemonicParsing="false" onAction="#previousAction" prefHeight="50.0" prefWidth="75.0" style="-fx-background-color: transparent;" AnchorPane.leftAnchor="45.0">
-               <font>
-                  <Font size="17.0" />
-               </font>
-            </Button>
-            <Button fx:id="playPauseButton" layoutX="173.0" layoutY="137.0" mnemonicParsing="false" onAction="#playPauseAction" prefHeight="50.0" prefWidth="75.0" style="-fx-background-color: transparent;">
-               <font>
-                  <Font size="17.0" />
-               </font>
-            </Button>
-            <Button fx:id="nextButton" layoutX="287.0" layoutY="137.0" mnemonicParsing="false" onAction="#nextAction" prefHeight="50.0" prefWidth="75.0" style="-fx-background-color: transparent;" AnchorPane.rightAnchor="45.0">
-               <font>
-                  <Font size="17.0" />
-               </font>
-            </Button>
-            <Button fx:id="queueButton" layoutX="173.0" layoutY="235.0" maxHeight="-Infinity" maxWidth="-Infinity" mnemonicParsing="false" onAction="#queueAction" prefHeight="50.0" prefWidth="75.0" style="-fx-background-color: transparent;">
-               <font>
-                  <Font size="17.0" />
-               </font>
-            </Button>
-            <Slider fx:id="timeSlider" layoutX="43.0" layoutY="86.0" prefHeight="30.0" prefWidth="330.0" style="-fx-background-color: #79BAD5;" AnchorPane.leftAnchor="45.0" AnchorPane.rightAnchor="45.0" AnchorPane.topAnchor="86.0" />
-            <Label fx:id="currentTimeLabel" alignment="CENTER" layoutY="86.0" prefHeight="35.0" prefWidth="45.0" text="0:00" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="86.0" />
-            <Label fx:id="totalTimeLabel" alignment="CENTER" layoutX="375.0" layoutY="83.0" prefHeight="35.0" prefWidth="45.0" text="0:00" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="86.0" />
-            <Slider fx:id="volumeSlider" layoutX="330.0" layoutY="226.0" orientation="VERTICAL" prefHeight="68.0" prefWidth="14.0" />
-            <Label fx:id="volumeLabel" alignment="CENTER" layoutX="337.0" layoutY="250.0" prefHeight="20.0" prefWidth="45.0" text="V" />
-         </children>
+      <AnchorPane prefHeight="325.0" prefWidth="420.0" style="-fx-background-color: #79BAD5;"
+                  BorderPane.alignment="CENTER">
+         <Button fx:id="previousButton" layoutX="45.0" layoutY="137.0" mnemonicParsing="false"
+                 onAction="#previousAction" prefHeight="50.0" prefWidth="75.0"
+                 style="-fx-background-color: transparent;" AnchorPane.leftAnchor="45.0">
+            <font>
+               <Font size="17.0"/>
+            </font>
+         </Button>
+         <Button fx:id="playPauseButton" layoutX="173.0" layoutY="137.0" mnemonicParsing="false"
+                 onAction="#playPauseAction" prefHeight="50.0" prefWidth="75.0"
+                 style="-fx-background-color: transparent;">
+            <font>
+               <Font size="17.0"/>
+            </font>
+         </Button>
+         <Button fx:id="nextButton" layoutX="287.0" layoutY="137.0" mnemonicParsing="false" onAction="#nextAction"
+                 prefHeight="50.0" prefWidth="75.0" style="-fx-background-color: transparent;"
+                 AnchorPane.rightAnchor="45.0">
+            <font>
+               <Font size="17.0"/>
+            </font>
+         </Button>
+         <Button fx:id="queueButton" layoutX="173.0" layoutY="235.0" maxHeight="-Infinity" maxWidth="-Infinity"
+                 mnemonicParsing="false" onAction="#queueAction" prefHeight="50.0" prefWidth="75.0"
+                 style="-fx-background-color: transparent;">
+            <font>
+               <Font size="17.0"/>
+            </font>
+         </Button>
+         <Slider fx:id="timeSlider" layoutX="43.0" layoutY="86.0" prefHeight="30.0" prefWidth="330.0"
+                 style="-fx-background-color: #79BAD5;" AnchorPane.leftAnchor="45.0" AnchorPane.rightAnchor="45.0"
+                 AnchorPane.topAnchor="86.0"/>
+         <Label fx:id="currentTimeLabel" alignment="CENTER" layoutY="86.0" prefHeight="35.0" prefWidth="45.0"
+                text="0:00" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="86.0"/>
+         <Label fx:id="totalTimeLabel" alignment="CENTER" layoutX="375.0" layoutY="83.0" prefHeight="35.0"
+                prefWidth="45.0" text="0:00" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="86.0"/>
+         <Slider fx:id="volumeSlider" layoutX="330.0" layoutY="226.0" orientation="VERTICAL" prefHeight="68.0"
+                 prefWidth="14.0"/>
+         <Label fx:id="volumeLabel" alignment="CENTER" layoutX="337.0" layoutY="250.0" prefHeight="20.0"
+                prefWidth="45.0" text="V"/>
       </AnchorPane>
    </bottom>
    <center>
       <TabPane prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="TOP_LEFT">
-        <tabs>
-          <Tab closable="false" text="Playing">
-               <content>
-                  <AnchorPane prefHeight="299.0" prefWidth="420.0" style="-fx-background-color: #79BAD5;">
-                     <children>
-                        <ToggleButton fx:id="loopButton" layoutX="25.0" layoutY="260.0" mnemonicParsing="false" onAction="#loopAction" prefHeight="41.0" prefWidth="70.0" style="-fx-background-color: #79BAD5;" AnchorPane.leftAnchor="30.0">
-                           <font>
-                              <Font size="17.0" />
-                           </font>
-                        </ToggleButton>
-                        <Label fx:id="songLabel" alignment="CENTER" layoutX="105.0" layoutY="263.0" onMouseClicked="#infoAction" prefHeight="35.0" prefWidth="211.0" text="Song">
-                           <font>
-                              <Font size="17.0" />
-                           </font>
-                        </Label>
-                        <ToggleButton fx:id="shuffleButton" layoutX="306.0" layoutY="260.0" mnemonicParsing="false" onAction="#shuffleAction" prefHeight="41.0" prefWidth="70.0" style="-fx-background-color: #79BAD5;" AnchorPane.rightAnchor="30.0">
-                           <font>
-                              <Font size="17.0" />
-                           </font>
-                        </ToggleButton>
-                        <ImageView fx:id="coverImageView" fitHeight="182.0" fitWidth="259.0" layoutX="131.0" layoutY="48.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="131.0" AnchorPane.rightAnchor="30.0" />
-                     </children>
-                  </AnchorPane>
-               </content>
-            </Tab>
-            <Tab text="Info">
-               <content>
-                  <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #79BAD5;">
-                     <children>
-                        <VBox layoutX="28.0" layoutY="25.0" prefHeight="200.0" prefWidth="116.0">
-                           <children>
-                              <Label prefHeight="30.0" prefWidth="134.0" text="Title:">
-                                 <font>
-                                    <Font size="17.0" />
-                                 </font>
-                              </Label>
-                              <Label prefHeight="30.0" prefWidth="154.0" text="Artist:">
-                                 <font>
-                                    <Font size="17.0" />
-                                 </font>
-                              </Label>
-                              <Label prefHeight="30.0" prefWidth="154.0" text="Album:">
-                                 <font>
-                                    <Font size="17.0" />
-                                 </font>
-                              </Label>
-                              <Label prefHeight="30.0" prefWidth="154.0" text="Album Artist:">
-                                 <font>
-                                    <Font size="17.0" />
-                                 </font>
-                              </Label>
-                              <Label prefHeight="30.0" prefWidth="154.0" text="Year:">
-                                 <font>
-                                    <Font size="17.0" />
-                                 </font>
-                              </Label>
-                           </children>
-                        </VBox>
-                        <VBox layoutX="199.0" layoutY="25.0" prefHeight="200.0" prefWidth="196.0">
-                           <children>
-                              <Label fx:id="titleLabel" prefHeight="30.0" prefWidth="259.0" text="Title">
-                                 <font>
-                                    <Font size="17.0" />
-                                 </font>
-                              </Label>
-                              <Label fx:id="artistLabel" prefHeight="30.0" prefWidth="278.0" text="Artist">
-                                 <font>
-                                    <Font size="17.0" />
-                                 </font>
-                              </Label>
-                              <Label fx:id="albumLabel" prefHeight="30.0" prefWidth="282.0" text="Album">
-                                 <font>
-                                    <Font size="17.0" />
-                                 </font>
-                              </Label>
-                              <Label fx:id="albumArtistLabel" prefHeight="30.0" prefWidth="320.0" text="Album Artist">
-                                 <font>
-                                    <Font size="17.0" />
-                                 </font>
-                              </Label>
-                              <Label fx:id="yearLabel" prefHeight="30.0" prefWidth="326.0" text="Year">
-                                 <font>
-                                    <Font size="17.0" />
-                                 </font>
-                              </Label>
-                           </children>
-                        </VBox>
-                     </children>
-                  </AnchorPane>
-               </content></Tab>
-            <Tab text="Songs">
-               <content>
-                  <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #79BAD5;">
-                     <children>
-                        <ListView fx:id="songListView" layoutX="14.0" layoutY="14.0" prefHeight="290.0" prefWidth="262.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
-                        <Button layoutX="289.0" layoutY="14.0" mnemonicParsing="false" onAction="#playSongAction" prefHeight="70.0" prefWidth="95.0" style="-fx-background-color: white;" text="Play song" AnchorPane.rightAnchor="35.0" AnchorPane.topAnchor="10.0" />
-                        <Button layoutX="289.0" layoutY="98.0" mnemonicParsing="false" onAction="#addToQueueSAction" prefHeight="70.0" prefWidth="95.0" style="-fx-background-color: white;" text="Add to queue" AnchorPane.rightAnchor="35.0" AnchorPane.topAnchor="100.0" />
-                        <Button layoutX="310.0" layoutY="201.0" mnemonicParsing="false" onAction="#removeAction" prefHeight="70.0" prefWidth="95.0" style="-fx-background-color: white;" text="Remove" AnchorPane.rightAnchor="35.0" AnchorPane.topAnchor="190.0" />
-                     </children>
-                  </AnchorPane>
-               </content></Tab>
-            <Tab text="Playlists">
-               <content>
-                  <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #79BAD5;">
-                     <children>
-                        <ListView fx:id="playlistListView" layoutX="14.0" layoutY="14.0" prefHeight="290.0" prefWidth="262.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
-                        <Button layoutX="304.0" layoutY="14.0" mnemonicParsing="false" onAction="#playPlaylistAction" prefHeight="70.0" prefWidth="95.0" style="-fx-background-color: white;" text="Play playlist" AnchorPane.rightAnchor="35.0" AnchorPane.topAnchor="10.0" />
-                        <Button layoutX="289.0" layoutY="97.0" mnemonicParsing="false" onAction="#addToQueuePAction" prefHeight="70.0" prefWidth="95.0" style="-fx-background-color: white;" text="Add to queue" AnchorPane.rightAnchor="35.0" AnchorPane.topAnchor="100.0" />
-                        <Button layoutX="310.0" layoutY="217.0" mnemonicParsing="false" onAction="#showPlaylistAction" prefHeight="70.0" prefWidth="95.0" style="-fx-background-color: white;" text="Show playlist" AnchorPane.rightAnchor="35.0" AnchorPane.topAnchor="190.0" />
-                     </children>
-                  </AnchorPane>
-               </content></Tab>
-            <Tab text="Albums">
-               <content>
-                  <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #79BAD5;">
-                     <children>
-                        <ListView fx:id="albumListView" layoutX="14.0" layoutY="14.0" prefHeight="290.0" prefWidth="262.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
-                        <Button layoutX="297.0" layoutY="14.0" mnemonicParsing="false" onAction="#playAlbumAction" prefHeight="70.0" prefWidth="95.0" style="-fx-background-color: white;" text="Play album" AnchorPane.rightAnchor="35.0" AnchorPane.topAnchor="10.0" />
-                        <Button layoutX="299.0" layoutY="107.0" mnemonicParsing="false" onAction="#addToQueueAAction" prefHeight="70.0" prefWidth="95.0" style="-fx-background-color: white;" text="Add to queue" AnchorPane.rightAnchor="35.0" AnchorPane.topAnchor="100.0" />
-                        <Button layoutX="310.0" layoutY="207.0" mnemonicParsing="false" onAction="#showAlbumAction" prefHeight="70.0" prefWidth="95.0" style="-fx-background-color: white;" text="Show album" AnchorPane.rightAnchor="35.0" AnchorPane.topAnchor="190.0" />
-                     </children>
-                  </AnchorPane>
-               </content></Tab>
-        </tabs>
+         <Tab closable="false" text="Playing">
+            <AnchorPane prefHeight="299.0" prefWidth="420.0" style="-fx-background-color: #79BAD5;">
+               <ToggleButton fx:id="loopButton" layoutX="25.0" layoutY="260.0" mnemonicParsing="false"
+                             onAction="#loopAction" prefHeight="41.0" prefWidth="70.0"
+                             style="-fx-background-color: #79BAD5;" AnchorPane.leftAnchor="30.0">
+                  <font>
+                     <Font size="17.0"/>
+                  </font>
+               </ToggleButton>
+               <Label fx:id="songLabel" alignment="CENTER" layoutX="105.0" layoutY="263.0" prefHeight="35.0"
+                      prefWidth="211.0" text="Song">
+                  <font>
+                     <Font size="17.0"/>
+                  </font>
+               </Label>
+               <ToggleButton fx:id="shuffleButton" layoutX="306.0" layoutY="260.0" mnemonicParsing="false"
+                             onAction="#shuffleAction" prefHeight="41.0" prefWidth="70.0"
+                             style="-fx-background-color: #79BAD5;" AnchorPane.rightAnchor="30.0">
+                  <font>
+                     <Font size="17.0"/>
+                  </font>
+               </ToggleButton>
+               <ImageView fx:id="coverImageView" fitHeight="182.0" fitWidth="259.0" layoutX="131.0" layoutY="48.0"
+                          pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="131.0"
+                          AnchorPane.rightAnchor="30.0"/>
+            </AnchorPane>
+         </Tab>
+         <Tab text="Info">
+            <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #79BAD5;">
+               <VBox layoutX="28.0" layoutY="25.0" prefHeight="200.0" prefWidth="116.0">
+                  <Label prefHeight="30.0" prefWidth="134.0" text="Title:">
+                     <font>
+                        <Font size="17.0"/>
+                     </font>
+                  </Label>
+                  <Label prefHeight="30.0" prefWidth="154.0" text="Artist:">
+                     <font>
+                        <Font size="17.0"/>
+                     </font>
+                  </Label>
+                  <Label prefHeight="30.0" prefWidth="154.0" text="Album:">
+                     <font>
+                        <Font size="17.0"/>
+                     </font>
+                  </Label>
+                  <Label prefHeight="30.0" prefWidth="154.0" text="Album Artist:">
+                     <font>
+                        <Font size="17.0"/>
+                     </font>
+                  </Label>
+                  <Label prefHeight="30.0" prefWidth="154.0" text="Year:">
+                     <font>
+                        <Font size="17.0"/>
+                     </font>
+                  </Label>
+               </VBox>
+               <VBox layoutX="199.0" layoutY="25.0" prefHeight="200.0" prefWidth="196.0">
+                  <Label fx:id="titleLabel" prefHeight="30.0" prefWidth="259.0" text="Title">
+                     <font>
+                        <Font size="17.0"/>
+                     </font>
+                  </Label>
+                  <Label fx:id="artistLabel" prefHeight="30.0" prefWidth="278.0" text="Artist">
+                     <font>
+                        <Font size="17.0"/>
+                     </font>
+                  </Label>
+                  <Label fx:id="albumLabel" prefHeight="30.0" prefWidth="282.0" text="Album">
+                     <font>
+                        <Font size="17.0"/>
+                     </font>
+                  </Label>
+                  <Label fx:id="albumArtistLabel" prefHeight="30.0" prefWidth="320.0" text="Album Artist">
+                     <font>
+                        <Font size="17.0"/>
+                     </font>
+                  </Label>
+                  <Label fx:id="yearLabel" prefHeight="30.0" prefWidth="326.0" text="Year">
+                     <font>
+                        <Font size="17.0"/>
+                     </font>
+                  </Label>
+               </VBox>
+            </AnchorPane>
+         </Tab>
+         <Tab text="Songs">
+            <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #79BAD5;">
+               <ListView fx:id="songListView" layoutX="14.0" layoutY="14.0" prefHeight="290.0" prefWidth="262.0"
+                         AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0"/>
+               <Button layoutX="289.0" layoutY="14.0" mnemonicParsing="false" onAction="#playSongAction"
+                       prefHeight="70.0" prefWidth="95.0" style="-fx-background-color: white;" text="Play song"
+                       AnchorPane.rightAnchor="35.0" AnchorPane.topAnchor="10.0"/>
+               <Button layoutX="289.0" layoutY="98.0" mnemonicParsing="false" onAction="#addToQueueSAction"
+                       prefHeight="70.0" prefWidth="95.0" style="-fx-background-color: white;" text="Add to queue"
+                       AnchorPane.rightAnchor="35.0" AnchorPane.topAnchor="100.0"/>
+               <Button layoutX="310.0" layoutY="201.0" mnemonicParsing="false" onAction="#removeAction"
+                       prefHeight="70.0" prefWidth="95.0" style="-fx-background-color: white;" text="Remove"
+                       AnchorPane.rightAnchor="35.0" AnchorPane.topAnchor="190.0"/>
+            </AnchorPane>
+         </Tab>
+         <Tab text="Playlists">
+            <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #79BAD5;">
+               <ListView fx:id="playlistListView" layoutX="14.0" layoutY="14.0" prefHeight="290.0"
+                         prefWidth="262.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0"
+                         AnchorPane.topAnchor="10.0"/>
+               <Button layoutX="304.0" layoutY="14.0" mnemonicParsing="false" onAction="#playPlaylistAction"
+                       prefHeight="70.0" prefWidth="95.0" style="-fx-background-color: white;"
+                       text="Play playlist" AnchorPane.rightAnchor="35.0" AnchorPane.topAnchor="10.0"/>
+               <Button layoutX="289.0" layoutY="97.0" mnemonicParsing="false" onAction="#addToQueuePAction"
+                       prefHeight="70.0" prefWidth="95.0" style="-fx-background-color: white;" text="Add to queue"
+                       AnchorPane.rightAnchor="35.0" AnchorPane.topAnchor="100.0"/>
+               <Button layoutX="310.0" layoutY="217.0" mnemonicParsing="false" onAction="#showPlaylistAction"
+                       prefHeight="70.0" prefWidth="95.0" style="-fx-background-color: white;"
+                       text="Show playlist" AnchorPane.rightAnchor="35.0" AnchorPane.topAnchor="190.0"/>
+            </AnchorPane>
+         </Tab>
+         <Tab text="Albums">
+            <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #79BAD5;">
+               <ListView fx:id="albumListView" layoutX="14.0" layoutY="14.0" prefHeight="290.0" prefWidth="262.0"
+                         AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0"/>
+               <Button layoutX="297.0" layoutY="14.0" mnemonicParsing="false" onAction="#playAlbumAction"
+                       prefHeight="70.0" prefWidth="95.0" style="-fx-background-color: white;" text="Play album"
+                       AnchorPane.rightAnchor="35.0" AnchorPane.topAnchor="10.0"/>
+               <Button layoutX="299.0" layoutY="107.0" mnemonicParsing="false" onAction="#addToQueueAAction"
+                       prefHeight="70.0" prefWidth="95.0" style="-fx-background-color: white;" text="Add to queue"
+                       AnchorPane.rightAnchor="35.0" AnchorPane.topAnchor="100.0"/>
+               <Button layoutX="310.0" layoutY="207.0" mnemonicParsing="false" onAction="#showAlbumAction"
+                       prefHeight="70.0" prefWidth="95.0" style="-fx-background-color: white;" text="Show album"
+                       AnchorPane.rightAnchor="35.0" AnchorPane.topAnchor="190.0"/>
+            </AnchorPane>
+         </Tab>
       </TabPane>
    </center>
 </BorderPane>

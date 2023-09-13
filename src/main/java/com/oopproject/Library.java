@@ -81,9 +81,6 @@ public class Library {
         });
     }
 
-    public String getLibraryFolder()    {
-        return properties.getProperty("libraryFolder");
-    }
 
     public int getLibrarySize() {
         return songs.size();
@@ -155,17 +152,6 @@ public class Library {
         return albums.get(name);
     }
 
-    public Vector<Integer> addFromFolder(String folderUri) {
-        File folder;
-
-        try {
-            folder = new File(new URI(folderUri));
-        } catch (URISyntaxException e) {
-            throw new RuntimeException(e);  //change exception handling
-        }
-
-        return addMultipleFiles(new CopyOnWriteArrayList<>(Objects.requireNonNull(folder.listFiles())));
-    }
 
     public Vector<Integer> addMultipleFiles(CopyOnWriteArrayList<File> files)  {
         Vector<Integer> indexes = new Vector<>();
@@ -249,13 +235,7 @@ public class Library {
         properties.remove(String.valueOf(index));
     }
 
-    public void createPlaylist(String name, File folder)    {
-        playlists.putIfAbsent(name, new Playlist(name, this, folder));
-    }
 
-    public void createPlaylist(String name, CopyOnWriteArrayList<File> files)   {
-        playlists.putIfAbsent(name, new Playlist(name, this, files.toArray(File[]::new)));
-    }
 
     public void createPlaylist(String name)    {
         playlists.putIfAbsent(name, new Playlist(name, this));
@@ -292,10 +272,6 @@ public class Library {
         playlists.remove(playlist);
     }
 
-    public void createAlbum(String name, String artist, CopyOnWriteArrayList<File> files)   {
-        albums.putIfAbsent(name, new Album(name, this, files.toArray(File[]::new)));
-        albums.get(name).setArtist(artist);
-    }
 
     public void createAlbum(String name, String artist, File folder)   {
         albums.putIfAbsent(name, new Album(name, this, folder));

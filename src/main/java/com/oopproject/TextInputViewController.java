@@ -1,15 +1,8 @@
 package com.oopproject;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
 
-import java.util.Objects;
 
 public class TextInputViewController {
     @FXML Label currentDefinition;
@@ -59,18 +52,11 @@ public class TextInputViewController {
     }
 
     @FXML
-    public void cancelAction() throws Exception {
+    public void cancelAction() {
         value = "";
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.CANCEL);
         dialog.close();
         cancel = true;
     }
 
-    private void setImage(Button button, String uri){
-        ImageView thisImageView =
-                new ImageView( new Image(Objects.requireNonNull(getClass().getResourceAsStream(uri))));
-        thisImageView.setFitHeight(40);
-        thisImageView.setFitWidth(35.0);
-        button.setGraphic(thisImageView);
-    }
 }

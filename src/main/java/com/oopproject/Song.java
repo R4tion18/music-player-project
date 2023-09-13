@@ -38,9 +38,6 @@ public record Song(File file) {
         return getFile(getURI(uri));
     }
 
-    public Mp3File getMp3File() {
-        return getMp3File(file);
-    }
 
     public static Mp3File getMp3File(File file) {
         Mp3File mp3 = null;
@@ -74,9 +71,6 @@ public record Song(File file) {
         boolean deleted = tempFile.delete();
     }
 
-    public Optional<ID3v2> getTag() {
-        return getTag(file);
-    }
 
     public static Optional<ID3v2> getTag(String uri) {
         return getTag(getFile(uri));
@@ -108,9 +102,6 @@ public record Song(File file) {
         return getIndexString(file);
     }
 
-    public static String getIndexString(String uri) {
-        return getIndexString(getFile(uri));
-    }
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     public static String getIndexString(File file) {
@@ -138,9 +129,6 @@ public record Song(File file) {
         setIndex(file, index);
     }
 
-    public static void setIndex(String uri, Integer index) {
-        setIndex(getFile(uri), index);
-    }
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     public static void setIndex(File file, Integer index) {
@@ -149,13 +137,6 @@ public record Song(File file) {
         save(mp3);
     }
 
-    public String getConsecutiveString() {
-        return getConsecutiveString(file);
-    }
-
-    public static String getConsecutiveString(String uri) {
-        return getConsecutiveString(getFile(uri));
-    }
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     public static String getConsecutiveString(File file) {
@@ -167,36 +148,6 @@ public record Song(File file) {
         }
     }
 
-    public int getConsecutive() {
-        return getConsecutive(file);
-    }
-
-    public static int getConsecutive(String uri) {
-        return getConsecutive(getFile(uri));
-    }
-
-    public static int getConsecutive(File file) {
-        try {
-            return Integer.parseInt(Objects.requireNonNull(getConsecutiveString(file)));
-        }   catch (NumberFormatException e) {
-            return -1;
-        }
-    }
-
-    public void setConsecutive(Integer index) {
-        setConsecutive(file, index);
-    }
-
-    public static void setConsecutive(String uri, Integer index) {
-        setConsecutive(getFile(uri), index);
-    }
-
-    @SuppressWarnings("OptionalGetWithoutIsPresent")
-    public static void setConsecutive(File file, Integer index) {
-        Mp3File mp3 = createTag(file);
-        getTag(mp3).get().setComment(getTag(file).get().getComment() + "," + index.toString());
-        save(mp3);
-    }
 
     public String getTitle() {
         return getTitle(file);
@@ -220,9 +171,6 @@ public record Song(File file) {
         setTitle(file, title);
     }
 
-    public static void setTitle(String uri, String title)   {
-        setTitle(getFile(uri), title);
-    }
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     public static void setTitle(File file, String title)  {
@@ -369,9 +317,6 @@ public record Song(File file) {
         }
     }
 
-    public void setTrack(int track)  {
-        setTrack(file, track);
-    }
 
     public static void setTrack(String uri, int track) {
         setTrack(getFile(uri), track);

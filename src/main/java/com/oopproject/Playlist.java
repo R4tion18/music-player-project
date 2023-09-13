@@ -1,6 +1,5 @@
 package com.oopproject;
 
-import java.io.File;
 import java.util.Comparator;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
@@ -13,15 +12,6 @@ public class Playlist {
     public Playlist(String name, Library library) {
         this.name = name;
         this.library = library;
-    }
-
-    public Playlist(String name, Library library, File folder)  {
-        this(name, library, folder.listFiles());
-    }
-
-    public Playlist(String name, Library library, File[] files) {
-        this(name, library);
-        library.addMultipleFiles(new CopyOnWriteArrayList<>(files)).forEach(this::addSong);
     }
 
     public String getName() {

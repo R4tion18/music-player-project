@@ -9,7 +9,6 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.stream.IntStream;
@@ -20,7 +19,6 @@ public class QueueViewController{
     @FXML Button plusButton;
     @FXML Button minusButton;
 
-    MusicPlayerOverviewController controller;
     SongQueue songs;
     ObservableList<String> queue;
 
