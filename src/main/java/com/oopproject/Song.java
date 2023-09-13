@@ -9,6 +9,11 @@ import java.net.URISyntaxException;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * A record containing static methods useful to manipulate mp3 metadata in the songs of a Library.
+ * It is also instantiable for consecutive use in single codeblocks.
+ * @param file the file from which to create a Song instance.
+ */
 public record Song(File file) {
     public static String getString(URI uri) {
         return uri.toString();
@@ -40,7 +45,7 @@ public record Song(File file) {
 
 
     public static Mp3File getMp3File(File file) {
-        Mp3File mp3 = null;
+        Mp3File mp3;
         try {
             mp3 = new Mp3File(file);
         } catch (IOException | UnsupportedTagException | InvalidDataException e) {
@@ -129,25 +134,12 @@ public record Song(File file) {
         setIndex(file, index);
     }
 
-
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     public static void setIndex(File file, Integer index) {
         Mp3File mp3 = createTag(file);
         getTag(mp3).get().setComment(index.toString());
         save(mp3);
     }
-
-
-    @SuppressWarnings("OptionalGetWithoutIsPresent")
-    public static String getConsecutiveString(File file) {
-        createTag(file);
-        if (getTag(file).get().getComment() == null) {
-            return null;
-        }   else {
-            return getTag(file).get().getComment().split(",")[1];
-        }
-    }
-
 
     public String getTitle() {
         return getTitle(file);
@@ -170,7 +162,6 @@ public record Song(File file) {
     public void setTitle(String title)  {
         setTitle(file, title);
     }
-
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     public static void setTitle(File file, String title)  {
@@ -255,10 +246,6 @@ public record Song(File file) {
         setArtist(file, artist);
     }
 
-    public static void setArtist(String uri, String artist) {
-        setArtist(getFile(uri), artist);
-    }
-
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     public static void setArtist(File file, String artist)  {
         Mp3File mp3 = createTag(file);
@@ -316,7 +303,6 @@ public record Song(File file) {
             return 0;
         }
     }
-
 
     public static void setTrack(String uri, int track) {
         setTrack(getFile(uri), track);

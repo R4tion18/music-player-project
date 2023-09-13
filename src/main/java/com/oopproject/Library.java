@@ -16,23 +16,42 @@ import java.util.stream.IntStream;
 
 /**
  * A Library to organise songs into playlists and albums.
- * @author francescorighi
- * @author riccardovezzani
- * @version 2023.8.18
- * @see Song
+ *
  * @see Playlist
  * @see Album
  */
 public class Library {
+    /**
+     * A map matching the titles of the songs in the Library with their index.
+     */
     public ConcurrentHashMap<String, Integer> titleIndex;
+
+    /**
+     * The properties of the Library.
+     * The first property indicates the folder where the songs are stored,
+     * and the rest are the indexes of the songs matched with the playlists they are in.
+     */
     private final Properties properties;
+
+    /**
+     * A map matching the indexes of the songs with a URI string representing their file.
+     */
     private final ConcurrentHashMap<Integer, String> songs = new ConcurrentHashMap<>();
+
+    /**
+     * A map matching the names of the playlists in the Library with their corresponding Playlist object.
+     */
     private final ConcurrentHashMap<String, Playlist> playlists = new ConcurrentHashMap<>();
+
+    /**
+     * A map matching the names of the albums in the Library with their corresponding Album object.
+     */
     private final ConcurrentHashMap<String, Album> albums = new ConcurrentHashMap<>();
 
-    /** Initialises a Library at the start of the application.
-     *
-     * @param properties contains the name of the directory where the Library files are stored.
+    /**
+     * Initialises a Library at the start of the application.
+     * @param properties contains the name of the directory where the Library files are stored,
+     *                   and the indexes of the songs stored in the directory.
      * @param isFirstSetup specifies if this is the first time the application was started on this system.
      * @throws RuntimeException if there is an error when opening the directory.
      */
@@ -42,7 +61,7 @@ public class Library {
         try {
             directory = new File(new URI(this.properties.getProperty("libraryFolder")));
         } catch (URISyntaxException e) {
-            throw new RuntimeException(e);  //change exception handling
+            throw new RuntimeException(e);
         }
         CopyOnWriteArrayList<File> files = getFiles(directory);
 
@@ -58,7 +77,8 @@ public class Library {
         }
     }
 
-    /** Creates a new Library instance from a list of files.
+    /**
+     * Populates the Library from a list of files.
      * @param files is the list of song files in the Library.
      */
     public void fillWith(CopyOnWriteArrayList<File> files) {
@@ -81,11 +101,10 @@ public class Library {
         });
     }
 
-
-    public int getLibrarySize() {
-        return songs.size();
-    }
-
+    /**
+     * Returns the highest index of a song in the Library.
+     * @return the index of the song.
+     */
     public int getHighestIndex()    {
         return this.properties.stringPropertyNames()
                 .stream()
@@ -95,11 +114,18 @@ public class Library {
                 .orElse(0);
     }
 
+    /**
+     * Returns a list of the song titles in the Library.
+     * @return the list of titles.
+     */
     public ObservableList<String> getSongTitles() {
         updateIndex();
         return FXCollections.observableArrayList(titleIndex.keySet());
     }
 
+    /**
+     * Updates the index of song titles.
+     */
     public void updateIndex()  {
         titleIndex = new ConcurrentHashMap<>();
         for (String uri : getSongURIs()) {
@@ -112,47 +138,80 @@ public class Library {
         }
     }
 
+    /**
+     * Returns the list of files contained in the specified directory.
+     * @param directory the directory from which to get the files.
+     * @return the list of files.
+     */
     public CopyOnWriteArrayList<File> getFiles(File directory)   {
         return new CopyOnWriteArrayList<>(List.of(Objects.requireNonNull(directory.listFiles())));
     }
 
+    /**
+     * Returns the list of URI strings of the songs in the Library.
+     * @return the list of URI strings.
+     */
     public CopyOnWriteArrayList<String> getSongURIs()   {
         return new CopyOnWriteArrayList<>(songs.values());
     }
 
-    public int getNumberOfPlaylists()   {
-        return playlists.size();
-    }
-
+    /**
+     * Returns the list of names of the playlists contained in the Library.
+     * @return the list of names.
+     */
     public ObservableList<String> getPlaylistNames()    {
         return FXCollections.observableArrayList(playlists.keySet());
     }
 
-    public int getNumberOfAlbums()  {
-        return albums.size();
-    }
-
+    /**
+     * Returns the list of names of the albums contained in the Library.
+     *      * @return the list of names.
+     */
     public ObservableList<String> getAlbumNames()   {
         return FXCollections.observableArrayList(albums.keySet());
     }
 
+    /**
+     * Returns the index of the song with the given title.
+     * @param title the title of the song.
+     * @return the index of the song.
+     */
     public int getIndex(String title)   {
         return titleIndex.get(title);
     }
 
+    /**
+     * Returns the URI string of the song with the  given index.
+     * @param index the index of the song.
+     * @return the URI string of the song.
+     */
     public String getSong(int index) {
         return songs.get(index);
     }
 
+    /**
+     * Returns the Playlist with the given name.
+     * @param name the name of the playlist.
+     * @return the Playlist object.
+     */
     public Playlist getPlaylist(String name)    {
         return playlists.get(name);
     }
 
+    /**
+     * Returns the Album with the given name.
+     * @param name the name of the album.
+     * @return the Album object.
+     */
     public Album getAlbum(String name)  {
         return albums.get(name);
     }
 
-
+    /**
+     * Adds a list of song files to the Library.
+     * @param files the list of files to add.
+     * @return a Vector containing the indexes of the added songs.
+     */
     public Vector<Integer> addMultipleFiles(CopyOnWriteArrayList<File> files)  {
         Vector<Integer> indexes = new Vector<>();
         for (File file : files) {
@@ -161,6 +220,11 @@ public class Library {
         return indexes;
     }
 
+    /**
+     * Adds a song file to the Library.
+     * @param uri the URI string representing the file.
+     * @return the index of the added song.
+     */
     public int addSongFile(String uri)    {
         File oldFile;
         String directoryPath;
@@ -181,6 +245,12 @@ public class Library {
         return addNewSong(Song.getString(newFile), getHighestIndex() + 1);
     }
 
+    /**
+     * Adds a song to the Library with the given index.
+     * @param uri the URI string representing the song file.
+     * @param index the index of the song.
+     * @return the index of the song.
+     */
     public int addNewSong(String uri, int index)  {
         Song song = new Song(Song.getFile(uri));
         song.setIndex(index);
@@ -196,6 +266,10 @@ public class Library {
         return index;
     }
 
+    /**
+     * Adds a song file to the Library.
+     * @param file the song file.
+     */
     public void addSong(File file)  {
         Song song = new Song(file);
         songs.putIfAbsent(song.getIndex(), Song.getString(file));
@@ -207,6 +281,10 @@ public class Library {
         }
     }
 
+    /**
+     * Removes a song from the Library.
+     * @param index the index of the song to remove.
+     */
     public void deleteSong(int index)   {
         Arrays.stream(properties.getProperty(String.valueOf(index)).split("\n"))
                 .forEach(playlist -> {
@@ -235,18 +313,30 @@ public class Library {
         properties.remove(String.valueOf(index));
     }
 
-
-
+    /**
+     * Creates a new Playlist with the given name in the library.
+     * @param name the name of the Playlist.
+     */
     public void createPlaylist(String name)    {
         playlists.putIfAbsent(name, new Playlist(name, this));
     }
 
+    /**
+     * Adds a given song to a given Playlist.
+     * @param index the index of the song.
+     * @param playlist the name of the Playlist.
+     */
     public void putInPlaylist(int index, String playlist)  {
         if (!properties.getProperty(String.valueOf(index)).contains(playlist))   {
             properties.setProperty(Integer.toString(index), properties.getProperty(String.valueOf(index)) + playlist + "\n");
         }
     }
 
+    /**
+     * Removes a given song from the given Playlist.
+     * @param index the index of the song.
+     * @param playlist the name of the Playlist.
+     */
     public void removeFromPlaylist(int index, String playlist)  {
         StringBuilder songPlaylists = new StringBuilder(properties.getProperty(String.valueOf(index)));
         songPlaylists.delete(songPlaylists.indexOf(playlist), songPlaylists.lastIndexOf(playlist) + playlist.length());
@@ -262,6 +352,11 @@ public class Library {
         properties.setProperty(String.valueOf(index), songPlaylists.toString());
     }
 
+    /**
+     * Deletes a Playlist from the Library.
+     * @param playlist the name of the Playlist.
+     * @param fromLibrary indicates whether the songs in the Playlist should also be deleted.
+     */
     public void deletePlaylist(String playlist, Boolean fromLibrary)    {
         if (fromLibrary)    {
             playlists.get(playlist).getSongIndexes().forEach(this::deleteSong);
@@ -272,21 +367,40 @@ public class Library {
         playlists.remove(playlist);
     }
 
-
+    /**
+     * Creates a new Album with the given name and artist from the given folder.
+     * @param name the name of the Album.
+     * @param artist the Album artist.
+     * @param folder the folder containing the songs of the Album.
+     */
     public void createAlbum(String name, String artist, File folder)   {
         albums.putIfAbsent(name, new Album(name, this, folder));
         albums.get(name).setArtist(artist);
     }
 
+    /**
+     * Creates a new Album with the given name and artist.
+     * @param name the name of the Album.
+     * @param artist the Album artist.
+     */
     public void createAlbum(String name, String artist) {
         albums.putIfAbsent(name, new Album(name, this));
         albums.get(name).setArtist(artist);
     }
 
+/**
+ * Creates a new Album with the given name.
+ * @param name the name of the Album.
+ */
     public void createAlbum(String name)    {
         albums.putIfAbsent(name, new Album(name, this));
     }
 
+    /**
+     * Deletes an Album from the Library.
+     * @param album the name of the Album.
+     * @param fromLibrary indicates whether the songs on the Album should also be deleted.
+     */
     public void deleteAlbum(String album, Boolean fromLibrary)   {
         albums.get(album).getSongIndexes().forEach(index -> Song.setAlbum(getSong(index), ""));
 

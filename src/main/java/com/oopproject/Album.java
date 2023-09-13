@@ -1,27 +1,50 @@
 package com.oopproject;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.Vector;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.stream.Collectors;
 
-import static java.lang.Integer.compare;
-
+/**
+ * An Album to store and play songs from the same album.
+ *
+ * @see Playlist
+ */
 public class Album extends Playlist  {
+    /**
+     * The year of release of the Album.
+     */
     private int year = 0;
+
+    /**
+     * The artist of the Album.
+     */
     private String artist = null;
 
+    /**
+     * Creates an Album with the given.
+     * @param name the Album name.
+     * @param library the Library the Album is stored in.
+     */
     public Album(String name, Library library) {
         super(name, library);
     }
 
+    /**
+     * Creates an Album with the given name from the given folder.
+     * @param name the name of the Album.
+     * @param library the Library the Album is stored in.
+     * @param folder the folder where the songs of the Album are stored.
+     */
     public Album(String name, Library library, File folder) {
         this(name, library, folder.listFiles());
     }
 
+    /**
+     * Creates an Album with the given name from the given list of files.
+     * @param name the name of the Album.
+     * @param library the Library the Album is stored in.
+     * @param files the files of the songs on the Album.
+     */
     public Album(String name, Library library, File[] files) {
         this(name, library);
         getLibrary().addMultipleFiles(new CopyOnWriteArrayList<>(files)).forEach(this::addSong);
@@ -34,19 +57,35 @@ public class Album extends Playlist  {
         getLibrary().deleteAlbum(getName(), false);
     }
 
+    /**
+     * Returns the artist of the Album.
+     * @return the artist of the Album.
+     */
     public String getArtist() {
         return artist;
     }
 
+    /**
+     * Changes the artist on the Album.
+     * @param artist the new artist.
+     */
     public void setArtist(String artist) {
         this.artist = artist;
         songs.forEach(index -> Song.setAlbumArtist(getLibrary().getSong(index), artist));
     }
 
+    /**
+     * Returns the year of release of the Album.
+     * @return the year of release of the Album.
+     */
     public int getYear() {
         return year;
     }
 
+    /**
+     * Changes the year of release of the Album.
+     * @param year the new year of release.
+     */
     public void setYear(int year) {
         this.year = year;
         songs.forEach(index -> {
@@ -56,6 +95,10 @@ public class Album extends Playlist  {
         });
     }
 
+    /**
+     *  `Adds songs to the Album from a list of indexes.
+     * @param indexes the list of indexes.
+     */
     public void addFrom(Vector<Integer> indexes)    {
         if (songs.isEmpty())  {
             songs = new CopyOnWriteArrayList<>(indexes);
@@ -99,6 +142,7 @@ public class Album extends Playlist  {
         }
     }
 
+
     @Override
     public void removeSong(int index) {
         songs.remove(Integer.valueOf(index));
@@ -112,6 +156,9 @@ public class Album extends Playlist  {
         Song.setAlbum(getLibrary().getSong(index), "");
     }
 
+    /**
+     * Refreshes the order of the songs on the Album.
+     */
     public void refreshOrder()  {
         Integer[] indexes = getSongIndexes().toArray(new Integer[0]);
         songs.forEach(index -> indexes[Song.getTrack(getLibrary().getSong(index)) - 1] = index);

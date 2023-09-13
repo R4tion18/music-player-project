@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 /**
- * A SongQueue that saves all the songs you want to play
+ * A SongQueue that saves all the songs you want to play.
  */
 public class SongQueue {
 
@@ -20,7 +20,7 @@ public class SongQueue {
     private boolean isShuffle = false;
 
     /**
-     * Constructor without parameters
+     * Constructor without parameters.
      */
     public SongQueue()  {
         queue = new ArrayList<>();
@@ -28,8 +28,8 @@ public class SongQueue {
     }
 
     /**
-     * Constructor with a new list of songs to play
-     * @param newSongs contains the file's uri of the new queue
+     * Constructor with a new list of songs to play.
+     * @param newSongs contains the file's uri of the new queue.
      */
     public SongQueue(CopyOnWriteArrayList<String> newSongs) {
         queue = new ArrayList<>();
@@ -41,24 +41,24 @@ public class SongQueue {
     }
 
     /**
-     * Getter for the index
-     * @return queue index
+     * Getter for the index.
+     * @return queue index.
      */
     public int getSongNumber() {
         return songNumber;
     }
 
     /**
-     * Getter for the sequence in which the song are to play
-     * @return List of integer related to this.queue
+     * Getter for the sequence in which the song are to play.
+     * @return List of integer related to this.queue.
      */
     public ObservableList<Integer> getSongSequence() {
         return songSequence;
     }
 
     /**
-     * Getter for the names of the songs
-     * @return List of names
+     * Getter for the names of the songs.
+     * @return List of names.
      */
     public ArrayList<String> getSongNames(){
         return songSequence.stream()
@@ -67,16 +67,16 @@ public class SongQueue {
     }
 
     /**
-     * Getter for the song in play now
-     * @return the song's URI
+     * Getter for the song in play now.
+     * @return the song's URI.
      */
     public String getSong() {
         return queue.get(nextSongIndex(songNumber));
     }
 
     /**
-     * Getter for the next song in the queue
-     * @return the song at the next index URI, if it's the end of the queue it loops back
+     * Getter for the next song in the queue.
+     * @return the song at the next index URI, if it's the end of the queue it loops back.
      */
     public String getNextSong(){
         if (songNumber == queue.size() - 1) {
@@ -88,8 +88,8 @@ public class SongQueue {
     }
 
     /**
-     * Getter for the previous song in the queue
-     * @return the song at the previous index URI, if it's the first of the queue it takes the last
+     * Getter for the previous song in the queue.
+     * @return the song at the previous index URI, if it's the first of the queue it takes the last.
      */
     public String getPreviousSong(){
         if (songNumber == 0) {
@@ -102,7 +102,7 @@ public class SongQueue {
 
     /**
      * Add a new song at the end of the queue.
-     * @param newSong the song's URI converted into string
+     * @param newSong the song's URI converted into string.
      */
     public void addSong(String newSong){
         songSequence.add(queue.size());
@@ -111,7 +111,7 @@ public class SongQueue {
 
     /**
      * Add a list of new songs at the end of the queue.
-     * @param newSongs a List of the songs URIs converted into string
+     * @param newSongs a List of the songs URIs converted into string.
      */
     public void addSongs(ArrayList<String> newSongs){
         songSequence.addAll(IntStream.range(queue.size(), queue.size() + newSongs.size()).boxed().toList());
@@ -119,8 +119,8 @@ public class SongQueue {
     }
 
     /**
-     * Remove the song at the given index in the sequence
-     * @param index Index of the song in songSequence
+     * Remove the song at the given index in the sequence.
+     * @param index Index of the song in songSequence.
      */
     public void removeSong(int index){
         int realIndex = songSequence.get(index);
@@ -134,7 +134,7 @@ public class SongQueue {
     }
 
     /**
-     * Shuffle or unshuffle songSequence without touching the queue
+     * Shuffle or unshuffle songSequence without touching the queue.
      */
     public void setShuffle() {
         if(!isShuffle){
@@ -151,18 +151,18 @@ public class SongQueue {
     }
 
     /**
-     * Convert the index in songSequence with the index in queue and vice-versa
-     * @param songRealIndex the index in songSequence/queue
-     * @return the index in queue/songSequence
+     * Convert the index in songSequence with the index in queue and vice-versa.
+     * @param songRealIndex the index in songSequence/queue.
+     * @return the index in queue/songSequence.
      */
     public int nextSongIndex(int songRealIndex){
         return songSequence.get(songRealIndex);
     }
 
     /**
-     * Swaps two songs in songSequence
-     * @param firstIndex the index of the first song
-     * @param secondIndex the index of the second song
+     * Swaps two songs in songSequence.
+     * @param firstIndex the index of the first song.
+     * @param secondIndex the index of the second song.
      */
     public void modifyQueue(int firstIndex, int secondIndex){
         Collections.swap(songSequence, firstIndex, secondIndex);

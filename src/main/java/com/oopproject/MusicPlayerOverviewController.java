@@ -11,7 +11,6 @@ import java.net.URL;
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -99,6 +98,7 @@ public class MusicPlayerOverviewController implements Initializable {
         albumListView.setItems(library.getAlbumNames());
     }
 
+    @SuppressWarnings("OptionalGetWithoutIsPresent")
     private void loadSong(String songName) {
         mediaPlayer = new MediaPlayer(new Media(songName));
         mediaPlayer.volumeProperty().bindBidirectional(volumeSlider.valueProperty());

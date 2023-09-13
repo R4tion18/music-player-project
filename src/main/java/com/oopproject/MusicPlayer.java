@@ -9,6 +9,9 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.Objects;
 
+/**
+ * A player to play songs and organise them in playlists and albums.
+ */
 public class MusicPlayer extends Application {
     @Override
     public void start(Stage stage) throws IOException {
